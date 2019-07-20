@@ -258,7 +258,7 @@ object DefaultListener : MouseAdapter() {
 ```
 -->
 
-**注**：オブジェクト宣言はローカルにすることはできません（つまり、関数内で直接ネストする必要があります）。ただし、他のオブジェクト宣言または非内部クラスにネストすることもできます。
+**注**：オブジェクト宣言はローカルにすることはできません（つまり、関数内で直接ネストする形はできません）。ただし、他のオブジェクト宣言または非内部クラスにネストすることもできます。
 
 <!--original
 **NOTE**: object declarations can't be local (i.e. be nested directly inside a function), but they can be nested into other object declarations or non-inner classes.

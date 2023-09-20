@@ -60,14 +60,14 @@ fun main() {
 > 変数はプログラムの最初、`main()`関数の外にも定義出来ます。このように定義された変数は **トップレベル（top level）**と呼ばれます。
 {: .note }
 
-As `customers` is a mutable variable, its value can be reassigned after declaration.
+`customers` はmutableな変数なので、定義した後にも値の再設定が可能となっている。
 
-> We recommend that you declare all variables as read-only (`val`) by default. Declare mutable variables (`var`) only if 
-> necessary.
+> 基本的にはすべての変数を読み取り専用(つまり`val`)にするのがオススメです。
+> 必要な時だけmutableな変数 (つまり`var`)にするようにしましょう。 
 > 
-{type="note"}
+{: .note}
 
-## String templates
+## 文字列テンプレート
 
 It's useful to know how to print the contents of variables to standard output. You can do this with **string templates**. 
 You can use template expressions to access data stored in variables and other objects, and convert them into strings.

@@ -2,6 +2,12 @@
 # Reference navigation
 # ====================
 reference:
+  - title: Kotlinツアー
+    items:
+       - url: /docs/kotlin-tour-welcome.html
+         title: Kotlinツアーへようこそ！
+       - url: /docs/kotlin-tour-hello-world.html
+         title: Hello World
   - title: 入門
     description: Get familiar with the basics of Kotlin including operations, coding conventions and idioms.
     items:

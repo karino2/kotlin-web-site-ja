@@ -1,34 +1,3 @@
-# Header navigation
-# ====================
-main:
-  - url: /docs/reference/
-    title: Learn
-
-  - url: /contribute.html
-    title: Contribute
-
-  - url: http://try.kotlinlang.org
-    title: Try Online
-
-
-# Docs section navigation
-# =======================
-docs:
-  - url: /docs/reference/
-    title: リファレンス
-
-  - url: /docs/tutorials/
-    title: Tutorials
-
-  - url: /docs/videos.html
-    title: Videos
-
-  - url: /docs/events.html
-    title: Events
-
-  - url: /docs/resources.html
-    title: More resources
-
 
 # Reference navigation
 # ====================

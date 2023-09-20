@@ -4,13 +4,6 @@
         <div class="g-layout">
             <a class="global-header-logo" href="{{ site.baseurl }}/">Kotlin</a>
 
-            {% if include.active %}
-            {% assign active = include.active %}
-            {% else %}
-            {% assign active = page.main_nav_id %}
-            {% endif %}
-
-            {% include nav/global-nav.html active=active %}
         </div>
     </div>
 

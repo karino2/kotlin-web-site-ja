@@ -5,89 +5,89 @@ reference:
   - title: 入門
     description: Get familiar with the basics of Kotlin including operations, coding conventions and idioms.
     items:
-      - url: /docs/reference/basic-syntax.html
+      - url: /docs/basic-syntax.html
         title: 基本的な構文
-      - url: /docs/reference/idioms.html
+      - url: /docs/idioms.html
         title: イディオム
-      - url: /docs/reference/coding-conventions.html
+      - url: /docs/coding-conventions.html
         title: コーディング規約
 
   - title: 基本
     description: The Basics
     items:
-      - url: /docs/reference/basic-types.html
+      - url: /docs/basic-types.html
         title: 基本の型
-      - url: /docs/reference/packages.html
+      - url: /docs/packages.html
         title: パッケージ
-      - url: /docs/reference/control-flow.html
+      - url: /docs/control-flow.html
         title: 制御フロー
-      - url: /docs/reference/returns.html
+      - url: /docs/returns.html
         title: returnとジャンプ
 
   - title: クラスとオブジェクト
     description: All about objects
     items:
-      - url: /docs/reference/classes.html
+      - url: /docs/classes.html
         title: クラスと継承
-      - url: /docs/reference/properties.html
+      - url: /docs/properties.html
         title: プロパティとフィールド
-      - url: /docs/reference/interfaces.html
+      - url: /docs/interfaces.html
         title: 継承
-      - url: /docs/reference/visibility-modifiers.html
+      - url: /docs/visibility-modifiers.html
         title: 可視性修飾子
-      - url: /docs/reference/extensions.html
+      - url: /docs/extensions.html
         title: 拡張
-      - url: /docs/reference/data-classes.html
+      - url: /docs/data-classes.html
         title: データクラス
-      - url: /docs/reference/generics.html
+      - url: /docs/generics.html
         title: ジェネリクス
-      - url: /docs/reference/nested-classes.html
+      - url: /docs/nested-classes.html
         title: ネストされたクラス
-      - url: /docs/reference/enum-classes.html
+      - url: /docs/enum-classes.html
         title: 列挙型クラス
-      - url: /docs/reference/object-declarations.html
+      - url: /docs/object-declarations.html
         title: オブジェクト
-      - url: /docs/reference/delegation.html
+      - url: /docs/delegation.html
         title: 委譲
-      - url: /docs/reference/delegated-properties.html
+      - url: /docs/delegated-properties.html
         title: 委譲プロパティ
 
   - title: 関数とラムダ
     description: All about functions
     items:
-      - url: /docs/reference/functions.html
+      - url: /docs/functions.html
         title: 関数
-      - url: /docs/reference/lambdas.html
+      - url: /docs/lambdas.html
         title: ラムダ
-      - url: /docs/reference/inline-functions.html
+      - url: /docs/inline-functions.html
         title: インライン関数
 
   - title: Other
     description: Various bits and bobs
     items:
-      - url: /docs/reference/multi-declarations.html
+      - url: /docs/multi-declarations.html
         title: Destructuring Declarations
-      - url: /docs/reference/collections.html
+      - url: /docs/collections.html
         title: Collections
-      - url: /docs/reference/ranges.html
+      - url: /docs/ranges.html
         title: Ranges
-      - url: /docs/reference/typecasts.html
+      - url: /docs/typecasts.html
         title: Type Checks and Casts
-      - url: /docs/reference/this-expressions.html
+      - url: /docs/this-expressions.html
         title: This expressions
-      - url: /docs/reference/equality.html
+      - url: /docs/equality.html
         title: Equality
-      - url: /docs/reference/operator-overloading.html
+      - url: /docs/operator-overloading.html
         title: Operator overloading
-      - url: /docs/reference/null-safety.html
+      - url: /docs/null-safety.html
         title: Null Safety
-      - url: /docs/reference/exceptions.html
+      - url: /docs/exceptions.html
         title: Exceptions
-      - url: /docs/reference/annotations.html
+      - url: /docs/annotations.html
         title: Annotations
-      - url: /docs/reference/reflection.html
+      - url: /docs/reflection.html
         title: Reflection
-      - url: /docs/reference/type-safe-builders.html
+      - url: /docs/type-safe-builders.html
         title: Type-Safe Builders
 
 
@@ -97,51 +97,51 @@ reference:
     items:
       - url: /api/latest/jvm/stdlib/index.html
         title: API Reference
-      - url: /docs/reference/grammar.html
+      - url: /docs/grammar.html
         title: Grammar
 
 
   - title: Java Interop
     description: What you need to know about interoperability with Java.
     items:
-      - url: /docs/reference/java-interop.html
+      - url: /docs/java-interop.html
         title: Calling Java from Kotlin
-      - url: /docs/reference/java-to-kotlin-interop.html
+      - url: /docs/java-to-kotlin-interop.html
         title: Calling Kotlin from Java
 
   - title: JavaScript
     description: Using Kotlin with JavaScript
     items:
-     - url: /docs/reference/dynamic-type.html
+     - url: /docs/dynamic-type.html
        title: Dynamic Type
-     - url: /docs/reference/js-interop.html
+     - url: /docs/js-interop.html
        title: JavaScript Interoperability
-     - url: /docs/reference/js-reflection.html
+     - url: /docs/js-reflection.html
        title: JavaScript Reflection
 
   - title: Tools
     description:
     items:
-#      - /docs/reference/kotlin-build-tools.html: Kotlin Build Tools
-      - url: /docs/reference/kotlin-doc.html
+#      - /docs/kotlin-build-tools.html: Kotlin Build Tools
+      - url: /docs/kotlin-doc.html
         title: Documenting Kotlin Code
-      - url: /docs/reference/using-maven.html
+      - url: /docs/using-maven.html
         title: Using Maven
-      - url: /docs/reference/using-ant.html
+      - url: /docs/using-ant.html
         title: Using Ant
-      - url: /docs/reference/using-gradle.html
+      - url: /docs/using-gradle.html
         title: Using Gradle
-      - url: /docs/reference/kotlin-osgi.html
+      - url: /docs/kotlin-osgi.html
         title: Kotlin and OSGi
 
   - title: FAQ
     description: Every question you could possibly think of, might be answered.
     items:
-      - url: /docs/reference/faq.html
+      - url: /docs/faq.html
         title: FAQ
-      - url: /docs/reference/comparison-to-java.html
+      - url: /docs/comparison-to-java.html
         title: Comparison to Java
-      - url: /docs/reference/comparison-to-scala.html
+      - url: /docs/comparison-to-scala.html
         title: Comparison to Scala
 
 

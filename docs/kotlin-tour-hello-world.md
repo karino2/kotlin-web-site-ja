@@ -29,38 +29,36 @@ Kotlinでは:
 * [`println()`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.io/println.html) と [`print()`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.io/print.html) 関数は引数を標準出力にプリントする
 
 > 関数は続く章でより詳細に議論します。そこまでは、`main()` 関数しか出てきません
-> 
+{: .note }
 
 ## 変数
 
-All programs need to be able to store data, and variables help you to do just that. In Kotlin, you can declare:
-* read-only variables with `val`
-* mutable variables with `var`
+プログラムというものは、基本的にはデータを保持する必要があるものです。そして変数というものは、まさにそれを行うだけのものです。Kotlinでは、変数を宣言するのに以下の二つのキーワードがあります：
+* 読み取り専用（read-only）の変数： `val`
+* 値を変更する（mutableな）変数： `var`
 
-To assign a value, use the assignment operator `=`.
+値を設定するには、`=` オペレータを使います。
 
-For example:
+例を見てみましょう：
 
-```kotlin
+{% capture kotlin-tour-variables %}
 fun main() { 
 //sampleStart
-    val popcorn = 5    // There are 5 boxes of popcorn
-    val hotdog = 7     // There are 7 hotdogs
-    var customers = 10 // There are 10 customers in the queue
+    val popcorn = 5    // ポップコーンが5箱あります
+    val hotdog = 7     // ホットドッグが7つあります
+    var customers = 10 // 列に10人の客が並んでいます
     
-    // Some customers leave the queue
+    // 何人かの客が列から去りました
     customers = 8
     println(customers)
     // 8
 //sampleEnd
 }
-```
-{kotlin-runnable="true" kotlin-min-compiler-version="1.3" id="kotlin-tour-variables"}
+{% endcapture %}
+{% include kotlin_quote.html body=kotlin-tour-variables %}
 
-> Variables can be declared outside the `main()` function at the beginning of your program. Variables declared in this way
-> are said to be declared at **top level**.
-> 
-{type="tip"}
+> 変数はプログラムの最初、`main()`関数の外にも定義出来ます。このように定義された変数は **トップレベル（top level）**と呼ばれます。
+{: .note }
 
 As `customers` is a mutable variable, its value can be reassigned after declaration.
 

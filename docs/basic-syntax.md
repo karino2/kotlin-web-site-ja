@@ -455,17 +455,29 @@ The *is*{: .keyword } operator checks if an expression is an instance of a type.
 If an immutable local variable or property is checked for a specific type, there's no need to cast it explicitly:
 -->
 
-``` kotlin
+{% capture kotlin-basic-syntax-is-operator %}
+//sampleStart
 fun getStringLength(obj: Any): Int? {
-  if (obj is String) {
-    // `obj` はこのブランチ内では自動的に`String`へキャストされる
-    return obj.length
-  }
+    if (obj is String) {
+        // `obj` はこのブランチ内では自動的に`String`へキャストされる
+        return obj.length
+    }
 
   // `obj` は型チェックが行われたブランチ外では、まだ`Any`型である
-  return null
+    return null
 }
-```
+//sampleEnd
+
+fun main() {
+    fun printLength(obj: Any) {
+        println("'$obj'の長さを取得。 結果: ${getStringLength(obj) ?: "エラー: オブジェクトは文字列ではありません"} ")
+    }
+    printLength("Incomprehensibilities")
+    printLength(1000)
+    printLength(listOf(Any()))
+}
+{% endcapture %}
+{% include kotlin_quote.html body=kotlin-basic-syntax-is-operator %}
 
 <!--original
 ``` kotlin
@@ -487,15 +499,27 @@ fun getStringLength(obj: Any): Int? {
 or
 -->
 
-``` kotlin
+{% capture kotlin-basic-syntax-is-operator-expression %}
+//sampleStart
 fun getStringLength(obj: Any): Int? {
-  if (obj !is String)
-    return null
+    if (obj !is String) return null
 
-  // `obj` はこのブランチ内では自動的に`String`へキャストされる
-  return obj.length
+    // `obj` はこのブランチ内では自動的に`String`へキャストされる
+    return obj.length
 }
-```
+//sampleEnd
+
+fun main() {
+    fun printLength(obj: Any) {
+        println("'$obj'の長さを取得。 結果: ${getStringLength(obj) ?: "エラー: オブジェクトは文字列ではありません"} ")
+    }
+    printLength("Incomprehensibilities")
+    printLength(1000)
+    printLength(listOf(Any()))
+}
+{% endcapture %}
+{% include kotlin_quote.html body=kotlin-basic-syntax-is-operator-expression %}
+
 
 <!--original
 ``` kotlin
@@ -515,15 +539,28 @@ fun getStringLength(obj: Any): Int? {
 or even
 -->
 
-``` kotlin
+{% capture kotlin-basic-syntax-is-operator-logic %}
+//sampleStart
 fun getStringLength(obj: Any): Int? {
-  // `obj` は`&&`の右側では自動的に`String`へキャストされる
-  if (obj is String && obj.length > 0)
-    return obj.length
+    // `obj` は`&&`の右側では自動的に`String`へキャストされる
+    if (obj is String && obj.length > 0) {
+        return obj.length
+    }
 
-  return null
+    return null
 }
-```
+//sampleEnd
+
+fun main() {
+    fun printLength(obj: Any) {
+        println("'$obj'の長さを取得。 結果: ${getStringLength(obj) ?: "エラー: オブジェクトは文字列ではありません"} ")
+    }
+    printLength("Incomprehensibilities")
+    printLength("")
+    printLength(1000)
+}
+{% endcapture %}
+{% include kotlin_quote.html body=kotlin-basic-syntax-is-operator-logic %}
 
 <!--original
 ``` kotlin

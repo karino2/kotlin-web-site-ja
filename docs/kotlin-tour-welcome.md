@@ -16,7 +16,7 @@ title: "Kotlinツアーへようこそ！"
 * [変数](kotlin-tour-hello-world.md)
 * [基本型](kotlin-tour-basic-types.md)
 * [コレクション](kotlin-tour-collections.md)
-* [Control flow](kotlin-tour-control-flow.md)
+* [制御フロー](kotlin-tour-control-flow.md)
 * [Functions](kotlin-tour-functions.md)
 * [Classes](kotlin-tour-classes.md)
 * [Null safety](kotlin-tour-null-safety.md)

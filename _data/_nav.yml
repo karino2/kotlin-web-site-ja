@@ -12,6 +12,8 @@ reference:
          title: 基本型（ツアー）
        - url: /docs/kotlin-tour-collections.html
          title: コレクション（ツアー）
+       - url: /docs/kotlin-tour-cotrol-flow.html
+         title: 制御フロー（ツアー）
   - title: 入門
     description: Get familiar with the basics of Kotlin including operations, coding conventions and idioms.
     items:

@@ -7,7 +7,7 @@ title: "Hello World"
 - ![ステップ1]({{ site.baseurl }}/assets/images/icons/icon-1.svg){:width="20" style="display:inline"} **Hello world**
 - ![ステップ2]({{ site.baseurl }}/assets/images/icons/icon-2-todo.svg){:width="20" style="display:inline"} [基本型](kotlin-tour-basic-types.md)
 - ![ステップ3]({{ site.baseurl }}/assets/images/icons/icon-3-todo.svg){:width="20" style="display:inline"} [コレクション](kotlin-tour-collections.md)
-- ![ステップ4]({{ site.baseurl }}/assets/images/icons/icon-4-todo.svg){:width="20" style="display:inline"} <a href="kotlin-tour-control-flow.md">Control flow</a>
+- ![ステップ4]({{ site.baseurl }}/assets/images/icons/icon-4-todo.svg){:width="20" style="display:inline"} [制御フロー](kotlin-tour-control-flow.md)
 - ![ステップ5]({{ site.baseurl }}/assets/images/icons/icon-5-todo.svg){:width="20" style="display:inline"} <a href="kotlin-tour-functions.md">Functions</a>
 - ![ステップ6]({{ site.baseurl }}/assets/images/icons/icon-6-todo.svg){:width="20" style="display:inline"} <a href="kotlin-tour-classes.md">Classes</a>
 - ![ステップ7]({{ site.baseurl }}/assets/images/icons/icon-7-todo.svg){:width="20" style="display:inline"} <a href="kotlin-tour-null-safety.md">Null safety</a>

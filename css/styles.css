@@ -2623,6 +2623,16 @@ a:hover {
   font-size: 14px;
 }
 
+.page-content blockquote.tip {
+  padding: 20px 40px;
+  background-color: #eae9e9;
+  background-image: url("data:image/svg+xml,<svg width='40px' height='40px' xmlns='http://www.w3.org/2000/svg'><text x='0' y='20px' font-size='25px'>💡</text></svg>");
+  background-repeat: no-repeat;
+  background-position: 15px 20px;
+  font-family: "Open Sans", Helvetica, Arial, sans-serif;
+  font-size: 14px;
+}
+
 .page-content .code._highlighted,
 .page-content .code._highlighted pre {
   color: #000;

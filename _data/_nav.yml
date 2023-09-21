@@ -9,7 +9,9 @@ reference:
        - url: /docs/kotlin-tour-hello-world.html
          title: Hello World
        - url: /docs/kotlin-tour-basic-types.html
-         title: 基本型
+         title: 基本型（ツアー）
+       - url: /docs/kotlin-tour-collections.html
+         title: コレクション（ツアー）
   - title: 入門
     description: Get familiar with the basics of Kotlin including operations, coding conventions and idioms.
     items:

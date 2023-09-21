@@ -9,6 +9,20 @@
 
 基本的にはjekyll servで動くようにしています。
 
+以下のように作ったイメージで、
+
+```
+$ pushd docker
+$ docker build -t karino2/jekyll . 
+$ popd
+```
+
+以下のようにしています。
+
+```
+$ docker run --rm --volume="$PWD:/srv/jekyll" -it -p 4000:4000 karino2/jekyll jekyll serve
+```
+
 本家のビルド手順の再現は目指さず、minimaでマークダウンを省エネでレンダリングする程度にし、
 翻訳したmdファイルを揃える事に注力します。
 

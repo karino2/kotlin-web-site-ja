@@ -35,3 +35,4 @@ pdf/tmp.html
 *.pyc
 pages/docs/.jekyll-cache
 gomi.txt
+.sass-cache

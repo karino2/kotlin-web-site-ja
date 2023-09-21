@@ -5,12 +5,12 @@ title: "Hello World"
 # Hello World
 
 - ![ステップ1]({{ site.baseurl }}/assets/images/icons/icon-1.svg){:width="20" style="display:inline"} **Hello world**
-- ![ステップ2]({{ site.baseurl }}/assets/images/icons/icon-2-todo.svg){:width="20" style="display:inline"} [基本型](kotlin-tour-basic-types.html)
-- ![ステップ3]({{ site.baseurl }}/assets/images/icons/icon-3-todo.svg){:width="20" style="display:inline"} <a href="kotlin-tour-collections.html">Collections</a>
-- ![ステップ4]({{ site.baseurl }}/assets/images/icons/icon-4-todo.svg){:width="20" style="display:inline"} <a href="kotlin-tour-control-flow.html">Control flow</a>
-- ![ステップ5]({{ site.baseurl }}/assets/images/icons/icon-5-todo.svg){:width="20" style="display:inline"} <a href="kotlin-tour-functions.html">Functions</a>
-- ![ステップ6]({{ site.baseurl }}/assets/images/icons/icon-6-todo.svg){:width="20" style="display:inline"} <a href="kotlin-tour-classes.html">Classes</a>
-- ![ステップ7]({{ site.baseurl }}/assets/images/icons/icon-7-todo.svg){:width="20" style="display:inline"} <a href="kotlin-tour-null-safety.html">Null safety</a>
+- ![ステップ2]({{ site.baseurl }}/assets/images/icons/icon-2-todo.svg){:width="20" style="display:inline"} [基本型](kotlin-tour-basic-types.md)
+- ![ステップ3]({{ site.baseurl }}/assets/images/icons/icon-3-todo.svg){:width="20" style="display:inline"} [コレクション](kotlin-tour-collections.md)
+- ![ステップ4]({{ site.baseurl }}/assets/images/icons/icon-4-todo.svg){:width="20" style="display:inline"} <a href="kotlin-tour-control-flow.md">Control flow</a>
+- ![ステップ5]({{ site.baseurl }}/assets/images/icons/icon-5-todo.svg){:width="20" style="display:inline"} <a href="kotlin-tour-functions.md">Functions</a>
+- ![ステップ6]({{ site.baseurl }}/assets/images/icons/icon-6-todo.svg){:width="20" style="display:inline"} <a href="kotlin-tour-classes.md">Classes</a>
+- ![ステップ7]({{ site.baseurl }}/assets/images/icons/icon-7-todo.svg){:width="20" style="display:inline"} <a href="kotlin-tour-null-safety.md">Null safety</a>
 
 "Hello, world!"と出力するプログラムは以下のようになります：
 
@@ -106,7 +106,6 @@ Kotlinは型を推論します：この場合は`Int`と。
 以下のコードを完成させて、`"Mary is 20 years old"`と標準出力にプリントせよ：
 
 {% capture kotlin-tour-hello-world-exercise %}
-
 fun main() {
     val name = "Mary"
     val age = 20

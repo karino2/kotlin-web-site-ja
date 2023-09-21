@@ -2,6 +2,7 @@
 layout: reference
 title: "コレクション（ツアー）"
 ---
+# コレクション（ツアー）
 
 - ![ステップ1]({{ site.baseurl }}/assets/images/icons/icon-1-done.svg){:width="20" style="display:inline"} [Hello world](kotlin-tour-hello-world.md)
 - ![ステップ2]({{ site.baseurl }}/assets/images/icons/icon-2-done.svg){:width="20" style="display:inline"} [基本型](kotlin-tour-basic-types.md)
@@ -11,91 +12,91 @@ title: "コレクション（ツアー）"
 - ![ステップ6]({{ site.baseurl }}/assets/images/icons/icon-6-todo.svg){:width="20" style="display:inline"} <a href="kotlin-tour-classes.html">Classes</a>
 - ![ステップ7]({{ site.baseurl }}/assets/images/icons/icon-7-todo.svg){:width="20" style="display:inline"} <a href="kotlin-tour-null-safety.html">Null safety</a>
 
-When programming, it is useful to be able to group data into structures for later processing. Kotlin provides collections
-for exactly this purpose.
+プログラムをする時には、データを何らかの構造を持ったグループにグルーピングして後の処理に備えるのが便利な事がしばしばあります。
+Kotlinはまさにこの用途のために、コレクションというものを提供します。
 
-Kotlin has the following collections for grouping items:
+Kotlinはアイテムをグルーピングするのに以下のコレクションが使えます:
 
-| **Collection type** | **Description**                                                         |
+| **コレクションの種類** | **説明**                                                         |
 |---------------------|-------------------------------------------------------------------------|
-| Lists               | Ordered collections of items                                            |
-| Sets                | Unique unordered collections of items                                   |
-| Maps                | Sets of key-value pairs where keys are unique and map to only one value |
+| Lists               | 順番のある要素のコレクション                                            |
+| Sets                | ユニーク（一意）で順場の無い要素のコレクション                                   |
+| Maps                | キーと値のペアのSets。キーはユニークで、各キーはただ一つの値に関連づけされている  |
 
-Each collection type can be mutable or read only.
+これらの各コレクションに、mutableと読み取り専用（read only）の二種類があります。
 
 ## List
 
-Lists store items in the order that they are added, and allow for duplicate items. 
+Listは要素を追加された順番に保持します。重複した要素も追加出来ます。
 
-To create a read-only list ([`List`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/)), use the 
-`[listOf()](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/list-of.html)` function.
+読み取り専用リスト　([`List`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/))を作るには、
+`[listOf()](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/list-of.html)` 関数を使います。
 
-To create a mutable list ([`MutableList`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-mutable-list.html)),
-use the [`mutableListOf()`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/mutable-list-of.html) function.
+mutableなリスト([`MutableList`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-mutable-list.html))を作るには,
+[`mutableListOf()`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/mutable-list-of.html)関数を使います。
 
-When creating lists, Kotlin can infer the type of items stored. To declare the type explicitly, add the type
-within angled brackets `<>` after the list declaration:
+リストを作るに際し、Kotlinは格納される要素の型を推論出来ます。
+型を明示的に宣言したい時は、リストの宣言のあとに角括弧`<>`で型を指定します。
 
-```kotlin
+
+{% capture kotlin-tour-lists-declaration %}
 fun main() { 
 //sampleStart
-    // Read only list
+    // 読み取り専用リスト
     val readOnlyShapes = listOf("triangle", "square", "circle")
     println(readOnlyShapes)
     // [triangle, square, circle]
     
-    // Mutable list with explicit type declaration
+    // Mutableなリストに明示的な型指定があるケース
     val shapes: MutableList<String> = mutableListOf("triangle", "square", "circle")
     println(shapes)
     // [triangle, square, circle]
 //sampleEnd
 }
-```
-{kotlin-runnable="true" kotlin-min-compiler-version="1.3" id="kotlin-tour-lists-declaration"}
+{% endcapture %}
+{% include kotlin_quote.html body=kotlin-tour-lists-declaration %}
 
-> To prevent unwanted modifications, you can obtain read-only views of mutable lists by assigning them to a `List`:
+> 意図せぬ変更をまぎれこませない為に、mutableなリストから、その読み取り専用のviewを作る事が出来ます。それは`List`型変数に代入することで得られます:
 > ```kotlin
 >     val shapes: MutableList<String> = mutableListOf("triangle", "square", "circle")
 >     val shapesLocked: List<String> = shapes
 > ```
-> This is also called **casting**.
+> これはまた、 **キャスト（casting）**とも呼ばれます。
 > 
-{type="tip"}
+{: .tip}
 
-Lists are ordered so to access an item in a list, use the [indexed access operator](operator-overloading.md#indexed-access-operator) `[]`:
+Listは順番があるコレクションなので、要素にアクセスする時にはそのインデックスを用いた[インデックスアクセスのオペレータ](operator-overloading.md#indexed-access-operator) `[]`を使います:
 
-```kotlin
+{% capture kotlin-tour-list-access %}
 fun main() { 
 //sampleStart
     val readOnlyShapes = listOf("triangle", "square", "circle")
-    println("The first item in the list is: ${readOnlyShapes[0]}")
-    // The first item in the list is: triangle
+    println("このリストの最初の要素は: ${readOnlyShapes[0]}")
+    // このリストの最初の要素は: triangle
 //sampleEnd
 }
-```
-{kotlin-runnable="true" kotlin-min-compiler-version="1.3" id="kotlin-tour-list-access"}
+{% endcapture %}
+{% include kotlin_quote.html body=kotlin-tour-list-access %}
 
-To get the first or last item in a list, use [`.first()`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/first.html)
-and [`.last()`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/last.html) functions respectively:
+リストの最初の要素を取り出す時は[`.first()`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/first.html)関数を、
+最後の要素を取り出す時には[`.last()`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/last.html)関数を使う事が出来ます:
 
-```kotlin
+{% capture kotlin-tour-list-first %}
 fun main() { 
 //sampleStart
     val readOnlyShapes = listOf("triangle", "square", "circle")
-    println("The first item in the list is: ${readOnlyShapes.first()}")
-    // The first item in the list is: triangle
+    println("このリストの最初の要素は: ${readOnlyShapes.first()}")
+    // このリストの最初の要素は: triangle
 //sampleEnd
 }
-```
-{kotlin-runnable="true" kotlin-min-compiler-version="1.3" id="kotlin-tour-list-first"}
+{% endcapture %}
+{% include kotlin_quote.html body=kotlin-tour-list-first %}
 
-> [`.first()`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/first.html) and [`.last()`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/last.html)
-> functions are examples of **extension** functions. To call an extension function on an object, write the function name 
-> after the object appended with a period `.` 
-> 
-> For more information about extension functions, see [Extension functions](extensions.md#extension-functions).
-> For the purposes of this tour, you only need to know how to call them. 
+> [`.first()`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/first.html)関数と[`.last()`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/last.html)関数は、
+> **extension**関数と呼ばれる関数の例にもなっています。あるオブジェクトのextension関数を呼ぶには、オブジェクトの後ろに `.` をつけて、
+> その後に関数名をつなげれば呼べます。 
+> extension関数についてもっと知りたければ、[Extension関数](extensions.md#extension-functions)を参照ください。
+> ですがこのツアーを続けていくのに必要な事は、単にそれらをどう呼べばいいかだけです。
 > 
 {type="note"}
 

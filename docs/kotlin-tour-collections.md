@@ -94,29 +94,29 @@ fun main() {
 
 > [`.first()`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/first.html)関数と[`.last()`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/last.html)関数は、
 > **extension**関数と呼ばれる関数の例にもなっています。あるオブジェクトのextension関数を呼ぶには、オブジェクトの後ろに `.` をつけて、
-> その後に関数名をつなげれば呼べます。 
+> その後に関数名をつなげれば呼ぶ事が出来ます。 
 > extension関数についてもっと知りたければ、[Extension関数](extensions.md#extension-functions)を参照ください。
-> ですがこのツアーを続けていくのに必要な事は、単にそれらをどう呼べばいいかだけです。
+> ですがこのツアーを続けていくのに必要な事は、単にそれらをどう呼べば良いかだけです。
 > 
-{type="note"}
+{: .note}
 
-To get the number of items in a list, use the [`.count()`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/count.html)
-function:
+リストの中に要素がいくつ入っているかを知るには、[`.count()`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/count.html)
+関数を使います:
 
-```kotlin
+{% capture kotlin-tour-list-count %}
 fun main() { 
 //sampleStart
     val readOnlyShapes = listOf("triangle", "square", "circle")
-    println("This list has ${readOnlyShapes.count()} items")
-    // This list has 3 items
+    println("このリストには ${readOnlyShapes.count()}個の要素が入っています。")
+    // このリストには 3個の要素が入っています。
 //sampleEnd
 }
-```
-{kotlin-runnable="true" kotlin-min-compiler-version="1.3" id="kotlin-tour-list-count"}
+{% endcapture %}
+{% include kotlin_quote.html body=kotlin-tour-list-count %}
 
-To check that an item is in a list, use the [`in` operator](operator-overloading.md#in-operator):
+ある要素がリストの中にあるかどうかを調べるには、[`in` 演算子](operator-overloading.md#in-operator)を使います:
 
-```kotlin
+{% capture kotlin-tour-list-in %}
 fun main() {
 //sampleStart
     val readOnlyShapes = listOf("triangle", "square", "circle")
@@ -124,89 +124,88 @@ fun main() {
     // true
 //sampleEnd
 }
-```
-{kotlin-runnable="true" kotlin-min-compiler-version="1.3" id="kotlin-tour-list-in"}
+{% endcapture %}
+{% include kotlin_quote.html body=kotlin-tour-list-in %}
 
-To add or remove items from a mutable list, use [`.add()`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-mutable-list/add.html)
-and [`.remove()`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/remove.html) functions respectively:
+mutableなリストに要素を追加するには[`.add()`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-mutable-list/add.html)関数を、
+mutableなリストから要素を削除するには[`.remove()`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/remove.html)関数を使います:
 
-```kotlin
+{% capture kotlin-tour-list-add-remove %}
 fun main() { 
 //sampleStart
     val shapes: MutableList<String> = mutableListOf("triangle", "square", "circle")
-    // Add "pentagon" to the list
+    // リストに"pentagon"を追加（訳注：ペンタゴンは五角形）
     shapes.add("pentagon") 
     println(shapes)  
     // [triangle, square, circle, pentagon]
 
-    // Remove the first "pentagon" from the list
+    // 最初に見つかった"pentagon"をリストから削除
     shapes.remove("pentagon") 
     println(shapes)  
     // [triangle, square, circle]
 //sampleEnd
 }
-```
-{kotlin-runnable="true" kotlin-min-compiler-version="1.3" id="kotlin-tour-list-add-remove"}
+{% endcapture %}
+{% include kotlin_quote.html body=kotlin-tour-list-add-remove %}
 
-## Set
+## Set（集合）
 
-Whereas lists are ordered and allow duplicate items, sets are **unordered** and only store **unique** items.
+リストが順番があり重複する要素も許すのに対し、セット（Set）は**順序なし（unordered）**なコレクションで、**一意（unique）**な要素だけを格納出来ます。
 
-To create a read-only set ([`Set`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-set/)), use the 
-[`setOf()`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/set-of.html) function.
+読み取り専用のセットを作るには、([`Set`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-set/))、
+[`setOf()`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/set-of.html)関数を使います。
 
-To create a mutable set ([`MutableSet`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-mutable-set/)),
-use the [`mutableSetOf()`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/mutable-set-of.html) function.
+mutableなセットを作るには、([`MutableSet`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-mutable-set/))、
+[`mutableSetOf()`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/mutable-set-of.html)関数を使います。
 
-When creating sets, Kotlin can infer the type of items stored. To declare the type explicitly, add the type
-within angled brackets `<>` after the set declaration:
+セットを作る時には、Kotlinは格納される要素の型を推論します。
+型を明示的に宣言したい時は、セットの宣言の後に角括弧`<>`をつけて、その中に型を書きます。
 
-```kotlin
+{% capture kotlin-tour-sets-declaration %}
 fun main() {
 //sampleStart
-    // Read-only set
+    // 読み取り専用のセット
     val readOnlyFruit = setOf("apple", "banana", "cherry", "cherry")
-    // Mutable set with explicit type declaration
+    // mutableなセットを明示的な型指定ありで作るケース
     val fruit: MutableSet<String> = mutableSetOf("apple", "banana", "cherry", "cherry")
     
     println(readOnlyFruit)
     // [apple, banana, cherry]
 //sampleEnd
 }
-```
-{kotlin-runnable="true" kotlin-min-compiler-version="1.3" id="kotlin-tour-sets-declaration"}
+{% endcapture %}
+{% include kotlin_quote.html body=kotlin-tour-sets-declaration %}
 
-You can see in the previous example that because sets only contain unique elements, the duplicate `"cherry"` item is dropped.
+この例で、セットはユニークな要素だけを保持する事から、重複しているはずの`"cherry"`の重複が除去されています。
 
-> To prevent unwanted modifications, obtain read-only views of mutable sets by casting them to `Set`:
+> 意図せぬ変更を防ぐために、mutableなセットから読み取り専用のビューをセットにキャストする事で作る事が出来ます:
 > ```kotlin
 >     val fruit: MutableSet<String> = mutableSetOf("apple", "banana", "cherry", "cherry")
 >     val fruitLocked: Set<String> = fruit
 > ```
 >
-{type="tip"}
+{: .tip}
 
-> As sets are **unordered**, you can't access an item at a particular index.
+> セットは**順序なし（unordered）**のコレクションなので、特定のインデックスの要素にアクセスする方法はありません。
 > 
-{type="note"}
+{: .note}
 
-To get the number of items in a set, use the [`.count()`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/count.html)
-function:
+セットに含まれる要素の数を得るためには、[`.count()`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/count.html)関数が使えます:
 
-```kotlin
+{% capture kotlin-tour-set-count %}
 fun main() { 
 //sampleStart
     val readOnlyFruit = setOf("apple", "banana", "cherry", "cherry")
-    println("This set has ${readOnlyFruit.count()} items")
-    // This set has 3 items
+    println("このセットには ${readOnlyFruit.count()}個の要素が含まれています")
+    // このセットには 3個の要素が含まれています
 //sampleEnd
 }
-```
-{kotlin-runnable="true" kotlin-min-compiler-version="1.3" id="kotlin-tour-set-count"}
+{% endcapture %}
+{% include kotlin_quote.html body=kotlin-tour-set-count %}
 
-To check that an item is in a set, use the [`in` operator](operator-overloading.md#in-operator):
+ある要素がセットの中にあるかどうかは、[`in` 演算子](operator-overloading.md#in-operator)で知る事が出来ます:
 
-```kotlin
+{% capture kotlin-tour-set-in %}
 fun main() {
 //sampleStart
     val readOnlyFruit = setOf("apple", "banana", "cherry", "cherry")
@@ -214,25 +213,25 @@ fun main() {
     // true
 //sampleEnd
 }
-```
-{kotlin-runnable="true" kotlin-min-compiler-version="1.3" id="kotlin-tour-set-in"}
+{% endcapture %}
+{% include kotlin_quote.html body=kotlin-tour-set-in %}
 
-To add or remove items from a mutable set, use [`.add()`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-mutable-list/add.html)
-and [`.remove()`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/remove.html) functions respectively:
+mutableなセットに要素を追加するには[`.add()`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-mutable-list/add.html)関数を、
+要素を削除するには[`.remove()`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/remove.html)関数を使います:
 
-```kotlin
+{% capture kotlin-tour-set-add-remove %}
 fun main() { 
 //sampleStart
     val fruit: MutableSet<String> = mutableSetOf("apple", "banana", "cherry", "cherry")
-    fruit.add("dragonfruit")    // Add "dragonfruit" to the set
+    fruit.add("dragonfruit")    // "dragonfruit"をセットに追加
     println(fruit)              // [apple, banana, cherry, dragonfruit]
     
-    fruit.remove("dragonfruit") // Remove "dragonfruit" from the set
+    fruit.remove("dragonfruit") // "dragonfruit"をセットから削除
     println(fruit)              // [apple, banana, cherry]
 //sampleEnd
 }
-```
-{kotlin-runnable="true" kotlin-min-compiler-version="1.3" id="kotlin-tour-set-add-remove"}
+{% endcapture %}
+{% include kotlin_quote.html body=kotlin-tour-set-add-remove %}
 
 ## Map
 

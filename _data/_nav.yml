@@ -4,100 +4,100 @@
 reference:
   - title: Kotlinツアー
     items:
-       - url: /docs/kotlin-tour-welcome.md
+       - url: /docs/kotlin-tour-welcome.html
          title: Kotlinツアーへようこそ！
-       - url: /docs/kotlin-tour-hello-world.md
+       - url: /docs/kotlin-tour-hello-world.html
          title: Hello World
-       - url: /docs/kotlin-tour-basic-types.md
+       - url: /docs/kotlin-tour-basic-types.html
          title: 基本型（ツアー）
-       - url: /docs/kotlin-tour-collections.md
+       - url: /docs/kotlin-tour-collections.html
          title: コレクション（ツアー）
   - title: 入門
     description: Get familiar with the basics of Kotlin including operations, coding conventions and idioms.
     items:
-      - url: /docs/basic-syntax.md
+      - url: /docs/basic-syntax.html
         title: 基本的な構文
-      - url: /docs/idioms.md
+      - url: /docs/idioms.html
         title: イディオム
-      - url: /docs/coding-conventions.md
+      - url: /docs/coding-conventions.html
         title: コーディング規約
 
   - title: 基本
     description: The Basics
     items:
-      - url: /docs/basic-types.md
+      - url: /docs/basic-types.html
         title: 基本の型
-      - url: /docs/packages.md
+      - url: /docs/packages.html
         title: パッケージ
-      - url: /docs/control-flow.md
+      - url: /docs/control-flow.html
         title: 制御フロー
-      - url: /docs/returns.md
+      - url: /docs/returns.html
         title: returnとジャンプ
 
   - title: クラスとオブジェクト
     description: All about objects
     items:
-      - url: /docs/classes.md
+      - url: /docs/classes.html
         title: クラスと継承
-      - url: /docs/properties.md
+      - url: /docs/properties.html
         title: プロパティとフィールド
-      - url: /docs/interfaces.md
+      - url: /docs/interfaces.html
         title: 継承
-      - url: /docs/visibility-modifiers.md
+      - url: /docs/visibility-modifiers.html
         title: 可視性修飾子
-      - url: /docs/extensions.md
+      - url: /docs/extensions.html
         title: 拡張
-      - url: /docs/data-classes.md
+      - url: /docs/data-classes.html
         title: データクラス
-      - url: /docs/generics.md
+      - url: /docs/generics.html
         title: ジェネリクス
-      - url: /docs/nested-classes.md
+      - url: /docs/nested-classes.html
         title: ネストされたクラス
-      - url: /docs/enum-classes.md
+      - url: /docs/enum-classes.html
         title: 列挙型クラス
-      - url: /docs/object-declarations.md
+      - url: /docs/object-declarations.html
         title: オブジェクト
-      - url: /docs/delegation.md
+      - url: /docs/delegation.html
         title: 委譲
-      - url: /docs/delegated-properties.md
+      - url: /docs/delegated-properties.html
         title: 委譲プロパティ
 
   - title: 関数とラムダ
     description: All about functions
     items:
-      - url: /docs/functions.md
+      - url: /docs/functions.html
         title: 関数
-      - url: /docs/lambdas.md
+      - url: /docs/lambdas.html
         title: ラムダ
-      - url: /docs/inline-functions.md
+      - url: /docs/inline-functions.html
         title: インライン関数
 
   - title: Other
     description: Various bits and bobs
     items:
-      - url: /docs/multi-declarations.md
+      - url: /docs/multi-declarations.html
         title: Destructuring Declarations
-      - url: /docs/collections.md
+      - url: /docs/collections.html
         title: Collections
-      - url: /docs/ranges.md
+      - url: /docs/ranges.html
         title: Ranges
-      - url: /docs/typecasts.md
+      - url: /docs/typecasts.html
         title: Type Checks and Casts
-      - url: /docs/this-expressions.md
+      - url: /docs/this-expressions.html
         title: This expressions
-      - url: /docs/equality.md
+      - url: /docs/equality.html
         title: Equality
-      - url: /docs/operator-overloading.md
+      - url: /docs/operator-overloading.html
         title: Operator overloading
-      - url: /docs/null-safety.md
+      - url: /docs/null-safety.html
         title: Null Safety
-      - url: /docs/exceptions.md
+      - url: /docs/exceptions.html
         title: Exceptions
-      - url: /docs/annotations.md
+      - url: /docs/annotations.html
         title: Annotations
-      - url: /docs/reflection.md
+      - url: /docs/reflection.html
         title: Reflection
-      - url: /docs/type-safe-builders.md
+      - url: /docs/type-safe-builders.html
         title: Type-Safe Builders
 
 
@@ -105,51 +105,51 @@ reference:
   - title: Reference
     description: API and Grammar
     items:
-      - url: /api/latest/jvm/stdlib/index.md
+      - url: /api/latest/jvm/stdlib/index.html
         title: API Reference
-      - url: /docs/grammar.md
+      - url: /docs/grammar.html
         title: Grammar
 
 
   - title: Java Interop
     description: What you need to know about interoperability with Java.
     items:
-      - url: /docs/java-interop.md
+      - url: /docs/java-interop.html
         title: Calling Java from Kotlin
-      - url: /docs/java-to-kotlin-interop.md
+      - url: /docs/java-to-kotlin-interop.html
         title: Calling Kotlin from Java
 
   - title: JavaScript
     description: Using Kotlin with JavaScript
     items:
-     - url: /docs/dynamic-type.md
+     - url: /docs/dynamic-type.html
        title: Dynamic Type
-     - url: /docs/js-interop.md
+     - url: /docs/js-interop.html
        title: JavaScript Interoperability
-     - url: /docs/js-reflection.md
+     - url: /docs/js-reflection.html
        title: JavaScript Reflection
 
   - title: Tools
     description:
     items:
-#      - /docs/kotlin-build-tools.md: Kotlin Build Tools
-      - url: /docs/kotlin-doc.md
+#      - /docs/kotlin-build-tools.html: Kotlin Build Tools
+      - url: /docs/kotlin-doc.html
         title: Documenting Kotlin Code
-      - url: /docs/using-maven.md
+      - url: /docs/using-maven.html
         title: Using Maven
-      - url: /docs/using-ant.md
+      - url: /docs/using-ant.html
         title: Using Ant
-      - url: /docs/using-gradle.md
+      - url: /docs/using-gradle.html
         title: Using Gradle
-      - url: /docs/kotlin-osgi.md
+      - url: /docs/kotlin-osgi.html
         title: Kotlin and OSGi
 
   - title: FAQ
     description: Every question you could possibly think of, might be answered.
     items:
-      - url: /docs/faq.md
+      - url: /docs/faq.html
         title: FAQ
-      - url: /docs/comparison-to-java.md
+      - url: /docs/comparison-to-java.html
         title: Comparison to Java
-      - url: /docs/comparison-to-scala.md
+      - url: /docs/comparison-to-scala.html
         title: Comparison to Scala

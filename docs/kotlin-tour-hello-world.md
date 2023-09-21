@@ -69,15 +69,18 @@ fun main() {
 
 ## 文字列テンプレート
 
-It's useful to know how to print the contents of variables to standard output. You can do this with **string templates**. 
-You can use template expressions to access data stored in variables and other objects, and convert them into strings.
-A string value is a sequence of characters in double quotes `"`. Template expressions always start with a dollar sign `$`.
+最初の段階で変数の中身を標準出力にプリントする方法を知っておくと便利です。
+この目的のためには、**文字列テンプレート（string templates）** という機能が使えます。
+テンプレート式を使って変数に格納されたデータややその他のオブジェクトにアクセスし、それを文字列に変換する事が出来ます。
+文字列の値は文字の列をダブルクオート、つまり`"`でくくったものです。
+テンプレート式はいつもドル記号、つまり`$`で始まります。
 
-To evaluate a piece of code in a template expression, place the code within curly braces `{}` after the dollar sign `$`.
+コード片をテンプレート式で実行したい場合は、ドル記号`$`の後ろに中括弧、つまり`{}`を置き、
+この中括弧の中に実行したいコード片を置きます。
 
-For example:
+例をあげましょう。:
 
-```kotlin
+{% capture kotlin-tour-string-templates %}
 fun main() { 
 //sampleStart
     val customers = 10
@@ -88,24 +91,26 @@ fun main() {
     // There are 11 customers
 //sampleEnd
 }
-```
-{kotlin-runnable="true" kotlin-min-compiler-version="1.3" id="kotlin-tour-string-templates"}
+{% endcapture %}
+{% include kotlin_quote.html body=kotlin-tour-string-templates %}
 
-For more information, see [String templates](strings.md).
+より詳しくは、[文字列テンプレート](strings.md)を参照ください。（未翻訳）
 
-You will notice that there aren't any types declared for variables. Kotlin has inferred the type itself: `Int`. This tour
-explains the different Kotlin basic types and how to declare them in the [next chapter](kotlin-tour-basic-types.md).
+変数の定義に明示的な型の表記が無い事に気づいたかもしれません。
+Kotlinは型を推論します：この場合は`Int`と。
+このツアーではKotlinの様々な基本型を説明していきます。
+また、それをどう宣言するかは[次の章](kotlin-tour-basic-types.md)で扱います。
 
 ## 練習問題
 
-Complete the code to make the program print `"Mary is 20 years old"` to standard output:
+以下のコードを完成させて、`"Mary is 20 years old"`と標準出力にプリントせよ：
 
 {% capture kotlin-tour-hello-world-exercise %}
 
 fun main() {
     val name = "Mary"
     val age = 20
-    // Write your code here
+    // ここにコードを書いてね
 }
 {% endcapture %}
 {% include kotlin_quote.html body=kotlin-tour-hello-world-exercise %}
@@ -121,6 +126,6 @@ fun main() {
 {% endcapture %}
 {% include collapse_quote.html body=kotlin-tour-hello-world-solution title="解答例" %}
 
-## Next step
+## 次回
 
-[Basic types](kotlin-tour-basic-types.md)
+[基本型](kotlin-tour-basic-types.md)

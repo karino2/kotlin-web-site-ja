@@ -19,9 +19,9 @@ Kotlinはアイテムをグルーピングするのに以下のコレクショ�
 
 | **コレクションの種類** | **説明**                                                         |
 |---------------------|-------------------------------------------------------------------------|
-| Lists               | 順番のある要素のコレクション                                            |
-| Sets                | ユニーク（一意）で順場の無い要素のコレクション                                   |
-| Maps                | キーと値のペアのSets。キーはユニークで、各キーはただ一つの値に関連づけされている  |
+| リスト               | 順番のある要素のコレクション                                            |
+| セット（集合）         | ユニーク（一意）で順番の無い要素のコレクション                                   |
+| マップ               | キーと値のペアのセットのようなもの。キーはユニークで、各キーはただ一つの値に関連づけされている  |
 
 これらの各コレクションに、mutableと読み取り専用（read only）の二種類があります。
 
@@ -235,106 +235,104 @@ fun main() {
 
 ## Map
 
-Maps store items as key-value pairs. You access the value by referencing the key. You can imagine a map like a food menu.
-You can find the price (value), by finding the food (key) you want to eat. Maps are useful if you want to look up a value
-without using a numbered index, like in a list.
+マップはキーと値のペアとして要素を保持するコレクションです。キーを指定する事で対応する値にアクセスする事が出来ます。
+マップというのはレストランなどのメニューのようなものと考えると近いかもしれません。
+食べたい料理で探すと、対応する価格を知る事が出来ます。
+マップは数字のインデックスでは無い何かで値を探したい、という時に便利です。（数字のインデックスならListで良いので）
 
-> * Every key in a map must be unique so that Kotlin can understand which value you want to get. 
-> * You can have duplicate values in a map.
+> * マップのそれぞれのキーはユニークでなくてはいけません。キーがユニークなのでKotlinはあなたが指定したキーでどの値を取り出そうとしているかが判断出来ます。
+> * ですが値は重複があっても問題ありません。
 >
-{type="note"}
+{: .note}
 
-To create a read-only map ([`Map`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-map/)), use the 
-[`mapOf()`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/map-of.html) function.
+読み取り専用のマップ([`Map`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-map/))を作るには、 
+[`mapOf()`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/map-of.html)関数を使えば良いです.
 
-To create a mutable map ([`MutableMap`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-mutable-map/)),
-use the [`mutableMapOf()`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/mutable-map-of.html) function.
+mutableなマップ([`MutableMap`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-mutable-map/))を作りたければ、
+[`mutableMapOf()`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/mutable-map-of.html)関数を使いましょう。
 
-When creating maps, Kotlin can infer the type of items stored. To declare the type explicitly, add the types
-of the keys and values within angled brackets `<>` after the map declaration. For example: `MutableMap<String, Int>`.
-The keys have type `String` and the values have type `Int`.
+マップを作る時、Kotlinは格納される要素の型を推測してくれる。
+もしキーと値の型を指定したいなら、マップの宣言の後に角括弧`<>`を続けて、この角括弧の中にキーと値の型を掛けば良い。
+例えば、`MutableMap<String, Int>`のような感じ。この場合キーは`String`型で値は`Int`型となる。
 
-The easiest way to create maps is to use [`to`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/to.html) between each 
-key and its related value:
+マップをつくる　一番カンタンな方法は、
+キーと値の間に[`to`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/to.html)を置く、という手法になる：
 
-```kotlin
+{% capture kotlin-tour-maps-declaration %}
 fun main() {
 //sampleStart
-    // Read-only map
+    // 読み取り専用のマップ
     val readOnlyJuiceMenu = mapOf("apple" to 100, "kiwi" to 190, "orange" to 100)
     println(readOnlyJuiceMenu)
     // {apple=100, kiwi=190, orange=100}
 
-    // Mutable map with explicit type declaration
+    // mutableなマップに明示的な型宣言をつけるケース
     val juiceMenu: MutableMap<String, Int> = mutableMapOf("apple" to 100, "kiwi" to 190, "orange" to 100)
     println(juiceMenu)
     // {apple=100, kiwi=190, orange=100}
 //sampleEnd
 }
-```
-{kotlin-runnable="true" kotlin-min-compiler-version="1.3" id="kotlin-tour-maps-declaration"}
+{% endcapture %}
+{% include kotlin_quote.html body=kotlin-tour-maps-declaration %}
 
-> To prevent unwanted modifications, obtain read-only views of mutable maps by casting them to `Map`:
+> 意図せぬ変更を防ぐため、mutableなマップから読み取り専用のビューを、`Map`へのキャストで取得出来る：
 > ```kotlin
 >     val juiceMenu: MutableMap<String, Int> = mutableMapOf("apple" to 100, "kiwi" to 190, "orange" to 100)
 >     val juiceMenuLocked: Map<String, Int> = juiceMenu
 > ```
 >
-{type="tip"}
+{: .tip}
 
-To access a value in a map, use the [indexed access operator](operator-overloading.md#indexed-access-operator) `[]` with
-its key:
+マップの値にアクセスするためには、[インデックスアクセス演算子](operator-overloading.md#indexed-access-operator) `[]` にキーを渡せば良い:
 
-```kotlin
+{% capture kotlin-tour-maps-access %}
 fun main() {
 //sampleStart
-    // Read-only map
+    // 読み取り専用のマップ
     val readOnlyJuiceMenu = mapOf("apple" to 100, "kiwi" to 190, "orange" to 100)
-    println("The value of apple juice is: ${readOnlyJuiceMenu["apple"]}")
-    // The value of apple juice is: 100
+    println("リンゴジュースの値段は: ${readOnlyJuiceMenu["apple"]}")
+    // リンゴジュースの値段は: 100
 //sampleEnd
 }
-```
-{kotlin-runnable="true" kotlin-min-compiler-version="1.3" id="kotlin-tour-map-access"}
+{% endcapture %}
+{% include kotlin_quote.html body=kotlin-tour-maps-access %}
 
-To get the number of items in a map, use the [`.count()`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/count.html)
-function:
+マップの中の要素数を得るためには、[`.count()`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/count.html)関数を使えば良い：
 
-```kotlin
+{% capture kotlin-tour-maps-count %}
 fun main() {
 //sampleStart
-    // Read-only map
+    // 読み取り専用のマップ
     val readOnlyJuiceMenu = mapOf("apple" to 100, "kiwi" to 190, "orange" to 100)
-    println("This map has ${readOnlyJuiceMenu.count()} key-value pairs")
-    // This map has 3 key-value pairs
+    println("このマップには${readOnlyJuiceMenu.count()}個のキーと値のペアがある")
+    // このマップには3個のキーと値のペアがある
 //sampleEnd
 }
-```
-{kotlin-runnable="true" kotlin-min-compiler-version="1.3" id="kotlin-tour-map-count"}
+{% endcapture %}
+{% include kotlin_quote.html body=kotlin-tour-maps-count %}
 
-To add or remove items from a mutable map, use [`.put()`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-mutable-map/put.html)
-and [`.remove()`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/remove.html) functions respectively:
+mutableなマップに要素を追加するには[`.put()`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-mutable-map/put.html)関数を使い、
+要素を削除するには[`.remove()`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/remove.html)関数を使う：
 
-```kotlin
+{% capture kotlin-tour-maps-put-remove %}
 fun main() {
 //sampleStart
     val juiceMenu: MutableMap<String, Int> = mutableMapOf("apple" to 100, "kiwi" to 190, "orange" to 100)
-    juiceMenu.put("coconut", 150) // Add key "coconut" with value 150 to the map
+    juiceMenu.put("coconut", 150) // キー"coconut"を値150でマップに追加
     println(juiceMenu)
     // {apple=100, kiwi=190, orange=100, coconut=150}
 
-    juiceMenu.remove("orange")    // Remove key "orange" from the map
+    juiceMenu.remove("orange")    // キー"orange"をマップから削除
     println(juiceMenu)
     // {apple=100, kiwi=190, coconut=150}
 //sampleEnd
 }
-```
-{kotlin-runnable="true" kotlin-min-compiler-version="1.3" id="kotlin-tour-map-put-remove"}
+{% endcapture %}
+{% include kotlin_quote.html body=kotlin-tour-maps-put-remove %}
 
-To check if a specific key is already included in a map, use the [`.containsKey()`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/contains-key.html)
-function:
+あるキーがマップに既に含まれているかを調べるには、[`.containsKey()`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/contains-key.html)関数を使う：
 
-```kotlin
+{% capture kotlin-tour-map-contains-keys %}
 fun main() {
 //sampleStart
     val readOnlyJuiceMenu = mapOf("apple" to 100, "kiwi" to 190, "orange" to 100)
@@ -342,13 +340,13 @@ fun main() {
     // true
 //sampleEnd
 }
-```
-{kotlin-runnable="true" kotlin-min-compiler-version="1.3" id="kotlin-tour-map-contains-keys"}
+{% endcapture %}
+{% include kotlin_quote.html body=kotlin-tour-map-contains-keys %}
 
-To obtain a collection of the keys or values of a map, use the [`keys`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-map/keys.html)
-and [`values`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-map/values.html) properties respectively:
+キーや値のコレクショを得るには、[`keys`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-map/keys.html)プロパティや
+[`values`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-map/values.html)プロパティを使います：
 
-```kotlin
+{% capture kotlin-tour-map-keys-values %}
 fun main() {
 //sampleStart
     val readOnlyJuiceMenu = mapOf("apple" to 100, "kiwi" to 190, "orange" to 100)
@@ -358,21 +356,21 @@ fun main() {
     // [100, 190, 100]
 //sampleEnd
 }
-```
-{kotlin-runnable="true" kotlin-min-compiler-version="1.3" id="kotlin-tour-map-keys-values"}
+{% endcapture %}
+{% include kotlin_quote.html body=kotlin-tour-map-keys-values %}
 
-> [`keys`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-map/keys.html) and [`values`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-map/values.html)
-> are examples of **properties** of an object. To access the property of an object, write the property name
-> after the object appended with a period `.`
+> [`keys`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-map/keys.html)と[`values`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-map/values.html)
+> は、オブジェクトの **プロパティ（properties）** というものの例となっています。オブジェクトのプロパティにアクセスするには、オブジェクトの後ろに`.`をつけて、
+> その後ろにプロパティ名を書けばよろしい。
 >
-> Properties are discussed in more detail in the [Classes](kotlin-tour-classes.md) chapter.
-> At this point in the tour, you only need to know how to access them.
+> プロパティについては、[クラス](kotlin-tour-classes.md)の章でより詳細に扱います。
+> ツアーのこの時点では、どうやってプロパティにアクセスするかだけ分かっていれば十分です。
 >
-{type="note"}
+{: .note}
 
-To check that a key or value is in a map, use the [`in` operator](operator-overloading.md#in-operator):
+キーや値がマップにあるかをチェックするには、[`in` 演算子](operator-overloading.md#in-operator)を使います：
 
-```kotlin
+{% capture kotlin-tour-map-in %}
 fun main() {
 //sampleStart
     val readOnlyJuiceMenu = mapOf("apple" to 100, "kiwi" to 190, "orange" to 100)
@@ -382,32 +380,32 @@ fun main() {
     // false
 //sampleEnd
 }
-```
-{kotlin-runnable="true" kotlin-min-compiler-version="1.3" id="kotlin-tour-map-in"}
+{% endcapture %}
+{% include kotlin_quote.html body=kotlin-tour-map-in %}
 
-For more information on what you can do with collections, see [Collections](collections-overview.md).
+コレクションについてより詳しい情報を知りたければ、[コレクション](collections-overview.md)を参照ください。
 
-Now that you know about basic types and how to manage collections, it's time to explore the [control flow](kotlin-tour-control-flow.md)
-that you can use in your programs.
+基本型を知り、コレクションをどう管理したらいいかを理解した今、あなたの書くプログラムの中で使える[制御フロー](kotlin-tour-control-flow.md)について学ぶ時が来ました。
 
-## Practice
+## 練習問題
 
-### Exercise 1 {initial-collapse-state="collapsed"}
+### 練習問題 1
 
-You have a list of “green” numbers and a list of “red” numbers. Complete the code to print how many numbers there
-are in total.
 
-|---|---|
-```kotlin
+“green”の数字のリストと、“red”の数字のリストがあったとします。
+全体でいくつの数字があるかをprintするコードを完成させなさい。
+
+
+{% capture kotlin-tour-collections-exercise-1 %}
 fun main() {
     val greenNumbers = listOf(1, 4, 23)
     val redNumbers = listOf(17, 2)
-    // Write your code here
+    // ここにコードを書いてね
 }
-```
-{validate="false" kotlin-runnable="true" kotlin-min-compiler-version="1.3" id="kotlin-tour-collections-exercise-1"}
+{% endcapture %}
+{% include kotlin_quote.html body=kotlin-tour-collections-exercise-1 %}
 
-|---|---|
+{% capture kotlin-tour-collections-solution-1 %}
 ```kotlin
 fun main() {
     val greenNumbers = listOf(1, 4, 23)
@@ -416,32 +414,33 @@ fun main() {
     println(totalCount)
 }
 ```
-{initial-collapse-state="collapsed" collapsed-title="Example solution" id="kotlin-tour-collections-solution-1"}
+{% endcapture %}
+{% include collapse_quote.html title="解答例" body=kotlin-tour-collections-solution-1 %}
 
-### Exercise 2 {initial-collapse-state="collapsed"}
+###  練習問題 2
 
-You have a set of protocols supported by your server. A user requests to use a particular protocol. Complete the program
-to check whether the requested protocol is supported or not (`isSupported` must be a Boolean value).
+あなたのサーバーがサポートするプロトコルの集合があるとします。
+ユーザーは特定のプロトコルを使う、とリクエストする事とします。
+リクエストされたプロトコルがサポートされているかどうかをチェックする以下のプログラムを完成させなさい（`isSupported`はBoolean型の値にならなくてはなりません）。
 
-|---|---|
-```kotlin
+
+{% capture kotlin-tour-collections-exercise-2 %}
 fun main() {
     val SUPPORTED = setOf("HTTP", "HTTPS", "FTP")
     val requested = "smtp"
-    val isSupported = // Write your code here 
+    val isSupported = // ここにコードを書いてね 
     println("Support for $requested: $isSupported")
 }
-```
-{validate="false" kotlin-runnable="true" kotlin-min-compiler-version="1.3" id="kotlin-tour-collections-exercise-2"}
+{% endcapture %}
+{% include kotlin_quote.html body=kotlin-tour-collections-exercise-2 %}
 
-<deflist collapsible="true" id="kotlin-tour-collections-exercise-2-hint">
-    <def title="Hint">
-        Make sure that you check the requested protocol in upper case. You can use the <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.text/uppercase.html"><code>.uppercase()</code></a>
-function to help you with this.
-    </def>
-</deflist>
+{% capture kotlin-tour-collections-exercise-2-hint %}
+リクエストされたプロトコルがいつも大文字になるようにしましょう。
+その為には[`.uppercase()`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.text/uppercase.html)関数が助けになるかもしれません。
+{% endcapture %}
+{% include collapse_quote.html title="ヒント" body=kotlin-tour-collections-exercise-2-hint %}
 
-|---|---|
+{% capture kotlin-tour-collections-solution-2 %}
 ```kotlin
 fun main() {
     val SUPPORTED = setOf("HTTP", "HTTPS", "FTP")
@@ -450,24 +449,24 @@ fun main() {
     println("Support for $requested: $isSupported")
 }
 ```
-{initial-collapse-state="collapsed" collapsed-title="Example solution" id="kotlin-tour-collections-solution-2"}
+{% endcapture %}
+{% include collapse_quote.html title="解答例" body=kotlin-tour-collections-solution-2 %}
 
-### Exercise 3 {initial-collapse-state="collapsed"}
+### 練習問題 3
 
-Define a map that relates integer numbers from 1 to 3 to their corresponding spelling. Use this map to spell the given 
-number.
+数字の1から3までと、それに対応した英語のスペリングを持つマップを作成せよ。
+このマップを用いて、与えられた数字をスペリングに変更するコードを書け。
 
-|---|---|
-```kotlin
+{% capture kotlin-tour-collections-exercise-3 %}
 fun main() {
-    val number2word = // Write your code here
+    val number2word = // ここにコードを書いてね
     val n = 2
-    println("$n is spelt as '${<Write your code here >}'")
+    println("$n is spelt as '${<ここにもコードを書いてね >}'")
 }
-```
-{validate="false" kotlin-runnable="true" kotlin-min-compiler-version="1.3" id="kotlin-tour-collections-exercise-3"}
+{% endcapture %}
+{% include kotlin_quote.html body=kotlin-tour-collections-exercise-3 %}
 
-|---|---|
+{% capture kotlin-tour-collections-solution-3 %}
 ```kotlin
 fun main() {
     val number2word = mapOf(1 to "one", 2 to "two", 3 to "three")
@@ -475,8 +474,9 @@ fun main() {
     println("$n is spelt as '${number2word[n]}'")
 }
 ```
-{initial-collapse-state="collapsed" collapsed-title="Example solution" id="kotlin-tour-collections-solution-3"}
+{% endcapture %}
+{% include collapse_quote.html title="解答例" body=kotlin-tour-collections-solution-3 %}
 
-## Next step
+## 次回
 
-[Control flow](kotlin-tour-control-flow.md)
+[制御フロー](kotlin-tour-control-flow.md)

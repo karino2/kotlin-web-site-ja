@@ -13,13 +13,13 @@ title: "Kotlinツアーへようこそ！"
 * **解答例** 答え合わせのために
 
 このツアーであなたは以下を学びます:
-* [変数](kotlin-tour-hello-world.html)
-* [Basic types](kotlin-tour-basic-types.html)
-* [Collections](kotlin-tour-collections.html)
-* [Control flow](kotlin-tour-control-flow.html)
-* [Functions](kotlin-tour-functions.html)
-* [Classes](kotlin-tour-classes.html)
-* [Null safety](kotlin-tour-null-safety.html)
+* [変数](kotlin-tour-hello-world.md)
+* [基本型](kotlin-tour-basic-types.md)
+* [コレクション](kotlin-tour-collections.md)
+* [Control flow](kotlin-tour-control-flow.md)
+* [Functions](kotlin-tour-functions.md)
+* [Classes](kotlin-tour-classes.md)
+* [Null safety](kotlin-tour-null-safety.md)
 
 先頭の章から順番に読んでいくのがオススメで、一番分かりやすいと思います。
 ですが、好きな章から読みたいというならそれも良いでしょう。

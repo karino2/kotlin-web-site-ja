@@ -4,100 +4,100 @@
 reference:
   - title: Kotlinツアー
     items:
-       - url: /docs/kotlin-tour-welcome.html
+       - url: /docs/kotlin-tour-welcome.md
          title: Kotlinツアーへようこそ！
-       - url: /docs/kotlin-tour-hello-world.html
+       - url: /docs/kotlin-tour-hello-world.md
          title: Hello World
-       - url: /docs/kotlin-tour-basic-types.html
+       - url: /docs/kotlin-tour-basic-types.md
          title: 基本型（ツアー）
-       - url: /docs/kotlin-tour-collections.html
+       - url: /docs/kotlin-tour-collections.md
          title: コレクション（ツアー）
   - title: 入門
     description: Get familiar with the basics of Kotlin including operations, coding conventions and idioms.
     items:
-      - url: /docs/basic-syntax.html
+      - url: /docs/basic-syntax.md
         title: 基本的な構文
-      - url: /docs/idioms.html
+      - url: /docs/idioms.md
         title: イディオム
-      - url: /docs/coding-conventions.html
+      - url: /docs/coding-conventions.md
         title: コーディング規約
 
   - title: 基本
     description: The Basics
     items:
-      - url: /docs/basic-types.html
+      - url: /docs/basic-types.md
         title: 基本の型
-      - url: /docs/packages.html
+      - url: /docs/packages.md
         title: パッケージ
-      - url: /docs/control-flow.html
+      - url: /docs/control-flow.md
         title: 制御フロー
-      - url: /docs/returns.html
+      - url: /docs/returns.md
         title: returnとジャンプ
 
   - title: クラスとオブジェクト
     description: All about objects
     items:
-      - url: /docs/classes.html
+      - url: /docs/classes.md
         title: クラスと継承
-      - url: /docs/properties.html
+      - url: /docs/properties.md
         title: プロパティとフィールド
-      - url: /docs/interfaces.html
+      - url: /docs/interfaces.md
         title: 継承
-      - url: /docs/visibility-modifiers.html
+      - url: /docs/visibility-modifiers.md
         title: 可視性修飾子
-      - url: /docs/extensions.html
+      - url: /docs/extensions.md
         title: 拡張
-      - url: /docs/data-classes.html
+      - url: /docs/data-classes.md
         title: データクラス
-      - url: /docs/generics.html
+      - url: /docs/generics.md
         title: ジェネリクス
-      - url: /docs/nested-classes.html
+      - url: /docs/nested-classes.md
         title: ネストされたクラス
-      - url: /docs/enum-classes.html
+      - url: /docs/enum-classes.md
         title: 列挙型クラス
-      - url: /docs/object-declarations.html
+      - url: /docs/object-declarations.md
         title: オブジェクト
-      - url: /docs/delegation.html
+      - url: /docs/delegation.md
         title: 委譲
-      - url: /docs/delegated-properties.html
+      - url: /docs/delegated-properties.md
         title: 委譲プロパティ
 
   - title: 関数とラムダ
     description: All about functions
     items:
-      - url: /docs/functions.html
+      - url: /docs/functions.md
         title: 関数
-      - url: /docs/lambdas.html
+      - url: /docs/lambdas.md
         title: ラムダ
-      - url: /docs/inline-functions.html
+      - url: /docs/inline-functions.md
         title: インライン関数
 
   - title: Other
     description: Various bits and bobs
     items:
-      - url: /docs/multi-declarations.html
+      - url: /docs/multi-declarations.md
         title: Destructuring Declarations
-      - url: /docs/collections.html
+      - url: /docs/collections.md
         title: Collections
-      - url: /docs/ranges.html
+      - url: /docs/ranges.md
         title: Ranges
-      - url: /docs/typecasts.html
+      - url: /docs/typecasts.md
         title: Type Checks and Casts
-      - url: /docs/this-expressions.html
+      - url: /docs/this-expressions.md
         title: This expressions
-      - url: /docs/equality.html
+      - url: /docs/equality.md
         title: Equality
-      - url: /docs/operator-overloading.html
+      - url: /docs/operator-overloading.md
         title: Operator overloading
-      - url: /docs/null-safety.html
+      - url: /docs/null-safety.md
         title: Null Safety
-      - url: /docs/exceptions.html
+      - url: /docs/exceptions.md
         title: Exceptions
-      - url: /docs/annotations.html
+      - url: /docs/annotations.md
         title: Annotations
-      - url: /docs/reflection.html
+      - url: /docs/reflection.md
         title: Reflection
-      - url: /docs/type-safe-builders.html
+      - url: /docs/type-safe-builders.md
         title: Type-Safe Builders
 
 
@@ -105,105 +105,51 @@ reference:
   - title: Reference
     description: API and Grammar
     items:
-      - url: /api/latest/jvm/stdlib/index.html
+      - url: /api/latest/jvm/stdlib/index.md
         title: API Reference
-      - url: /docs/grammar.html
+      - url: /docs/grammar.md
         title: Grammar
 
 
   - title: Java Interop
     description: What you need to know about interoperability with Java.
     items:
-      - url: /docs/java-interop.html
+      - url: /docs/java-interop.md
         title: Calling Java from Kotlin
-      - url: /docs/java-to-kotlin-interop.html
+      - url: /docs/java-to-kotlin-interop.md
         title: Calling Kotlin from Java
 
   - title: JavaScript
     description: Using Kotlin with JavaScript
     items:
-     - url: /docs/dynamic-type.html
+     - url: /docs/dynamic-type.md
        title: Dynamic Type
-     - url: /docs/js-interop.html
+     - url: /docs/js-interop.md
        title: JavaScript Interoperability
-     - url: /docs/js-reflection.html
+     - url: /docs/js-reflection.md
        title: JavaScript Reflection
 
   - title: Tools
     description:
     items:
-#      - /docs/kotlin-build-tools.html: Kotlin Build Tools
-      - url: /docs/kotlin-doc.html
+#      - /docs/kotlin-build-tools.md: Kotlin Build Tools
+      - url: /docs/kotlin-doc.md
         title: Documenting Kotlin Code
-      - url: /docs/using-maven.html
+      - url: /docs/using-maven.md
         title: Using Maven
-      - url: /docs/using-ant.html
+      - url: /docs/using-ant.md
         title: Using Ant
-      - url: /docs/using-gradle.html
+      - url: /docs/using-gradle.md
         title: Using Gradle
-      - url: /docs/kotlin-osgi.html
+      - url: /docs/kotlin-osgi.md
         title: Kotlin and OSGi
 
   - title: FAQ
     description: Every question you could possibly think of, might be answered.
     items:
-      - url: /docs/faq.html
+      - url: /docs/faq.md
         title: FAQ
-      - url: /docs/comparison-to-java.html
+      - url: /docs/comparison-to-java.md
         title: Comparison to Java
-      - url: /docs/comparison-to-scala.html
+      - url: /docs/comparison-to-scala.md
         title: Comparison to Scala
-
-
-
-# Tutorials navigation
-# ====================
-tutorials:
-  - title: Getting Started
-    items:
-      - url: /docs/tutorials/getting-started.html
-        title: Getting Started with IntelliJ IDEA
-      - url: /docs/tutorials/getting-started-eclipse.html
-        title: Getting Started with Eclipse
-      - url: /docs/tutorials/command-line.html
-        title: Working with the Command Line Compiler
-      - url: /docs/tutorials/build-tools.html
-        title: Working with Build Tools
-      - url: /docs/tutorials/koans.html
-        title: Koans
-  - title: Java Interop
-    items:
-      - url: /docs/tutorials/mixing-java-kotlin-intellij.html
-        title: Mixing Java and Kotlin in one project
-  - title: JavaScript
-    items:
-      - url: /docs/tutorials/javascript/kotlin-to-javascript/kotlin-to-javascript.html
-        title: Kotlin to JavaScript
-      - url: /docs/tutorials/javascript/getting-started-idea/getting-started-with-intellij-idea.html
-        title: Getting Started with Kotlin and JavaScript with IntelliJ IDEA
-      - url: /docs/tutorials/javascript/working-with-modules/working-with-modules.html
-        title: Working with Kotlin and JavaScript Modules
-      - url: /docs/tutorials/javascript/getting-started-command-line/command-line-library-js.html
-        title: Creating a Kotlin JavaScript library with the Command Line Compiler
-      - url: /docs/tutorials/javascript/getting-started-maven/getting-started-with-maven.html
-        title: Getting Started with Kotlin and JavaScript with Maven
-      - url: /docs/tutorials/javascript/getting-started-gradle/getting-started-with-gradle.html
-        title: Getting Started with Kotlin and JavaScript with Gradle
-
-  - title: Web Development
-    items:
-      - url: /docs/tutorials/httpservlets.html
-        title: Creating Web Applications with Http Servlets
-      - url: /docs/tutorials/spring-boot-restful.html
-        title: Creating a RESTful Web Service with Spring Boot
-
-  - title: Mobile
-    items:
-      - url: /docs/tutorials/kotlin-android.html
-        title: Getting Started With Android Development
-      - url: /docs/tutorials/android-plugin.html
-        title: Kotlin Android Extensions
-  - title: Tools
-    items:
-      - url: /docs/tutorials/kotlin-and-ci.html
-        title: Setting up Kotlin on TeamCity

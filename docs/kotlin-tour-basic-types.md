@@ -2,6 +2,7 @@
 layout: reference
 title: "基本型（ツアー）"
 ---
+# 基本型（ツアー）
 
 - ![ステップ1]({{ site.baseurl }}/assets/images/icons/icon-1-done.svg){:width="20" style="display:inline"} [Hello world](kotlin-tour-hello-world.md)
 - ![ステップ2]({{ site.baseurl }}/assets/images/icons/icon-2.svg){:width="20" style="display:inline"} **基本型**

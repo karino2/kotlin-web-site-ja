@@ -96,23 +96,21 @@ For more information, see [String templates](strings.md).
 You will notice that there aren't any types declared for variables. Kotlin has inferred the type itself: `Int`. This tour
 explains the different Kotlin basic types and how to declare them in the [next chapter](kotlin-tour-basic-types.md).
 
-## Practice
-
-### Exercise {initial-collapse-state="collapsed"}
+## 練習問題
 
 Complete the code to make the program print `"Mary is 20 years old"` to standard output:
 
-|---|---|
-```kotlin
+{% capture kotlin-tour-hello-world-exercise %}
+
 fun main() {
     val name = "Mary"
     val age = 20
     // Write your code here
 }
-```
-{validate="false" kotlin-runnable="true" kotlin-min-compiler-version="1.3" id="kotlin-tour-hello-world-exercise"}
+{% endcapture %}
+{% include kotlin_quote.html body=kotlin-tour-hello-world-exercise %}
 
-|---|---|
+{% capture kotlin-tour-hello-world-solution %}
 ```kotlin
 fun main() {
     val name = "Mary"
@@ -120,7 +118,8 @@ fun main() {
     println("$name is $age years old")
 }
 ```
-{initial-collapse-state="collapsed" collapsed-title="Example solution" id="kotlin-tour-hello-world-solution"}
+{% endcapture %}
+{% include collapse_quote.html body=kotlin-tour-hello-world-solution title="解答例" %}
 
 ## Next step
 

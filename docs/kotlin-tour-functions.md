@@ -12,9 +12,9 @@ title: "関数（ツアー）"
 - ![ステップ6]({{ site.baseurl }}/assets/images/icons/icon-6-todo.svg){:width="20" style="display:inline"} <a href="kotlin-tour-classes.html">Classes</a>
 - ![ステップ7]({{ site.baseurl }}/assets/images/icons/icon-7-todo.svg){:width="20" style="display:inline"} <a href="kotlin-tour-null-safety.html">Null safety</a>
 
-You can declare your own functions in Kotlin using the `fun` keyword.
+Kotlinでは、自分の関数を宣言するのは`fun`キーワードで行う事が出来ます。
 
-```kotlin
+{% capture kotlin-tour-function-demo %}
 fun hello() {
     return println("Hello, world!")
 }
@@ -23,28 +23,28 @@ fun main() {
     hello()
     // Hello, world!
 }
-```
-{kotlin-runnable="true" kotlin-min-compiler-version="1.3" id="kotlin-tour-function-demo"}
+{% endcapture %}
+{% include kotlin_quote.html body=kotlin-tour-function-demo %}
 
-In Kotlin:
-* function parameters are written within parentheses `()`.
-* each parameter must have a type, and multiple parameters must be separated by commas `,`.
-* the return type is written after the function's parentheses `()`, separated by a colon `:`.
-* the body of a function is written within curly braces `{}`.
-* the `return` keyword is used to exit or return something from a function.
+Kotlinでは:
+* 関数のパラメータはカッコ `()`　の中に書く
+* 各パラメータは型指定が必要で、複数のパラメータはカンマ `,` で区切る
+* 戻り値の型は関数のカッコ `()` の後ろに、コロン `:` で区切って置く
+* 関数のボディは中括弧 `{}` の中に書きます
+* 関数から出たり、何かを返したりするには `return` キーワードを使います
 
-> If a function doesn't return anything useful, the return type and `return` keyword can be omitted. Learn more about
-> this in [Functions without return](#functions-without-return).
+> もし関数が何も役に立つ何かを返す事が無ければ、 `return` キーワードは無しでも構いません。
+> より詳細には後述の[戻り値の無い関数](#戻り値の無い関数)を参照の事
 >
-{type="note"}
+{: .note}
 
-In the following example:
-* `x` and `y` are function parameters.
-* `x` and `y` have type `Int`.
-* the function's return type is `Int`.
-* the function returns a sum of `x` and `y` when called.
+以下の例で:
+* `x` と `y` は関数のパラメータ
+* `x` と `y` は型としては `Int`.
+* 関数の戻りの型は `Int`.
+* この関数が呼ばれると、`x` と `y`　を足したものを返す
 
-```kotlin
+{% capture kotlin-tour-simple-function %}
 fun sum(x: Int, y: Int): Int {
     return x + y
 }
@@ -53,92 +53,99 @@ fun main() {
     println(sum(1, 2))
     // 3
 }
-```
-{kotlin-runnable="true" kotlin-min-compiler-version="1.3" id="kotlin-tour-simple-function"}
+{% endcapture %}
+{% include kotlin_quote.html body=kotlin-tour-simple-function %}
 
-> We recommend in our [coding conventions](coding-conventions.md#function-names) that you name functions starting with 
-> a lowercase letter and use camel case with no underscores.
+> [コーディング規約](coding-conventions.md#function-names)では、関数の名前は小文字で始めて 
+> アンダースコア無しのcamel caseを推奨しています（訳注：小文字始まりのcamel caseとはkotlinTourSampleなどのように単語の区切りを大文字で表すコンベンション）
 > 
-{type="note"}
+{: .note}
 
-## Named arguments
 
-For concise code, when calling your function, you don't have to include parameter names. However, including parameter names
-does make your code easier to read. This is called using **named arguments**. If you do include parameter names, then 
-you can write the parameters in any order.
 
-> In the following example, [string templates](strings.md#string-templates) (`$`) are used to access
-> the parameter values, convert them to `String` type, and then concatenate them into a string for printing.
+## 名前付き引数
+
+簡潔にコードを書きたい場合は、関数を呼ぶ時にパラメータの名前を含める必要はありません。
+しかし、パラメータの名前を含める事でコードを読みやすく出来る場合もあります。
+これは **名前付き引数(named arguments)** と呼ばれる機能です。
+もしパラメータの名前をつける場合、パラメータの順番は自由に出来ます。
+
+> 以下の例では [文字列テンプレート](strings.md#文字列テンプレート) (`$`) を使って
+> パラメータの値にアクセスして、`String` 型に変換して、それを文字列の中に結合して出力しています。
 > 
-{type="tip"}
+{: .tip}
 
-```kotlin
+{% capture kotlin-tour-named-arguments-function %}
 fun printMessageWithPrefix(message: String, prefix: String = "Info") {
     println("[$prefix] $message")
 }
 
 fun main() {
-    // Uses named arguments with swapped parameter order
+    // 名前付き引数を使う事で引数の順番を入れ替えている
     printMessageWithPrefix(prefix = "Log", message = "Hello")
     // [Log] Hello
 }
-```
-{kotlin-runnable="true" kotlin-min-compiler-version="1.3" id="kotlin-tour-named-arguments-function"}
+{% endcapture %}
+{% include kotlin_quote.html body=kotlin-tour-named-arguments-function %}
 
-## Default parameter values
+## デフォルトのパラメータ値
 
-You can define default values for your function parameters. Any parameter with a default value can be omitted when
-calling your function. To declare a default value, use the assignment operator `=` after the type:
+関数のパラメータにデフォルトの値を定義する事が出来ます。
+デフォルトの値があるパラメータは関数を呼ぶ時に省く事が出来ます。
+デフォルトの値を宣言するには、アサイン演算子 `=` を型の後に書きます：
 
-```kotlin
+{% capture kotlin-tour-default-param-function %}
 fun printMessageWithPrefix(message: String, prefix: String = "Info") {
     println("[$prefix] $message")
 }
 
 fun main() {
-    // Function called with both parameters
+    // 両方のパラメータを指定して関数呼び出し
     printMessageWithPrefix("Hello", "Log") 
     // [Log] Hello
     
-    // Function called only with message parameter
+    // messageパラメータのみで関数呼び出し
     printMessageWithPrefix("Hello")        
     // [Info] Hello
     
+    // 名前付き引数で関数呼び出し
     printMessageWithPrefix(prefix = "Log", message = "Hello")
     // [Log] Hello
 }
-```
-{kotlin-runnable="true" kotlin-min-compiler-version="1.3" id="kotlin-tour-default-param-function"}
+{% endcapture %}
+{% include kotlin_quote.html body=kotlin-tour-default-param-function %}
 
-> You can skip specific parameters with default values, rather than omitting them all. However, after the 
-> first skipped parameter, you must name all subsequent parameters.
+> デフォルト値つきのパラメータ全部では無く、そのうちの一部だけを省く、という事も出来ます。
+> けれどその場合は、最初に省いたパラメータより後はすべて名前付き引数で指定しなくてはいけません。
 >
-{type="note"}
+{: .note}
 
-## Functions without return
+## 戻り値の無い関数
 
-If your function doesn't return a useful value then its return type is `Unit`. `Unit` is a type with only one value – 
-`Unit`. You don't have to declare that `Unit` is returned explicitly in your function body. This means that you don't 
-have to use the `return` keyword or declare a return type:
+関数がなにも有用な値を返さない場合は、その戻り値の型は `Unit` です。
+ `Unit` は、唯一の値 ( `Unit` ) だけを持つ型です。
+この場合は、明示的に宣言する必要もありませんし、関数本体で明示的に返す必要もありません。
+つまり、`return` キーワードを使う必要もありません：
 
-```kotlin
+{% capture kotlin-tour-unit-function %}
 fun printMessage(message: String) {
     println(message)
-    // `return Unit` or `return` is optional
+    // `return Unit` や `return` と書いても良いが書かなくても良い
 }
 
 fun main() {
     printMessage("Hello")
     // Hello
 }
-```
-{kotlin-runnable="true" kotlin-min-compiler-version="1.3" id="kotlin-tour-unit-function"}
+{% endcapture %}
+{% include kotlin_quote.html body=kotlin-tour-unit-function %}
 
-## Single-expression functions
+## 単一式関数
 
-To make your code more concise, you can use single-expression functions. For example, the `sum()` function can be shortened:
+コードをもっと簡潔にする為の仕組みとして、単一式関数（single-expression function）というものがあります。
+例えば　`sum()` 関数はもっと短く書く事が出来ます。
 
-```kotlin
+{% capture kotlin-tour-simple-function-before %}
 fun sum(x: Int, y: Int): Int {
     return x + y
 }
@@ -147,53 +154,52 @@ fun main() {
     println(sum(1, 2))
     // 3
 }
-```
-{kotlin-runnable="true" kotlin-min-compiler-version="1.3" id="kotlin-tour-simple-function-before"}
+{% endcapture %}
+{% include kotlin_quote.html body=kotlin-tour-simple-function-before %}
 
-You can remove the curly braces `{}` and declare the function body using the assignment operator `=`. And due to Kotlin's
-type inference, you can also omit the return type. The `sum()` function then becomes one line:
+中括弧を省いてアサイン演算子の`=`を使って関数の本体を宣言することが出来ます。
+さらにKotlinの型推論の機能により、戻りの型も省く事が出来ます。
+以上を用いる事で、 `sum()` 関数はたった1行で書けてしまいます：
 
-```kotlin
+{% capture kotlin-tour-simple-function-after %}
 fun sum(x: Int, y: Int) = x + y
 
 fun main() {
     println(sum(1, 2))
     // 3
 }
-```
-{kotlin-runnable="true" kotlin-min-compiler-version="1.3" id="kotlin-tour-simple-function-after"}
+{% endcapture %}
+{% include kotlin_quote.html body=kotlin-tour-simple-function-after %}
 
-> Omitting the return type is only possible when your function has no body (`{}`). Unless your function's return type
-> is `Unit`.
+> 関数の戻りの型が`Unit`なケースを除けば、戻りの型が省略出来るのは　関数の本体 (`{}`) が無いケースだけです。
 > 
-{type="note"}
+{: .note}
 
-## Functions practice
+## 関数の練習問題
 
-### Exercise 1 {initial-collapse-state="collapsed" id="functions-exercise-1"}
+### 練習問題 1
 
-Write a function called `circleArea` that takes the radius of a circle in integer format as a parameter and outputs the
-area of that circle.
+`circleArea` という関数を定義せよ（訳注：areaは面積という意味、つまり円の面積を求める関数）。
+円の半径をIntのフォーマットでradiusというパラメータで取り、円の面積を出力せよ。
 
-> In this exercise, you import a package so that you can access the value of pi via `PI`. For more information about
-> importing packages, see [Packages and imports](packages.md).
+> この課題では、円周率を`PI`でアクセス出来るようにパッケージをインポートしています。
+> パッケージのインポートについては、[パッケージとインポート](packages.md)を参照ください。
 >
-{type = "note"}
+{: .note}
 
-|---|---|
-```kotlin
+{% capture kotlin-tour-functions-exercise-1 %}
 import kotlin.math.PI
 
 fun circleArea() {
-    // Write your code here
+    // ここにコードを書いてね
 }
 fun main() {
     println(circleArea(2))
 }
-```
-{validate="false" kotlin-runnable="true" kotlin-min-compiler-version="1.3" id="kotlin-tour-functions-exercise-1"}
+{% endcapture %}
+{% include kotlin_quote.html body=kotlin-tour-functions-exercise-1 %}
 
-|---|---|
+{% capture kotlin-tour-functions-solution-1 %}
 ```kotlin
 import kotlin.math.PI
 
@@ -205,25 +211,25 @@ fun main() {
     println(circleArea(2)) // 12.566370614359172
 }
 ```
-{initial-collapse-state="collapsed" collapsed-title="Example solution" id="kotlin-tour-functions-solution-1"}
+{% endcapture %}
+{% include collapse_quote.html title="解答例" body=kotlin-tour-functions-solution-1 %}
 
-### Exercise 2 {initial-collapse-state="collapsed" id="functions-exercise-2"}
+### 練習問題 2
 
-Rewrite the `circleArea` function from the previous exercise as a single-expression function.
+前述の `circleArea` を単一式関数（single-expression function）で書き直せ。
 
-|---|---|
-```kotlin
+{% capture kotlin-tour-functions-exercise-2 %}
 import kotlin.math.PI
 
-// Write your code here
+// ここにコードを書いてね
 
 fun main() {
     println(circleArea(2))
 }
-```
-{validate="false" kotlin-runnable="true" kotlin-min-compiler-version="1.3" id="kotlin-tour-functions-exercise-2"}
+{% endcapture %}
+{% include kotlin_quote.html body=kotlin-tour-functions-exercise-2 %}
 
-|---|---|
+{% capture kotlin-tour-functions-solution-2 %}
 ```kotlin
 import kotlin.math.PI
 
@@ -233,16 +239,16 @@ fun main() {
     println(circleArea(2)) // 12.566370614359172
 }
 ```
-{initial-collapse-state="collapsed" collapsed-title="Example solution" id="kotlin-tour-functions-solution-2"}
+{% endcapture %}
+{% include collapse_quote.html title="解答例" body=kotlin-tour-functions-solution-2 %}
 
-### Exercise 3 {initial-collapse-state="collapsed" id="functions-exercise-3"}
+### 練習問題 3
 
-You have a function that translates a time interval given in hours, minutes, and seconds into seconds. In most cases,
-you need to pass only one or two function parameters while the rest are equal to 0. Improve the function and the code that
-calls it by using default parameter values and named arguments so that the code is easier to read.
+時、分、秒を渡されて、その秒換算での時間間隔を返す関数がある。
+多くのケースでは時、分、秒の幾つかだけを渡して結果がほしいだけで、全部を指定したい訳では無い（指定されない時は0とみなす）。
+この関数を名前付き引数とデフォルト値を使ってコードを読みやすく改善せよ。
 
-|---|---|
-```kotlin
+{% capture kotlin-tour-functions-exercise-3 %}
 fun intervalInSeconds(hours: Int, minutes: Int, seconds: Int) =
     ((hours * 60) + minutes) * 60 + seconds
 
@@ -253,10 +259,10 @@ fun main() {
     println(intervalInSeconds(0, 10, 0))
     println(intervalInSeconds(1, 0, 1))
 }
-```
-{validate="false" kotlin-runnable="true" kotlin-min-compiler-version="1.3" id="kotlin-tour-functions-exercise-3"}
+{% endcapture %}
+{% include kotlin_quote.html body=kotlin-tour-functions-exercise-3 %}
 
-|---|---|
+{% capture kotlin-tour-functions-solution-3 %}
 ```kotlin
 fun intervalInSeconds(hours: Int = 0, minutes: Int = 0, seconds: Int = 0) =
     ((hours * 60) + minutes) * 60 + seconds
@@ -268,10 +274,10 @@ fun main() {
     println(intervalInSeconds(minutes = 10))
     println(intervalInSeconds(hours = 1, seconds = 1))
 }
-```
-{initial-collapse-state="collapsed" collapsed-title="Example solution" id="kotlin-tour-functions-solution-3"}
+{% endcapture %}
+{% include collapse_quote.html title="解答例" body=kotlin-tour-functions-solution-3 %}
 
-## Lambda expressions
+## ラムダ式
 
 Kotlin allows you to write even more concise code for functions by using lambda expressions.
 

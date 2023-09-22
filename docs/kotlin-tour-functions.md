@@ -92,7 +92,7 @@ fun main() {
 
 関数のパラメータにデフォルトの値を定義する事が出来ます。
 デフォルトの値があるパラメータは関数を呼ぶ時に省く事が出来ます。
-デフォルトの値を宣言するには、アサイン演算子 `=` を型の後に書きます：
+デフォルトの値を宣言するには、代入演算子 `=` を型の後に書きます：
 
 {% capture kotlin-tour-default-param-function %}
 fun printMessageWithPrefix(message: String, prefix: String = "Info") {
@@ -157,7 +157,7 @@ fun main() {
 {% endcapture %}
 {% include kotlin_quote.html body=kotlin-tour-simple-function-before %}
 
-中括弧を省いてアサイン演算子の`=`を使って関数の本体を宣言することが出来ます。
+中括弧を省いて代入演算子の`=`を使って関数の本体を宣言することが出来ます。
 さらにKotlinの型推論の機能により、戻りの型も省く事が出来ます。
 以上を用いる事で、 `sum()` 関数はたった1行で書けてしまいます：
 
@@ -279,11 +279,11 @@ fun main() {
 
 ## ラムダ式
 
-Kotlin allows you to write even more concise code for functions by using lambda expressions.
+Kotlinはさらに簡潔に関数を書く方法を提供します。ラムダ式（lambda expression）です。
 
-For example, the following `uppercaseString()` function:
+例を挙げましょう。以下の `uppercaseString()` 関数：
 
-```kotlin
+{% capture kotlin-tour-lambda-function-before %}
 fun uppercaseString(string: String): String {
     return string.uppercase()
 }
@@ -291,64 +291,64 @@ fun main() {
     println(uppercaseString("hello"))
     // HELLO
 }
-```
-{kotlin-runnable="true" kotlin-min-compiler-version="1.3" id="kotlin-tour-lambda-function-before"}
+{% endcapture %}
+{% include kotlin_quote.html body=kotlin-tour-lambda-function-before %}
 
-Can also be written as a lambda expression:
+これはラムダ式を用いて、以下のようにも書けます：
 
-```kotlin
+{% capture kotlin-tour-lambda-function-after %}
 fun main() {
     println({ string: String -> string.uppercase() }("hello"))
     // HELLO
 }
-```
-{kotlin-runnable="true" kotlin-min-compiler-version="1.3" id="kotlin-tour-lambda-function-after"}
+{% endcapture %}
+{% include kotlin_quote.html body=kotlin-tour-lambda-function-after %}
 
-Lambda expressions can be hard to understand at first glance so let's break it down. Lambda expressions are written 
-within curly braces `{}`.
+ラムダ式は初めて見た時は理解が難しく感じるかもしれません。
+だから以下では細かく見てみましょう。
+ラムダ式はカッコ`{}`の中に書きます。
 
-Within the lambda expression, you write:
-* the parameters followed by an `->`.
-* the function body after the `->`.
+ラムダ式の中では、以下を書きます：
+* パラメータを書いて、その後に `->` をつけます
+* `->` の後に、関数の本体を置きます
 
-In the previous example:
-* `string` is a function parameter.
-* `string` has type `String`.
-* the function returns the result of the [`.uppercase()`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.text/uppercase.html)
-function called on `string`.
+前の例に当てはめると：
+* `string` が関数のパラメータです
+* `string` の型は `String` です
+* 関数は、`string` に対して [`.uppercase()`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.text/uppercase.html)を呼んだ結果を返します
 
-> If you declare a lambda without parameters, then there is no need to use `->`. For example:
+> もしパラメータの無いラムダを宣言する時は `->` 無しで構いません。例：
 > ```kotlin
 > { println("Log message") }
 > ```
 >
-{type="note"}
+{: .note}
 
-Lambda expressions can be used in a number of ways. You can:
-* [assign a lambda to a variable that you can then invoke later](#assign-to-variable)
-* [pass a lambda expression as a parameter to another function](#pass-to-another-function)
-* [return a lambda expression from a function](#return-from-a-function)
-* [invoke a lambda expression on its own](#invoke-separately)
+ラムダ式は幾つもの用途で使う事が出来ます。例えば以下のような事が出来ます：
+* [変数にラムダ式を代入して、後で呼ぶ事が出来ます](#変数に代入)
+* [他の関数へのパラメータとしてラムダ式を渡す](#他の関数に渡す)
+* [関数からラムダ式をreturnする](#関数から返す)
+* [ラムダ式を単体でそのまま呼び出す](#単独で呼び出す)
 
-### Assign to variable
+### 変数に代入
 
-To assign a lambda expression to a variable, use the assignment operator `=`:
+変数にラムダ式を代入するには、代入演算子 `=` を使います：
 
-```kotlin
+{% capture kotlin-tour-lambda-variable %}
 fun main() {
     val upperCaseString = { string: String -> string.uppercase() }
     println(upperCaseString("hello"))
     // HELLO
 }
-```
-{kotlin-runnable="true" kotlin-min-compiler-version="1.3" id="kotlin-tour-lambda-variable"}
+{% endcapture %}
+{% include kotlin_quote.html body=kotlin-tour-lambda-variable %}
 
-### Pass to another function
+### 他の関数にわたす
 
-A great example of when it is useful to pass a lambda expression to a function, is using the [`.filter()`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/filter.html)
-function on collections:
+ラムダ関数を他の関数に渡すケースの素晴らしい実例といえば、
+コレクションの [`.filter()`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/filter.html) 関数を使う時でしょう：
 
-```kotlin
+{% capture kotlin-tour-lambda-filter %}
 fun main() {
     //sampleStart
     val numbers = listOf(1, -2, 3, -4, 5, -6)
@@ -360,23 +360,23 @@ fun main() {
     // [-2, -4, -6]
     //sampleEnd
 }
-```
-{kotlin-runnable="true" kotlin-min-compiler-version="1.3" id="kotlin-tour-lambda-filter"}
+{% endcapture %}
+{% include kotlin_quote.html body=kotlin-tour-lambda-filter %}
 
-The `.filter()` function accepts a lambda expression as a predicate:
-* `{ x -> x > 0 }` takes each element of the list and returns only those that are positive.
-* `{ x -> x < 0 }` takes each element of the list and returns only those that are negative.
+`.filter()` 関数は述語としてラムダ式を引数に取ります：
+* `{ x -> x > 0 }` リストの各要素を取り出し、それらのうち正なものだけを返す。
+* `{ x -> x < 0 }` リストの各要素を取り出し、それらのうち負のものだけを返す。
 
-> If a lambda expression is the only function parameter, you can drop the function parentheses `()`.
-> This is an example of a [trailing lambda](#trailing-lambdas), which is discussed in more detail at the end of this
-> chapter.
+（訳注：述語は「trueかfalseを返す関数」くらいの意味）
+
+> もしラムダ式が唯一の関数のパラメータの場合、関数のカッコ `()` を省略出来ます。
+> これは [トレーリングラムダ（Trailing lambdas）](#トレーリングラムダ) の一種で、この章の最後にもっと詳しく説明します。
 >
-{type = "note"}
+{: .note}
 
-Another good example, is using the [`.map()`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/map.html) 
-function to transform items in a collection:
+もう一つの良い例としては、コレクションの中の要素を変換する [`.map()`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/map.html) 関数があります：
 
-```kotlin
+{% capture kotlin-tour-lambda-map %}
 fun main() {
     //sampleStart
     val numbers = listOf(1, -2, 3, -4, 5, -6)
@@ -388,63 +388,62 @@ fun main() {
     // [3, -6, 9, -12, 15, -18]
     //sampleEnd
 }
-```
-{kotlin-runnable="true" kotlin-min-compiler-version="1.3" id="kotlin-tour-lambda-map"}
+{% endcapture %}
+{% include kotlin_quote.html body=kotlin-tour-lambda-map %}
 
-The `.map()` function accepts a lambda expression as a predicate:
-* `{ x -> x * 2 }` takes each element of the list and returns that element multiplied by 2.
-* `{ x -> x * 3 }` takes each element of the list and returns that element multiplied by 3.
+`.map()` 関数はラムダ式を述語として受け取ります：
+* `{ x -> x * 2 }` リストの各要素を受け取り、それらに2を掛けたものを返す。
+* `{ x -> x * 3 }` リストの各要素を受け取り、それらに3を掛けたものを返す。
 
-### Function types
+### 関数の型
 
-Before you can return a lambda expression from a function, you first need to understand **function
-types**.
+ラムダ式を関数から返す話に進む前に、**関数の型（function type）** について知る必要があります。
 
-You have already learned about basic types but functions themselves also have a type. Kotlin's type inference 
-can infer a function's type from the parameter type. But there may be times when you need to explicitly
-specify the function type. The compiler needs the function type so that it knows what is and isn't 
-allowed for that function.
+ここまででも既に基本型については学んできましたが、関数も関数自体に型があります。
+Kotlinの型推論はパラメータを渡す時などにはそのパラメータから型を推論してくれるので型を明示的に書く必要はありません。
+ですが、時には関数の型を明示的に指定する必要がある場合もあります。
+コンパイラはその関数に、何を渡せて何は渡せないかなどを知る為にその関数の型を知る必要があります。
 
-The syntax for a function type has:
-* each parameter's type written within parentheses `()` and separated by commas `,`.
-* the return type written after `->`.
+関数の型のシンタックスは以下のようになります：
+* 各パラメータの型はカッコ `()` の中に書き、カンマ `,` で区切ります
+* 戻りの型は `->` の後に書きます
 
-For example: `(String) -> String` or `(Int, Int) -> Int`.
+例： `(String) -> String` や `(Int, Int) -> Int` など。
 
-This is what a lambda expression looks like if a function type for `upperCaseString()` is defined:
+`upperCaseString()`に型を指定すると以下のようになります：
 
-```kotlin
+{% capture kotlin-tour-lambda-function-type %}
 val upperCaseString: (String) -> String = { string -> string.uppercase() }
 
 fun main() {
     println(upperCaseString("hello"))
     // HELLO
 }
-```
-{kotlin-runnable="true" kotlin-min-compiler-version="1.3" id="kotlin-tour-lambda-function-type"}
+{% endcapture %}
+{% include kotlin_quote.html body=kotlin-tour-lambda-function-type %}
 
-If your lambda expression has no parameters then the parentheses `()` are left empty. For example: `() -> Unit`
+もしラムダ式にパラメータが無い場合は、カッコ `()` の中は空っぽにしておきます。例：`() -> Unit`
 
-> You must declare parameter and return types either in the lambda expression or as a function type. Otherwise, the
-> compiler won't be able to know what type your lambda expression is.
-> 
-> For example, the following won't work:
-> 
+> ラムダ式か関数の型のどちらかにはパラメータとreturnの型を指定する必要があります。
+> そうしないとコンパイラはラムダ式の型を知る事が出来ません。
+>
+> 例えば、以下のコードはコンパイル出来ません：
+>
 > `val upperCaseString = { str -> str.uppercase() }`
 >
-{type="note"}
+{: .note}
 
-### Return from a function
+### 関数から返す
 
-Lambda expressions can be returned from a function. So that the compiler understands what type the lambda
-expression returned is, you must declare a function type.
+ラムダ式は関数から返す事が出来ます。
+コンパイラが返すラムダ式の型が何かを知る為には、関数の型を宣言する必要があります。
 
-In the following example, the `toSeconds()` function has function type `(Int) -> Int` because it always returns a lambda
-expression that takes a parameter of type `Int` and returns an `Int` value.
+以下の例では、`toSeconds()`関数の戻りの型は関数の型、`(Int) -> Int`となります。
+何故なら、toSecondsはいつもラムダ関数で、引数として`Int`を取り`Int`の値を返すものを返すからです。
 
-This example uses a `when` expression to determine which lambda expression is returned when `toSeconds()` is called:
+この例では、`toSeconds()`が呼ばれた時にどのラムダ式を返すかを、`when`式を使って決定しています：
 
-```kotlin
+{% capture kotlin-tour-lambda-return-from-function %}
 fun toSeconds(time: String): (Int) -> Int = when (time) {
     "hour" -> { value -> value * 60 * 60 }
     "minute" -> { value -> value * 60 }
@@ -456,75 +455,80 @@ fun main() {
     val timesInMinutes = listOf(2, 10, 15, 1)
     val min2sec = toSeconds("minute")
     val totalTimeInSeconds = timesInMinutes.map(min2sec).sum()
-    println("Total time is $totalTimeInSeconds secs")
-    // Total time is 1680 secs
+    println("トータルの時間は $totalTimeInSeconds 秒")
+    // トータルの時間は 1680 秒
 }
-```
-{kotlin-runnable="true" kotlin-min-compiler-version="1.3" id="kotlin-tour-lambda-return-from-function"}
+{% endcapture %}
+{% include kotlin_quote.html body=kotlin-tour-lambda-return-from-function %}
 
-### Invoke separately
+### 単独で呼び出す
 
-Lambda expressions can be invoked on their own by adding parentheses `()` after the curly braces `{}` and including
-any parameters within the parentheses:
+ラムダ式はそれ単体で呼び出す事が出来ます。
+その為には中括弧 `{}` のあとにカッコ `()` をつけて、パラメータをカッコの中に並べます：
 
-```kotlin
+
+{% capture kotlin-tour-lambda-standalone %}
 fun main() {
     //sampleStart
     println({ string: String -> string.uppercase() }("hello"))
     // HELLO
     //sampleEnd
 }
-```
-{kotlin-runnable="true" kotlin-min-compiler-version="1.3" id="kotlin-tour-lambda-standalone"}
+{% endcapture %}
+{% include kotlin_quote.html body=kotlin-tour-lambda-standalone %}
 
-### Trailing lambdas
+### トレーリングラムダ
 
-As you have already seen, if a lambda expression is the only function parameter, you can drop the function parentheses `()`.
-If a lambda expression is passed as the last parameter of a function, then the expression can be written outside the
-function parentheses `()`. In both cases, this syntax is called a **trailing lambda**.
+// トレーリングラムダ（Trailing lambdas）
 
-For example, the [`.fold()`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.sequences/fold.html) function accepts an 
-initial value and an operation:
+既に見てきたように、ラムダ式が唯一の関数の引数のケースでは、関数呼び出しのカッコ `()` を省略する事が出来ます。
+また、もしラムダ式を関数の最後の引数に渡す場合は、そのラムダ式を関数のカッコ `()` の外に出す事が出来ます。
+どちらのケースも、このシンタックスを**トレーリングラムダ（trailing lambda）**といいます。
+（訳注：トレーリングはトレーラーとかと同じ単語で後ろに引きずってくるようなイメージ。良い訳が思いつかなかったのでカタカナでトレーリングラムダと呼ぶ事にします）
 
-```kotlin
+例えば、 [`.fold()`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.sequences/fold.html)関数は初期値と行う演算を引数に取ります：
+
+{% capture kotlin-tour-trailing-lambda %}
 fun main() {
     //sampleStart
-    // The initial value is zero. 
-    // The operation sums the initial value with every item in the list cumulatively.
+    // 初期値はゼロ。 
+    // 演算としては初期値を、各要素に対して累積的に和を取る。
     println(listOf(1, 2, 3).fold(0, { x, item -> x + item })) // 6
 
-    // Alternatively, in the form of a trailing lambda
+    // トレーリングラムダを使ってこうも書く事が出来る。
     println(listOf(1, 2, 3).fold(0) { x, item -> x + item })  // 6
     //sampleEnd
 }
-```
-{kotlin-runnable="true" kotlin-min-compiler-version="1.3" id="kotlin-tour-trailing-lambda"}
+{% endcapture %}
+{% include kotlin_quote.html body=kotlin-tour-trailing-lambda %}
 
-For more information on lambda expressions, see [Lambda expressions and anonymous functions](lambdas.md#lambda-expressions-and-anonymous-functions).
+ラムダ式についてのより詳細な情報は、[ラムダ式と無名関数](lambdas.md#ラムダ式と無名関数)を参照ください。
 
-The next step in our tour is to learn about [classes](kotlin-tour-classes.md) in Kotlin.
+我らのツアーの次なるステップは、Kotlinにおける[クラス](kotlin-tour-classes.md)を学ぶ、です。
 
-## Lambda expressions practice
+## ラムダ式の練習問題
 
-### Exercise 1 {initial-collapse-state="collapsed" id="lambdas-exercise-1"}
+### 練習問題 1
 
-You have a list of actions supported by a web service, a common prefix for all requests, and an ID of a particular resource.
-To request an action `title` over the resource with ID: 5, you need to create the following URL: `https://example.com/book-info/5/title`.
-Use a lambda expression to create a list of URLs from the list of actions.
+あなたのwebサービスとしてサポートされているアクションのリストがあります。
+また、全てのリクエスト共通のprefixと、
+特定のリソースを表すIDがあります。
+リソースIDが5のリソースに`title`というアクションをリクエストする為には、以下のURLを組み立てる必要があります：`https://example.com/book-info/5/title`。
+アクションのリストからURLのリストを、ラムダ式を使って作りなさい。
 
-|---|---|
-```kotlin
+
+{% capture kotlin-tour-lambda-exercise-1 %}
 fun main() {
     val actions = listOf("title", "year", "author")
     val prefix = "https://example.com/book-info"
     val id = 5
-    val urls = // Write your code here
+    val urls = // ここにコードを書いてね
         println(urls)
 }
-```
-{validate="false" kotlin-runnable="true" kotlin-min-compiler-version="1.3" id="kotlin-tour-lambdas-exercise-1"}
+{% endcapture %}
+{% include kotlin_quote.html body=kotlin-tour-lambda-exercise-1 %}
 
-|---|---|
+{% capture kotlin-tour-lambda-solution-1 %}
 ```kotlin
 fun main() {
     val actions = listOf("title", "year", "author")
@@ -534,26 +538,27 @@ fun main() {
     println(urls)
 }
 ```
-{initial-collapse-state="collapsed" collapsed-title="Example solution" id="kotlin-tour-lambdas-solution-1"}
+{% endcapture %}
+{% include collapse_quote.html title="解答例" body=kotlin-tour-lambda-solution-1 %}
 
-### Exercise 2 {initial-collapse-state="collapsed" id="lambdas-exercise-2"}
+### 練習問題 2
 
-Write a function that takes an `Int` value and an action (a function with type `() -> Unit`) which then repeats the 
-action the given number of times. Then use this function to print “Hello” 5 times.
+`Int`の値とアクション（`() -> Unit`型の関数）を引数にとり、
+その引数で指定された値の回数分だけアクションを繰り返す関数を書け。
+そしてこの関数を使って“Hello”と5回printlnせよ。
 
-|---|---|
-```kotlin
+{% capture kotlin-tour-lambda-exercise-2 %}
 fun repeatN(n: Int, action: () -> Unit) {
-    // Write your code here
+    // ここにコードを書いてね
 }
 
 fun main() {
-    // Write your code here
+    // ここにコードを書いてね
 }
-```
-{validate="false" kotlin-runnable="true" kotlin-min-compiler-version="1.3" id="kotlin-tour-lambdas-exercise-2"}
+{% endcapture %}
+{% include kotlin_quote.html body=kotlin-tour-lambda-exercise-2 %}
 
-|---|---|
+{% capture kotlin-tour-lambda-solution-2 %}
 ```kotlin
 fun repeatN(n: Int, action: () -> Unit) {
     for (i in 1..n) {
@@ -567,8 +572,9 @@ fun main() {
     }
 }
 ```
-{initial-collapse-state="collapsed" collapsed-title="Example solution" id="kotlin-tour-lambdas-solution-2"}
+{% endcapture %}
+{% include collapse_quote.html title="解答例" body=kotlin-tour-lambda-solution-2 %}
 
-## Next step
+## 次回
 
-[Classes](kotlin-tour-classes.md)
+[クラス](kotlin-tour-classes.md)

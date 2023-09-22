@@ -25,102 +25,102 @@ class Customer
 
 ## プロパティ
 
-Characteristics of a class's object can be declared in properties. You can declare properties for a class:
-* Within parentheses `()` after the class name.
+クラスに所属するオブジェクトの特性は、プロパティで宣言する事が出来ます。
+クラスのプロパティは以下のように作る事が出来ます：
+* クラス名のあとのカッコ `()` の中
 ```kotlin
 class Contact(val id: Int, var email: String)
 ```
-* Within the class body defined by curly braces `{}`.
+* 中括弧 `{}` の中のクラスの本体の中
 ```kotlin
 class Contact(val id: Int, var email: String) {
     val category: String = ""
 }
 ```
 
-We recommend that you declare properties as read-only (`val`) unless they need to be changed after an instance of the class
-is created.
+クラスのインスタンスを作った後に変更したい場合を除いて、プロパティは読み取り専用(`val`)にしておく事をオススメします。
 
-You can declare properties without `val` or `var` within parentheses but these properties are not accessible after an 
-instance has been created.
+カッコの中の`val`や`var`無しでもプロパティを定義する事は出来ますが、これらのプロパティはインスタンスを作った後はアクセス出来ません。
 
-> * The content contained within parentheses `()` is called the **class header**.
-> * You can use a [trailing comma](coding-conventions.md#trailing-commas) when declaring class properties.
+> * カッコ `()` の中に置くものは **クラスヘッダ（class header）** と呼ばれます。
+> * クラスのプロパティを宣言する時は、[トレーリングカンマ(trailing comma)](coding-conventions.md#トレーリングカンマ)を使う事が出来ます。
 >
-{type="note"}
+{: .note}
 
-Just like with function parameters, class properties can have default values:
+関数の引数と同様、クラスのプロパティもデフォルトの値を持つ事が出来ます：
 ```kotlin
 class Contact(val id: Int, var email: String = "example@gmail.com") {
     val category: String = "work"
 }
 ```
 
-## Create instance
+## インスタンスの作成
 
-To create an object from a class, you declare a class **instance** using a **constructor**.
+オブジェクトをクラスから作るには、**コンストラクタ（constructor）**を使って**インスタンス（instance）**を作らないといけません。
 
-By default, Kotlin automatically creates a constructor with the parameters declared in the class header.
+デフォルトでは、Kotlinはクラスヘッダに定義された内容のパラメータを持つコンストラクタを自動的に生成します。
 
-For example:
-```kotlin
+例を挙げましょう：
+{% capture kotlin-tour-class-create-instance %}
 class Contact(val id: Int, var email: String)
 
 fun main() {
     val contact = Contact(1, "mary@gmail.com")
 }
-```
-{kotlin-runnable="true" kotlin-min-compiler-version="1.3" id="kotlin-tour-class-create-instance"}
+{% endcapture %}
+{% include kotlin_quote.html body=kotlin-tour-class-create-instance %}
 
-In the example:
-* `Contact` is a class.
-* `contact` is an instance of the `Contact` class.
-* `id` and `email` are properties.
-* `id` and `email` are used with the default constructor to create `contact`.
+この例において:
+* `Contact` はクラス
+* `contact` は`Contact`クラスのインスタンス
+* `id` と `email` はプロパティ
+* `id` と `email` はデフォルトコンストラクタで`contact`を作るのにも使われている
 
-Kotlin classes can have many constructors, including ones that you define yourself. To learn more about how to declare 
-multiple constructors, see [Constructors](classes.md#constructors).
+Kotlinのクラスはたくさんのコンストラクタを持つ事が出来、あなたが自身で定義出来るものも含みます。
+どうやって複数のコンストラクタを宣言するのかを学びたければ、[コンストラクタ](classes.md#コンストラクタ)を参照してください。
 
-## Access properties
+## プロパティにアクセスする
 
-To access a property of an instance, write the name of the property after the instance name appended with a period `.`:
+インスタンスのプロパティにアクセスするには、インスタンスの名前の後にピリオド`.`をつけて、その後ろにプロパティの名前を書きます：
 
-```kotlin
+{% capture kotlin-tour-access-property %}
 class Contact(val id: Int, var email: String)
 
 fun main() {
     val contact = Contact(1, "mary@gmail.com")
     
-    // Prints the value of the property: email
+    // プロパティの値を出力: email
     println(contact.email)           
     // mary@gmail.com
 
-    // Updates the value of the property: email
+    // プロパティの値を更新: email
     contact.email = "jane@gmail.com"
     
-    // Prints the new value of the property: email
+    // 新しくなったプロパティの値を出力: email
     println(contact.email)           
     // jane@gmail.com
 }
-```
-{kotlin-runnable="true" kotlin-min-compiler-version="1.3" id="kotlin-tour-access-property"}
+{% endcapture %}
+{% include kotlin_quote.html body=kotlin-tour-access-property %}
 
-> To concatenate the value of a property as part of a string, you can use string templates (`$`).
-> For example:
+> プロパティの値を文字列とつなげるには、文字列テンプレート(`$`)が使えます。
+> たとえば：
 > ```kotlin
 > println("Their email address is: ${contact.email}")
 > ```
 >
-{type="tip"}
+{: .tip}
 
-## Member functions
+## メンバ関数
 
-In addition to declaring properties as part of an object's characteristics, you can also define an object's behavior 
-with member functions.
+オブジェクトの特性としてプロパティを宣言するのに加えて、オブジェクトの振る舞いをメンバ関数として定義する事も出来ます。
 
-In Kotlin, member functions must be declared within the class body. To call a member function on an instance, write the 
-function name after the instance name appended with a period `.`. For example:
+Kotlinでは、メンバ関数はクラスの本体の中に定義しなくてはなりません。
+インスタンスのメンバ関数を呼ぶためには、
+インスタンスの名前の後にピリオド`.`をつなげて、その後にメンバ関数名を書きます。
+例えば：
 
-```kotlin
+{% capture kotlin-tour-member-function %}
 class Contact(val id: Int, var email: String) {
     fun printId() {
         println(id)
@@ -129,65 +129,69 @@ class Contact(val id: Int, var email: String) {
 
 fun main() {
     val contact = Contact(1, "mary@gmail.com")
-    // Calls member function printId()
+    // メンバ関数 printId() を呼ぶ
     contact.printId()           
     // 1
 }
-```
-{kotlin-runnable="true" kotlin-min-compiler-version="1.3" id="kotlin-tour-member-function"}
+{% endcapture %}
+{% include kotlin_quote.html body=kotlin-tour-member-function %}
 
-## Data classes
+## Dataクラス
 
-Kotlin has **data classes** which are particularly useful for storing data. Data classes have the same functionality as 
-classes, but they come automatically with additional member functions. These member functions allow you to easily print 
-the instance to readable output, compare instances of a class, copy instances, and more. As these functions are
-automatically available, you don't have to spend time writing the same boilerplate code for each of your classes.
+Kotlinには**dataクラス**があります。
+それは、データを格納するのにとりわけ便利です。
+dataクラスはクラスと同じ機能を持ち、それに加えて追加のメンバ関数がいくつか自動生成されます。
+これらの自動生成されるメンバ関数のおかげで、
+インスタンスを人間が読む事が出来るような出力でプリントしたり、
+同じクラスから作られたインスタンス同士を比較したり、インスタンスをコピーしたり、その他さまざまな事が簡単に出来るようになります。
+これらの関数は自動的に作られて使う事が出来るので、各クラスでいつも同じようなお決まりのコード（boilerplate code）を何度も繰り返し書かなくて済みます。
 
-To declare a data class, use the keyword `data`:
+dataクラスを宣言するには、キーワード`data`を使います：
 ```kotlin
 data class User(val name: String, val id: Int)
 ```
 
-The most useful predefined member functions of data classes are:
+dataクラスに最初から定義されるメンバ関数のうちで、特に便利なものを挙げると：
 
-| **Function**        | **Description**                                                                                                |
+| **関数**             | **説明**                                                                                                       |
 |---------------------|----------------------------------------------------------------------------------------------------------------|
-| `.toString()`       | Prints a readable string of the class instance and its properties.                                             |
-| `.equals()` or `==` | Compares instances of a class.                                                                                 |
-| `.copy()`           | Creates a class instance by copying another, potentially with some different properties.                       |
+| `.toString()`       | クラスのインスタンスとそのプロパティについて人間が読むことが出来るような文字列を得る                                         |
+| `.equals()` or `==` | クラスのインスタンス同士を比較する                                                                                   |
+| `.copy()`           | あるインスタンスからコピーする事でクラスのインスタンスを作成する、幾つかのパラメータをコピー時に変更したりも出来る                |
 
-See the following sections for examples of how to use each function:
-* [Print as string](#print-as-string)
-* [Compare instances](#compare-instances)
-* [Copy instance](#copy-instance)
+これらの関数をどうやって使うかは、続く以下のセクションを参照ください：
+* [文字列としてプリント](#文字列としてプリント)
+* [インスタンス同士の比較](#インスタンス同士の比較)
+* [インスタンスのコピー](#インスタンスのコピー)
 
-### Print as string
+### 文字列としてプリント
 
-To print a readable string of a class instance, you can explicitly call the `.toString()` function, or use print functions 
-(`println()` and `print()`) which automatically call `.toString()` for you:
+クラスのインスタンスの可読な文字列をプリントするには、`.toString()`を明示的に呼ぶか、
+print関数(`println()` と `print()`)を呼べば良いです（print関数は自動的に`.toString()`を呼んでくれます）：
 
-```kotlin
+
+{% capture kotlin-tour-data-classes-print-string %}
 data class User(val name: String, val id: Int)
 
 fun main() {
     val user = User("Alex", 1)
     
     //sampleStart
-    // Automatically uses toString() function so that output is easy to read
+    // 自動的に toString() 関数が使われるので、結果の出力は読みやすいものになっている
     println(user)            
     // User(name=Alex, id=1)
     //sampleEnd
 }
-```
-{kotlin-runnable="true" kotlin-min-compiler-version="1.3" id="kotlin-tour-data-classes-print-string"}
+{% endcapture %}
+{% include kotlin_quote.html body=kotlin-tour-data-classes-print-string %}
 
-This is particularly useful when debugging or creating logs.
+この機能はデバッグやログを作るのに特に便利です。
 
-### Compare instances
+### インスタンス同士の比較
 
-To compare data class instances, use the equality operator `==`:
+dataクラスのインスタンス同士を比較するには、等価演算子`==`を使います：
 
-```kotlin
+{% capture kotlin-tour-data-classes-compare-instances %}
 data class User(val name: String, val id: Int)
 
 fun main() {
@@ -196,28 +200,28 @@ fun main() {
     val secondUser = User("Alex", 1)
     val thirdUser = User("Max", 2)
 
-    // Compares user to second user
+    // user と second user を比較
     println("user == secondUser: ${user == secondUser}") 
     // user == secondUser: true
     
-    // Compares user to third user
+    // user と third user を比較
     println("user == thirdUser: ${user == thirdUser}")   
     // user == thirdUser: false
     //sampleEnd
 }
-```
-{kotlin-runnable="true" kotlin-min-compiler-version="1.3" id="kotlin-tour-data-classes-compare-instances"}
+{% endcapture %}
+{% include kotlin_quote.html body=kotlin-tour-data-classes-compare-instances %}
 
-### Copy instance
+### インスタンスのコピー
 
-To create an exact copy of a data class instance, call the `.copy()` function on the instance.
+dataクラスのインスタンスの、そのまんまのコピーを作るには、インスタンスの`.copy()`関数を呼びます。
 
-To create a copy of a data class instance **and** change some properties, call the `.copy()` function on the instance 
-**and** add replacement values for properties as function parameters.
+dataクラスのインスタンスのコピーを作り、**しかも**幾つかのプロパティは変更したければ、
+インスタンスの`.copy()`関数を呼んで、**しかも**置き換えたいプロパティを関数の引数として渡します。
 
-For example:
+例を挙げると:
 
-```kotlin
+{% capture kotlin-tour-data-classes-copy-instance %}
 data class User(val name: String, val id: Int)
 
 fun main() {
@@ -226,40 +230,41 @@ fun main() {
     val secondUser = User("Alex", 1)
     val thirdUser = User("Max", 2)
 
-    // Creates an exact copy of user
+    // userのそのまんまのコピー
     println(user.copy())       
     // User(name=Alex, id=1)
 
-    // Creates a copy of user with name: "Max"
+    // userをnameだけ"Max"にしてコピー
     println(user.copy("Max"))  
     // User(name=Max, id=1)
 
-    // Creates a copy of user with id: 3
+    // userをidだけ3にしてコピー
     println(user.copy(id = 3)) 
     // User(name=Alex, id=3)
     //sampleEnd
 }
-```
-{kotlin-runnable="true" kotlin-min-compiler-version="1.3" id="kotlin-tour-data-classes-copy-instance"}
+{% endcapture %}
+{% include kotlin_quote.html body=kotlin-tour-data-classes-copy-instance %}
 
-Creating a copy of an instance is safer than modifying the original instance because any code that relies on the
-original instance isn't affected by the copy and what you do with it.
+元インスタンスを変更するよりも、インスタンスのコピーを作る方が安全です。
+なぜなら、元のインスタンスに依存したすべてのコードは、あなたがコピーに何をしても一切影響が無いからです。
 
-For more information about data classes, see [Data classes](data-classes.md).
+dataクラスについてのより詳細な情報は、[Dataクラス](data-classes.md)を参照ください。 
 
-The last chapter of this tour is about Kotlin's [null safety](kotlin-tour-null-safety.md).
+このツアーの最後の章は、Kotlinの[Null safety](kotlin-tour-null-safety.md)に関してです。
 
-## Practice
+## 練習問題
 
-### Exercise 1 {initial-collapse-state="collapsed"}
+### 練習問題 1
 
-Define a data class `Employee` with two properties: one for a name, and another for a salary. Make sure that the property
-for salary is mutable, otherwise you won’t get a salary boost at the end of the year! The main function demonstrates how
-you can use this data class.
+`Employee`という名前で以下の二つのプロパティを持つdataクラスを作成せよ：一つがname、もう一つがsalary（訳注：給料の意味）。
+salaryプロパティはmutableにし忘れないように。そうしないと年末に昇給しなくなってしまいますから！
+main関数ではこのdataクラスをどう使うかを示しています。
 
-|---|---|
-```kotlin
-// Write your code here
+（訳注：Employeeは社員、salaryは給料という意味）
+
+{% capture kotlin-tour-classes-exercise-1 %}
+// ここにコードを書いてね
 
 fun main() {
     val emp = Employee("Mary", 20)
@@ -267,10 +272,10 @@ fun main() {
     emp.salary += 10
     println(emp)
 }
-```
-{validate="false" kotlin-runnable="true" kotlin-min-compiler-version="1.3" id="kotlin-tour-classes-exercise-1"}
+{% endcapture %}
+{% include kotlin_quote.html body=kotlin-tour-classes-exercise-1 %}
 
-|---|---|
+{% capture kotlin-tour-classes-solution-1 %}
 ```kotlin
 data class Employee(val name: String, var salary: Int)
 
@@ -281,34 +286,32 @@ fun main() {
     println(emp)
 }
 ```
-{initial-collapse-state="collapsed" collapsed-title="Example solution" id="kotlin-tour-classes-solution-1"}
+{% endcapture %}
+{% include collapse_quote.html title="解答例" body=kotlin-tour-classes-solution-1 %}
 
-### Exercise 2 {initial-collapse-state="collapsed"}
+### 練習問題 2
 
-To test your code, you need a generator that can create random employees. Define a class with a fixed list of potential 
-names (inside the class body), and that is configured by a minimum and maximum salary (inside the class header). Once 
-again, the main function demonstrates how you can use this class.
+あなたのコードをテストするために、ランダムな社員を作る必要が出てきました。
+以下のようなクラスを作成しなさい：名前の候補をリストで（クラスの本体の中に）持ち、最低額と最高額の賃金を設定出来る（クラスヘッダの中で）。
+ここでも、main関数では作るべきクラスをどう使うかを示しています。
 
-<deflist collapsible="true" id="kotlin-tour-classes-exercise-2-hint-1">
-    <def title="Hint">
-        Lists have an extension function called <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/random.html"><code>.random()</code></a>
-        that returns a random item within a list.
-    </def>
-</deflist>
+{% capture kotlin-tour-classes-exercise-2-hint-1 %}
+リストには[`.random()`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/random.html)というextension関数があり、
+これがリストの中の要素をランダムに返してくれます。
+{% endcapture %}
+{% include collapse_quote.html title="ヒント1" body=kotlin-tour-classes-exercise-2-hint-1 %}
 
-<deflist collapsible="true" id="kotlin-tour-classes-exercise-2-hint-2">
-    <def title="Hint">
-        <code>Random.nextInt(from = ..., until = ...)</code> gives you a random <code>Int</code> number within specified limits.
-    </def>
-</deflist>
+{% capture kotlin-tour-classes-exercise-2-hint-2 %}
+`Random.nextInt(from = ..., until = ...)`は指定した範囲の`Int`の数値を返します（訳注：fromは一番下、untilは一番上を表します、fromは含みますがuntilは含みません）
+{% endcapture %}
+{% include collapse_quote.html title="ヒント2" body=kotlin-tour-classes-exercise-2-hint-2 %}
 
-|---|---|
-```kotlin
+{% capture kotlin-tour-classes-exercise-2 %}
 import kotlin.random.Random
 
 data class Employee(val name: String, var salary: Int)
 
-// Write your code here
+// ここにコードを書いてね
 
 fun main() {
     val empGen = RandomEmployeeGenerator(10, 30)
@@ -319,10 +322,10 @@ fun main() {
     empGen.maxSalary = 100
     println(empGen.generateEmployee())
 }
-```
-{validate="false" kotlin-runnable="true" kotlin-min-compiler-version="1.3" id="kotlin-tour-classes-exercise-2"}
+{% endcapture %}
+{% include kotlin_quote.html body=kotlin-tour-classes-exercise-2 %}
 
-|---|---|
+{% capture kotlin-tour-classes-solution-2 %}
 ```kotlin
 import kotlin.random.Random
 
@@ -345,8 +348,9 @@ fun main() {
     println(empGen.generateEmployee())
 }
 ```
-{initial-collapse-state="collapsed" collapsed-title="Example solution" id="kotlin-tour-classes-solution-2"}
+{% endcapture %}
+{% include collapse_quote.html title="解答例" body=kotlin-tour-classes-solution-2 %}
 
-## Next step
+## 次回
 
 [Null safety](kotlin-tour-null-safety.md)

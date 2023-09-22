@@ -9,7 +9,7 @@ title: "関数（ツアー）"
 - ![ステップ3]({{ site.baseurl }}/assets/images/icons/icon-3-done.svg){:width="20" style="display:inline"} [コレクション](kotlin-tour-collections.md)
 - ![ステップ4]({{ site.baseurl }}/assets/images/icons/icon-4-done.svg){:width="20" style="display:inline"} [制御フロー](kotlin-tour-control-flow.md)
 - ![ステップ5]({{ site.baseurl }}/assets/images/icons/icon-5.svg){:width="20" style="display:inline"} **関数**
-- ![ステップ6]({{ site.baseurl }}/assets/images/icons/icon-6-todo.svg){:width="20" style="display:inline"} <a href="kotlin-tour-classes.html">Classes</a>
+- ![ステップ6]({{ site.baseurl }}/assets/images/icons/icon-6-todo.svg){:width="20" style="display:inline"} [クラス](kotlin-tour-classes.md)
 - ![ステップ7]({{ site.baseurl }}/assets/images/icons/icon-7-todo.svg){:width="20" style="display:inline"} <a href="kotlin-tour-null-safety.html">Null safety</a>
 
 Kotlinでは、自分の関数を宣言するのは`fun`キーワードで行う事が出来ます。

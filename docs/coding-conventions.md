@@ -106,6 +106,33 @@ In lambdas which are short and not nested, it's recommended to use the `it` conv
 explicitly. In nested lambdas with parameters, parameters should be always declared explicitly.
 -->
 
+### トレーリングカンマ
+
+（訳注：リンクを貼るので一時的にここだけ最新の和訳にアップデートします）
+
+トレーリングカンマ(trailing comma)はカンマのシンボルが最後の要素の後にもついているものの事を言います：
+
+```kotlin
+class Person(
+    val firstName: String,
+    val lastName: String,
+    val age: Int, // トレーリングカンマ
+)
+```
+
+トレーリングカンマを使う事は、幾つかの利点があります：
+
+* バージョン管理ソフトのdiffが綺麗になる - 皆変更の場所だけを集中してみたいのだから
+* 要素を追加したり順番を変えるのが簡単になる - 最後になったらカンマを削除したり最後じゃなくなったらカンマを追加したりしなくて良い
+* コード生成などでオブジェクトの初期化を出力するのが楽になる。最後の要素でも気にせずカンマを出せば良いので
+
+トレーリングカンマはいつでもオプショナルです - あなたのコードはトレーリングカンマ無しでも動きます。
+Kotlinのスタイルガイドラインとしては宣言側ではトレーリングカンマを使う事を推奨しています。
+呼ぶ側はあなたの好きなように選んで良い事になっています。
+
+IntelliJ IDEAフォーマッタでトレーリングカンマを有効にするには、**Settings/Preferences | Editor | Code Style | Kotlin**に行って、
+**Other**タブを開いて、**Use trailing comma**オプションを選びます。
+
 ## ユニット (Unit)
 
 <!--original

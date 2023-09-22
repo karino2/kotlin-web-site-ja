@@ -12,18 +12,18 @@ title: "クラス（ツアー）"
 - ![ステップ6]({{ site.baseurl }}/assets/images/icons/icon-6.svg){:width="20" style="display:inline"} **クラス**
 - ![ステップ7]({{ site.baseurl }}/assets/images/icons/icon-7-todo.svg){:width="20" style="display:inline"} <a href="kotlin-tour-null-safety.html">Null safety</a>
 
+Kotlinはクラスとオブジェクトによるオブジェクト指向プログラミングをサポートしています。
+オブジェクトはプログラムのデータを格納するのに便利です。
+クラスはオブジェクトの特性を記述するのに使います。
+クラスからオブジェクトを作れば、個々のオブジェクトにこの特性を繰り返し記述する必要がなくなるので時間の節約になります。
 
-Kotlin supports object-oriented programming with classes and objects. Objects are useful for storing data in your program.
-Classes allow you to declare a set of characteristics for an object. When you create objects from a class, you can save
-time and effort because you don't have to declare these characteristics every time.
-
-To declare a class, use the `class` keyword: 
+クラスを宣言するには、`class`キーワードを使います：
 
 ```kotlin
 class Customer
 ```
 
-## Properties
+## プロパティ
 
 Characteristics of a class's object can be declared in properties. You can declare properties for a class:
 * Within parentheses `()` after the class name.

@@ -10,7 +10,7 @@ title: "制御フロー（ツアー）"
 - ![ステップ4]({{ site.baseurl }}/assets/images/icons/icon-4.svg){:width="20" style="display:inline"} **制御フロー**
 - ![ステップ5]({{ site.baseurl }}/assets/images/icons/icon-5-todo.svg){:width="20" style="display:inline"} [関数](kotlin-tour-functions.md)
 - ![ステップ6]({{ site.baseurl }}/assets/images/icons/icon-6-todo.svg){:width="20" style="display:inline"} [クラス](kotlin-tour-classes.md)
-- ![ステップ7]({{ site.baseurl }}/assets/images/icons/icon-7-todo.svg){:width="20" style="display:inline"} <a href="kotlin-tour-null-safety.html">Null safety</a>
+- ![ステップ7]({{ site.baseurl }}/assets/images/icons/icon-7-todo.svg){:width="20" style="display:inline"} [Null safety](kotlin-tour-null-safety.md)
 
 他のプログラム言語と同様に、Kotlinもコード片を評価した結果がtrueかどうかによって処理を決定する事が出来ます。
 そのようなコード片を**条件式（conditional expressions）**と呼んだりします。

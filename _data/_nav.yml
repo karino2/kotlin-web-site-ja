@@ -18,6 +18,8 @@ reference:
          title: 関数（ツアー）
        - url: /docs/kotlin-tour-classes.html
          title: クラス（ツアー）
+       - url: /docs/kotlin-tour-null-safety.html
+         title: Null safety（ツアー）
   - title: 入門
     description: Get familiar with the basics of Kotlin including operations, coding conventions and idioms.
     items:

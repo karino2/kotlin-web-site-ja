@@ -38,7 +38,9 @@ reference:
             isFolder: true
             items:
               - url: /docs/basic-types.html
-                title: 基本の型
+                title: 概要
+              - url: /docs/numbers.html
+                title: 数値
           - title: 型チェックとキャスト
             url: /docs/typecasts.html
       - url: /docs/packages.html

@@ -59,48 +59,42 @@ reference:
         title: 制御フロー
       - url: /docs/returns.html
         title: returnとジャンプ
-
-  - title: クラスとオブジェクト
-    description: All about objects
-    items:
-      - url: /docs/classes.html
-        title: クラスと継承
-      - url: /docs/properties.html
-        title: プロパティとフィールド
-      - url: /docs/interfaces.html
-        title: 継承
-      - url: /docs/visibility-modifiers.html
-        title: 可視性修飾子
-      - url: /docs/extensions.html
-        title: 拡張
-      - url: /docs/data-classes.html
-        title: データクラス
-      - url: /docs/generics.html
-        title: ジェネリクス
-      - url: /docs/nested-classes.html
-        title: ネストされたクラス
-      - url: /docs/enum-classes.html
-        title: 列挙型クラス
-      - url: /docs/object-declarations.html
-        title: オブジェクト
-      - url: /docs/delegation.html
-        title: 委譲
-      - url: /docs/delegated-properties.html
-        title: 委譲プロパティ
-
-  - title: 関数とラムダ
-    description: All about functions
-    items:
-      - url: /docs/functions.html
-        title: 関数
-      - url: /docs/lambdas.html
-        title: ラムダ
-      - url: /docs/inline-functions.html
-        title: インライン関数
-
-  - title: Other
-    description: Various bits and bobs
-    items:
+      - title: クラスとオブジェクト
+        isFolder: true
+        items:
+          - url: /docs/classes.html
+            title: クラスと継承
+          - url: /docs/properties.html
+            title: プロパティとフィールド
+          - url: /docs/interfaces.html
+            title: 継承
+          - url: /docs/visibility-modifiers.html
+            title: 可視性修飾子
+          - url: /docs/extensions.html
+            title: 拡張
+          - url: /docs/data-classes.html
+            title: データクラス
+          - url: /docs/generics.html
+            title: ジェネリクス
+          - url: /docs/nested-classes.html
+            title: ネストされたクラス
+          - url: /docs/enum-classes.html
+            title: 列挙型クラス
+          - url: /docs/object-declarations.html
+            title: オブジェクト
+          - url: /docs/delegation.html
+            title: 委譲
+          - url: /docs/delegated-properties.html
+            title: 委譲プロパティ
+      - title: 関数関連
+        isFolder: true
+        items:
+          - url: /docs/functions.html
+            title: 関数
+          - url: /docs/lambdas.html
+            title: ラムダ
+          - url: /docs/inline-functions.html
+            title: インライン関数
       - url: /docs/multi-declarations.html
         title: Destructuring Declarations
       - url: /docs/collections.html

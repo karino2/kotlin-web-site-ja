@@ -1,20 +1,8 @@
 ---
-type: doc
 layout: reference
-category: "Syntax"
-title: "Control Flow"
+title: "条件式とループ"
 ---
-
-<!--original
-- --
-type: doc
-layout: reference
-category: "Syntax"
-title: "Control Flow"
-- --
--->
-
-# 制御フロー
+# 条件式とループ
 
 <!--original
 # Control Flow

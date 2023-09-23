@@ -25,9 +25,9 @@ Kotlinはアイテムをグルーピングするのに以下のコレクショ�
 
 これらの各コレクションに、mutableと読み取り専用（read only）の二種類があります。
 
-## List
+## リスト
 
-Listは要素を追加された順番に保持します。重複した要素も追加出来ます。
+リストは要素を追加された順番に保持します。重複した要素も追加出来ます。
 
 読み取り専用リスト　([`List`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/))を作るには、
 `[listOf()](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/list-of.html)` 関数を使います。
@@ -148,7 +148,7 @@ fun main() {
 {% endcapture %}
 {% include kotlin_quote.html body=kotlin-tour-list-add-remove %}
 
-## Set（集合）
+## セット（集合）
 
 リストが順番があり重複する要素も許すのに対し、セット（Set）は**順序なし（unordered）**なコレクションで、**一意（unique）**な要素だけを格納出来ます。
 
@@ -233,7 +233,7 @@ fun main() {
 {% endcapture %}
 {% include kotlin_quote.html body=kotlin-tour-set-add-remove %}
 
-## Map
+## マップ
 
 マップはキーと値のペアとして要素を保持するコレクションです。キーを指定する事で対応する値にアクセスする事が出来ます。
 マップというのはレストランなどのメニューのようなものと考えると近いかもしれません。

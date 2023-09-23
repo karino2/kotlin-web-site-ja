@@ -94,7 +94,7 @@ fun main() {
 {% endcapture %}
 {% include kotlin_quote.html body=kotlin-tour-string-templates %}
 
-より詳しくは、[文字列テンプレート](strings.md)を参照ください。（未翻訳）
+より詳しくは、[文字列テンプレート](strings.md#文字列テンプレート)を参照ください。
 
 変数の定義に明示的な型の表記が無い事に気づいたかもしれません。
 Kotlinは型を推論します：この場合は`Int`と。

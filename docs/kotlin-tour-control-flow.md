@@ -271,7 +271,7 @@ fun main() {
 {% include kotlin_quote.html body=kotlin-tour-while-do-loop %}
 
 
-条件式とループについてさらに知りたい人は、[Conditions and loops](control-flow.md)を参照ください。
+条件式とループについてさらに知りたい人は、[条件式とループ](control-flow.md)を参照ください。
 
 今やあなたはKotlinの制御フローの基礎を理解しました。あなた自身の[関数](kotlin-tour-functions.md)を書く方法を学ぶ時が来ました。
 

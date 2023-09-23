@@ -21,7 +21,6 @@ reference:
        - url: /docs/kotlin-tour-null-safety.html
          title: Nullセーフティ（ツアー）
   - title: 入門
-    description: Get familiar with the basics of Kotlin including operations, coding conventions and idioms.
     items:
       - url: /docs/basic-syntax.html
         title: 基本的な構文
@@ -30,11 +29,18 @@ reference:
       - url: /docs/coding-conventions.html
         title: コーディング規約
 
-  - title: 基本
-    description: The Basics
+  - title: コンセプト
     items:
-      - url: /docs/basic-types.html
-        title: 基本の型
+      - title: Types
+        isFolder: true
+        items:
+          - title: 基本型
+            isFolder: true
+            items:
+              - url: /docs/basic-types.html
+                title: 基本の型
+          - title: 型チェックとキャスト
+            url: /docs/typecasts.html
       - url: /docs/packages.html
         title: パッケージ
       - url: /docs/control-flow.html
@@ -89,8 +95,6 @@ reference:
         title: Collections
       - url: /docs/ranges.html
         title: Ranges
-      - url: /docs/typecasts.html
-        title: Type Checks and Casts
       - url: /docs/this-expressions.html
         title: This expressions
       - url: /docs/equality.html

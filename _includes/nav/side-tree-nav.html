@@ -1,31 +1,79 @@
 <nav role="navigation" class="side-tree-nav">
+    {% comment %} 3階層決め打ち。各階層はコピペで対応。splitで<>は絶対にマッチしない想定。 {% endcomment %}
+    {% assign open_titles = '' | split: '' %}
     {% for category in site.data._nav.reference %}
+        {% assign catArr = category.title | split: '<>' %}
+        {% for item in category.items %}
+            {% assign itemArr = item.title | split: '<>' %}
+            {% assign itemArr = catArr | concat: itemArr %}
+            {% if item.isFolder %}
+                {% for item2 in item.items %}
+                    {% assign item2Arr = item2.title | split: '<>' %}
+                    {% assign item2Arr = itemArr | concat: item2Arr %}
+                    {% if item2.isFolder %}
+                        {% for item3 in item2.items %}
+                            {% if item3.url == page.url %}
+                                {% assign item3Arr = item3.title | split: '<>' %}
+                                {% assign open_titles = open_titles | concat: item2Arr | concat: item3Arr %}
+                            {% endif %}
+                        {% endfor %}
+                    {% else %}
+                        {% if item2.url == page.url %}
+                            {% assign open_titles = open_titles | concat: item2Arr %}
+                        {%endif %}
+                    {% endif %}
+                {% endfor %}
+            {% else %}
+                {% if item.url == page.url %}
+                    {% assign open_titles = open_titles | concat: itemArr %}
+                {% endif %}
+            {% endif %}
+        {% endfor %}
 
-    {% assign is_open = false %}
-    {% for item in category.items %}
-    {% if item.url == page.url %}{%assign is_open = true %}{% endif %}
     {% endfor %}
 
-        <details {%if is_open %}open="true"{% endif %}>
+    {% comment %} 
+        デバッグ用：
+        {% for hit in open_titles %}
+            open: {{ hit }}<br>
+        {% endfor %}
+    {% endcomment %}
+
+
+    {% for category in site.data._nav.reference %}
+        
+        <details {%if open_titles contains category.title %}open="true"{% endif %}>
             <summary>{{ category.title }}</summary>
             <ol>
                 {% for item in category.items %}
                     <li>
-                        <div class="tree-item tree-leaf js-item js-leaf">
-                            {% if item.url == page.url %}
-                                <div class="tree-item tree-leaf js-item js-leaf">
-                                    <div class="marker"></div>
-                                    <div class="text">{{ item.title }}</div>
-                                </div>
-                            {% else %}
-                                <a href="{{ item.url | relative_url }}"
-                                    class="tree-item-title tree-leaf-title js-item-title js-leaf-title"
-                                >
-                                    <span class="marker"></span>
-                                    <span class="text">{{ item.title }}</span><br>
-                                </a>
-                            {% endif %}
-                        </div>
+                        {%if item.isFolder %}
+                            <details {%if open_titles contains item.title %}open="true"{% endif %}>
+                                <summary>{{ item.title }}</summary>
+                                <ol>
+                                    {% for item2 in item.items %}
+                                        <li>
+                                            {%if item2.isFolder %}
+                                                <details {%if open_titles contains item2.title %}open="true"{% endif %}>
+                                                    <summary>{{ item2.title }}</summary>
+                                                    <ol>
+                                                        {% for item3 in item2.items %}
+                                                        <li>
+                                                            {% include nav/tree-item.html url=item3.url title=item3.title %}
+                                                        </li>
+                                                        {% endfor %}
+                                                    </ol>
+                                                </details>
+                                            {% else %}
+                                                {% include nav/tree-item.html url=item2.url title=item2.title %}
+                                            {% endif %}
+                                        </li>
+                                    {% endfor %}
+                                </ol>
+                            </details>
+                        {% else %}
+                            {% include nav/tree-item.html url=item.url title=item.title %}
+                        {% endif %}
                     </li>
                 {% endfor %}
             </ol>

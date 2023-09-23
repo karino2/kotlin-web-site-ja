@@ -20,7 +20,7 @@ reference:
          title: クラス（ツアー）
        - url: /docs/kotlin-tour-null-safety.html
          title: Nullセーフティ（ツアー）
-  - title: 入門
+  - title: 基本
     items:
       - url: /docs/basic-syntax.html
         title: 基本的な構文

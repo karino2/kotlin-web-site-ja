@@ -19,7 +19,7 @@ title: "Kotlinツアーへようこそ！"
 * [制御フロー](kotlin-tour-control-flow.md)
 * [関数](kotlin-tour-functions.md)
 * [クラス](kotlin-tour-classes.md)
-* [Null safety](kotlin-tour-null-safety.md)
+* [Nullセーフティ](kotlin-tour-null-safety.md)
 
 先頭の章から順番に読んでいくのがオススメで、一番分かりやすいと思います。
 ですが、好きな章から読みたいというならそれも良いでしょう。

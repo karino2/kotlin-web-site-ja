@@ -10,7 +10,7 @@ title: "クラス（ツアー）"
 - ![ステップ4]({{ site.baseurl }}/assets/images/icons/icon-4-done.svg){:width="20" style="display:inline"} [制御フロー](kotlin-tour-control-flow.md)
 - ![ステップ5]({{ site.baseurl }}/assets/images/icons/icon-5-done.svg){:width="20" style="display:inline"} [関数](kotlin-tour-functions.md)
 - ![ステップ6]({{ site.baseurl }}/assets/images/icons/icon-6.svg){:width="20" style="display:inline"} **クラス**
-- ![ステップ7]({{ site.baseurl }}/assets/images/icons/icon-7-todo.svg){:width="20" style="display:inline"} [Null safety](kotlin-tour-null-safety.md)
+- ![ステップ7]({{ site.baseurl }}/assets/images/icons/icon-7-todo.svg){:width="20" style="display:inline"} [Nullセーフティ](kotlin-tour-null-safety.md)
 
 Kotlinはクラスとオブジェクトによるオブジェクト指向プログラミングをサポートしています。
 オブジェクトはプログラムのデータを格納するのに便利です。
@@ -251,7 +251,7 @@ fun main() {
 
 dataクラスについてのより詳細な情報は、[Dataクラス](data-classes.md)を参照ください。 
 
-このツアーの最後の章は、Kotlinの[Null safety](kotlin-tour-null-safety.md)に関してです。
+このツアーの最後の章は、Kotlinの[Nullセーフティ](kotlin-tour-null-safety.md)に関してです。
 
 ## 練習問題
 
@@ -353,4 +353,4 @@ fun main() {
 
 ## 次回
 
-[Null safety](kotlin-tour-null-safety.md)
+[Nullセーフティ](kotlin-tour-null-safety.md)

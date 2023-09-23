@@ -10,7 +10,7 @@ title: "基本型（ツアー）"
 - ![ステップ4]({{ site.baseurl }}/assets/images/icons/icon-4-todo.svg){:width="20" style="display:inline"} [制御フロー](kotlin-tour-control-flow.md)
 - ![ステップ5]({{ site.baseurl }}/assets/images/icons/icon-5-todo.svg){:width="20" style="display:inline"} [関数](kotlin-tour-functions.md)
 - ![ステップ6]({{ site.baseurl }}/assets/images/icons/icon-6-todo.svg){:width="20" style="display:inline"} [クラス](kotlin-tour-classes.md)
-- ![ステップ7]({{ site.baseurl }}/assets/images/icons/icon-7-todo.svg){:width="20" style="display:inline"} [Null safety](kotlin-tour-null-safety.md)
+- ![ステップ7]({{ site.baseurl }}/assets/images/icons/icon-7-todo.svg){:width="20" style="display:inline"} [Nullセーフティ](kotlin-tour-null-safety.md)
 
 Kotlinでは、すべての変数とデータ構造にはデータの型があります。データの型はコンパイラに対して、あなたがその変数やデータ構造にどういう操作を許しているかを伝えるという重要な役割を果たしています。
 言い換えると、その変数やデータ構造がどのような関数やプロパティを持っているか、という事を伝えているという事です。

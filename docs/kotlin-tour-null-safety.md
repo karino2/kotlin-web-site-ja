@@ -1,8 +1,8 @@
 ---
 layout: reference
-title: "Null safety（ツアー）"
+title: "Nullセーフティ（ツアー）"
 ---
-# Null safety（ツアー）
+# Nullセーフティ（ツアー）
 
 - ![ステップ1]({{ site.baseurl }}/assets/images/icons/icon-1-done.svg){:width="20" style="display:inline"} [Hello world](kotlin-tour-hello-world.md)
 - ![ステップ2]({{ site.baseurl }}/assets/images/icons/icon-2-done.svg){:width="20" style="display:inline"} [基本型](kotlin-tour-basic-types.md)
@@ -10,91 +10,98 @@ title: "Null safety（ツアー）"
 - ![ステップ4]({{ site.baseurl }}/assets/images/icons/icon-4-done.svg){:width="20" style="display:inline"} [制御フロー](kotlin-tour-control-flow.md)
 - ![ステップ5]({{ site.baseurl }}/assets/images/icons/icon-5-done.svg){:width="20" style="display:inline"} [関数](kotlin-tour-functions.md)
 - ![ステップ6]({{ site.baseurl }}/assets/images/icons/icon-6-done.svg){:width="20" style="display:inline"} [クラス](kotlin-tour-classes.md)
-- ![ステップ7]({{ site.baseurl }}/assets/images/icons/icon-7.svg){:width="20" style="display:inline"} [Null safety](kotlin-tour-null-safety.md)
+- ![ステップ7]({{ site.baseurl }}/assets/images/icons/icon-7.svg){:width="20" style="display:inline"} [Nullセーフティ](kotlin-tour-null-safety.md)
 
-In Kotlin, it's possible to have a `null` value. To help prevent issues with `null` values in your programs, Kotlin has 
-null safety in place. Null safety detects potential problems with `null` values at compile time, rather than at run time.
+Kotlinでは、`null`の値をとる事がある。
+プログラムにおける`null`にまつわる問題を防ぐため、
+KotlinにはNullセーフティというものがあります。
+Nullセーフティは、`null`にまつわる潜在的な問題を、実行時では無くコンパイル時に検出します。
 
-Null safety is a combination of features that allow you to:
-* explicitly declare when `null` values are allowed in your program.
-* check for `null` values.
-* use safe calls to properties or functions that may contain `null` values.
-* declare actions to take if `null` values are detected.
 
-## Nullable types
+Nullセーフティは以下を可能にする機能の組み合わせです：
+* `null`の値がプログラムのどこで許容されるかを明示的に宣言
+* `null`値のチェック
+* `null`値かもしれないオブジェクトのプロパティや関数の安全な呼び出し（セーフコール）
+* `null`が検出された時のアクションの宣言
 
-Kotlin supports nullable types which allows the possibility for the declared type to have `null` values. By default, a type
-is **not** allowed to accept `null` values. Nullable types are declared by explicitly adding `?` after the type declaration.
+## Nullable型
 
-For example:
+KotlinはNullable型をサポートしています。Nullable型とは`null`の値が入っても良い型というものです。
+デフォルトでは、型は`null`を受け入れ**ません**。Nullable型は明示的に`?`を型の後ろにつけることで宣言します。
 
-```kotlin
+例：
+
+{% capture kotlin-tour-nullable-type %}
 fun main() {
-    // neverNull has String type
-    var neverNull: String = "This can't be null"
+    // neverNullはString型
+    var neverNull: String = "これはnullにはなり得ない"
 
-    // Throws a compiler error
+    // コンパイルエラー
     neverNull = null
 
-    // nullable has nullable String type
-    var nullable: String? = "You can keep a null here"
+    // nullable変数はnullableはString型
+    var nullable: String? = "ここにはnullも格納出来る"
 
-    // This is OK  
+    // これはOK
     nullable = null
 
-    // By default, null values aren't accepted
-    var inferredNonNull = "The compiler assumes non-nullable"
+    // デフォルトではnullは受け付けない
+    var inferredNonNull = "コンパイラはnullableでは無いと想定する"
 
-    // Throws a compiler error
+    // コンパイルエラー
     inferredNonNull = null
 
-    // notNull doesn't accept null values
+    // notNullはnullを受け付けない
     fun strLength(notNull: String): Int {                 
         return notNull.length
     }
 
     println(strLength(neverNull)) // 18
-    println(strLength(nullable))  // Throws a compiler error
+    println(strLength(nullable))  // コンパイルエラー
 }
-```
-{kotlin-runnable="true" validate="false" kotlin-min-compiler-version="1.3" id="kotlin-tour-nullable-type"}
+{% endcapture %}
+{% include kotlin_quote.html body=kotlin-tour-nullable-type %}
 
-> `length` is a property of the [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/) class that 
-> contains the number of characters within a string.
+> `length`は[String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/)クラスのプロパティで、
+> 文字列に含まれる文字の数を保持します。
 >
-{type="tip"}
+{: .tip}
 
-## Check for null values
 
-You can check for the presence of `null` values within conditional expressions. In the following example, the `describeString()`
-function has an `if` statement that checks whether `maybeString` is **not** `null` and if its `length` is greater than zero:
+## null値のチェック
 
-```kotlin
+条件式の中で`null`かどうかをチェック出来ます。
+以下の例では、`describeString()`関数の`if`文で、
+`maybeString`が`null`では**ない**か、そして長さが0より大きいかをチェックしています：
+
+{% capture kotlin-tour-check-nulls %}
 fun describeString(maybeString: String?): String {
     if (maybeString != null && maybeString.length > 0) {
-        return "String of length ${maybeString.length}"
+        return "長さ${maybeString.length}の文字列"
     } else {
-        return "Empty or null string"
+        return "空かnullの文字列"
     }
 }
 
 fun main() {
     var nullString: String? = null
     println(describeString(nullString))
-    // Empty or null string
+    // 空かnullの文字列
 }
-```
-{kotlin-runnable="true" kotlin-min-compiler-version="1.3" id="kotlin-tour-check-nulls"}
+{% endcapture %}
+{% include kotlin_quote.html body=kotlin-tour-check-nulls %}
 
-## Use safe calls
 
-To safely access properties of an object that might contain a `null` value, use the safe call operator `?.`. The safe call
-operator returns `null` if the object's property is `null`. This is useful if you want to avoid the presence of `null`
-values triggering errors in your code.
+## セーフコール
 
-In the following example, the `lengthString()` function uses a safe call to return either the length of the string or `null`:
+`null`値かもしれないオブジェクトのプロパティに安全にアクセスする為に、セーフコール演算子 `?.` が使えます。
+セーフコール演算子はオブジェクトがnullの時にはプロパティがnullを返すようにします。
+これは`null`だった時にエラーが起こるのを防ぐのに有用です。
 
-```kotlin
+以下の例で、`lengthString()`関数はセーフコールを使って、文字列の長さか`null`のどちらかを返します：
+
+
+{% capture kotlin-tour-safe-call-property %}
 fun lengthString(maybeString: String?): Int? = maybeString?.length
 
 fun main() { 
@@ -102,63 +109,63 @@ fun main() {
     println(lengthString(nullString))
     // null
 }
-```
-{kotlin-runnable="true" kotlin-min-compiler-version="1.3" id="kotlin-tour-safe-call-property"}
+{% endcapture %}
+{% include kotlin_quote.html body=kotlin-tour-safe-call-property %}
 
-> Safe calls can be chained so that if any property of an object contains a `null` value, then `null` is returned without 
-> an error being thrown. For example:
+> セーフコールはつなげる事（チェイン）が出来ます。その時はプロパティのどれかが`null`だったらnullを返す事になります。
+> 例：
 > ```kotlin
 >   person.company?.address?.country
 > ```
 >
-{type="note"}
+{: .note}
 
-The safe call operator can also be used to safely call an extension or member function. In this case, a null check is 
-performed before the function is called. If the check detects a `null` value, then the call is skipped and `null` is returned.
+セーフコール演算子はまた、extension関数やメンバ関数を安全に呼ぶのにも使えます。
+この場合、nullチェックは関数の実行をする前に行われます。
+もしこのチェックが`null`値を検出したら、関数の呼び出しはスキップされ`null`が返されます。
 
-In the following example, `nullString` is `null` so the invocation of [`.uppercase()`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.text/uppercase.html)
-is skipped and `null` is returned:
+以下の例では、`nullString`は`null`なので、
+[`.uppercase()`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.text/uppercase.html)の呼び出しはスキップされて、
+`null`が返されます。
 
-```kotlin
+{% capture kotlin-tour-safe-call-function %}
 fun main() {
     var nullString: String? = null
     println(nullString?.uppercase())
     // null
 }
-```
-{kotlin-runnable="true" kotlin-min-compiler-version="1.3" id="kotlin-tour-safe-call-function"}
+{% endcapture %}
+{% include kotlin_quote.html body=kotlin-tour-safe-call-function %}
 
-## Use Elvis operator
+## Elvis演算子を使おう！
 
-You can provide a default value to return if a `null` value is detected by using the **Elvis operator** `?:`.
 
-Write on the left-hand side of the Elvis operator what should be checked for a `null` value.
-Write on the right-hand side of the Elvis operator what should be returned if a `null` value is detected.
+**Elvis演算子（Elvis operator）** `?:`を使う事で、`null`値が検出された時に返すデフォルトの値を提供する事が出来ます。
 
-In the following example, `nullString` is `null` so the safe call to access the `length` property returns a `null` value.
-As a result, the Elvis operator returns `0`:
+Elvis演算子の左には、`null`値かどうかをチェックしたい対象を書きます。
+Elvis演算子の右には、`null`値が検出された時に返したい値を書きます。
 
-```kotlin
+以下の例では、`nullString`は`null`なので、`length`プロパティのセーフコールは`null`値を返します。
+結果として、Elvis演算子は`0`を返します：
+
+{% capture kotlin-tour-elvis-operator %}
 fun main() {
     var nullString: String? = null
     println(nullString?.length ?: 0)
     // 0
 }
-```
-{kotlin-runnable="true" kotlin-min-compiler-version="1.3" id="kotlin-tour-elvis-operator"}
+{% endcapture %}
+{% include kotlin_quote.html body=kotlin-tour-elvis-operator %}
 
-For more information about null safety in Kotlin, see [Null safety](null-safety.md).
+KotlinにおけるNullセーフティについてのより詳細な情報は、[Nullセーフティ](null-safety.md)を参照ください。
 
-## Practice
+## 練習問題
 
-### Exercise {initial-collapse-state="collapsed"}
+あなたの手元には`employeeById`関数があります。これは会社の会社員に関するデータベースへのアクセスを提供しています。
+残念なことに、この関数は`Employee?`型を返します。だから結果が`null`な事がありえます。
+以上を踏まえて、社員の`id`が渡されたら給料（salary）を返す関数を書いてください。ただしデータベースに社員が存在しなかったら`0`を返してください。
 
-You have the `employeeById` function that gives you access to a database of employees of a company. Unfortunately, this 
-function returns a value of the `Employee?` type, so the result can be `null`. Your goal is to write a function that 
-returns the salary of an employee when their `id` is provided, or `0` if the employee is missing from the database.
-
-|---|---|
-```kotlin
+{% capture kotlin-tour-null-safety-exercise %}
 data class Employee (val name: String, var salary: Int)
 
 fun employeeById(id: Int) = when(id) {
@@ -174,10 +181,10 @@ fun salaryById(id: Int) = // Write your code here
 fun main() { 
     println((1..5).sumOf { id -> salaryById(id) })
 }
-```
-{validate="false" kotlin-runnable="true" kotlin-min-compiler-version="1.3" id="kotlin-tour-null-safety-exercise"}
+{% endcapture %}
+{% include kotlin_quote.html body=kotlin-tour-null-safety-exercise %}
 
-|---|---|
+{% capture kotlin-tour-null-safety-solution %}
 ```kotlin
 data class Employee (val name: String, var salary: Int)
 
@@ -195,10 +202,12 @@ fun main() {
  println((1..5).sumOf { id -> salaryById(id) })
 }
 ```
-{initial-collapse-state="collapsed" collapsed-title="Example solution" id="kotlin-tour-null-safety-solution"}
+{% endcapture %}
+{% include collapse_quote.html body=kotlin-tour-null-safety-solution title="解答例" %}
 
-## What's next?
+## 次は何をやるべき？
 
-Congratulations! Now that you have completed the Kotlin tour, check out our tutorials for popular Kotlin applications:
-* [Create a backend application](jvm-create-project-with-spring-boot.md)
-* [Create a cross-platform application for Android and iOS](multiplatform-mobile-getting-started.md)
+おめでとうございます！今やKotlinのツアーを無事終了したあなたとしては、Kotlinの人気の使い道のチュートリアルを要チェックです！
+
+* [Create a backend application](https://kotlinlang.org/docs/jvm-create-project-with-spring-boot.html) （未翻訳）
+* [Create a cross-platform application for Android and iOS](https://kotlinlang.org/docs/multiplatform-mobile-getting-started.html) （未翻訳）

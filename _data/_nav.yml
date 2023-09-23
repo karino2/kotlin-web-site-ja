@@ -45,6 +45,8 @@ reference:
                 title: 文字
               - url: /docs/booleans.html
                 title: 真偽値（Boolean）
+              - url: /docs/arrays.html
+                title: 配列
           - title: 型チェックとキャスト
             url: /docs/typecasts.html
       - url: /docs/packages.html

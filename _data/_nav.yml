@@ -41,6 +41,8 @@ reference:
                 title: 概要
               - url: /docs/numbers.html
                 title: 数値
+              - url: /docs/characters.html
+                title: 文字
           - title: 型チェックとキャスト
             url: /docs/typecasts.html
       - url: /docs/packages.html

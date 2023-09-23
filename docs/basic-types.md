@@ -10,49 +10,11 @@ Kotlinでは、すべての変数に対して何らかのメンバ関数やプ�
 
 このセクションでは、Kotlinの基本型について解説します：
 * [数値](numbers.md)とその[符号なしバージョン](unsigned-integer-types.md)
-* [Booleans](booleans.md)
+* [真偽値（Booleans）](booleans.md)
 * [文字](characters.md)
 * [文字列](strings.md)
 * [配列](arrays.md)
 
-
-## 文字
-
-
-## 真偽値 (Boolean)
-
-<!--original
-## Booleans
--->
-
-[translation here]
-`Boolean`型は真偽値を表し、*true*{: .keyword }と*false*{: .keyword }の2つの値があります。
-
-<!--original
-The type `Boolean` represents booleans, and has two values: *true*{: .keyword } and *false*{: .keyword }.
--->
-
-Booleanはnull許容参照が必要なときにボクシングされます。
-
-<!--original
-Booleans are boxed if a nullable reference is needed.
--->
-
-Booleanのビルトイン演算は次を含みます：
-
-<!--original
-Built-in operations on booleans include
--->
-
-* `||` – 遅延評価論理和
-* `&&` – 遅延評価論理積
-* `!` - 否定
-
-<!--original
-* `||` – lazy disjunction
-* `&&` – lazy conjunction
-* `!` - negation
--->
 
 ## 配列
 

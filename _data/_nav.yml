@@ -43,6 +43,8 @@ reference:
                 title: 数値
               - url: /docs/characters.html
                 title: 文字
+              - url: /docs/booleans.html
+                title: 真偽値（Boolean）
           - title: 型チェックとキャスト
             url: /docs/typecasts.html
       - url: /docs/packages.html

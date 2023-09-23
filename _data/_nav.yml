@@ -41,10 +41,12 @@ reference:
                 title: 概要
               - url: /docs/numbers.html
                 title: 数値
-              - url: /docs/characters.html
-                title: 文字
+              - url: /docs/unsigned-integer-types.html
+                title: 符号なし整数型
               - url: /docs/booleans.html
                 title: 真偽値（Boolean）
+              - url: /docs/characters.html
+                title: 文字
               - url: /docs/strings.html
                 title: 文字列
               - url: /docs/arrays.html

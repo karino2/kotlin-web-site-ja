@@ -16,10 +16,12 @@ Kotlinは数値を扱ういくつかのビルドイン型を提供していま�
 | `Int`	 | 32        |-2,147,483,648 (-2<sup>31</sup>)| 2,147,483,647 (2<sup>31</sup> - 1)|
 | `Long`	 | 64        |-9,223,372,036,854,775,808 (-2<sup>63</sup>)|9,223,372,036,854,775,807 (2<sup>63</sup> - 1)|
 
-When you initialize a variable with no explicit type specification, the compiler automatically infers the type with the 
-smallest range enough to represent the value starting from `Int`. If it is not exceeding the range of `Int`, the type is `Int`.
-If it exceeds, the type is `Long`. To specify the `Long` value explicitly, append the suffix `L` to the value. 
-Explicit type specification triggers the compiler to check the value not to exceed the range of the specified type.
+変数に明示的に型をつけずに初期化する場合、コンパイラは自動的に格納に必要な十分なサイズを持つ中で一番小さな型を、しかし`Int`から始めて類推します。
+もし`Int`の範囲を越えていなければ、型は`Int`になります。
+もし`Int`を超えていたら`Long`になります。
+`Long`の値を明示的に指示するためには、値の最後に`L`をつけます。
+明示的に型を指定すると、コンパイラはその型の範囲に値が収まっているかをチェックするようになります。
+
 
 ```kotlin
 val one = 1 // Int
@@ -28,11 +30,11 @@ val oneLong = 1L // Long
 val oneByte: Byte = 1
 ```
 
-> In addition to integer types, Kotlin also provides unsigned integer types. For more information, see [Unsigned integer types](unsigned-integer-types.md).
+> 整数型の他に、Kotlinは符号なし整数型も提供しています。詳細は[符号なし整数型](unsigned-integer-types.md)を参照。
 >
-{type="tip"}
+{: .tip}
 
-## Floating-point types
+## 浮動小数点型
 
 For real numbers, Kotlin provides floating-point types `Float` and `Double` that adhere to the [IEEE 754 standard](https://en.wikipedia.org/wiki/IEEE_754).
 `Float` reflects the IEEE 754 _single precision_, while `Double` reflects _double precision_.

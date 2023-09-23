@@ -131,7 +131,7 @@ Function returning no meaningful value:
 {% capture kotlin-basic-syntax-return-unit-1 %}
 //sampleStart
 fun printSum(a: Int, b: Int): Unit {
-    println("sum of $a and $b is ${a + b}")
+    println("$a と $b の合計は ${a + b}")
 }
 //sampleEnd
 
@@ -183,7 +183,7 @@ fun main() {
     val a: Int = 1  // 即座の代入
     val b = 2   // `Int`型が推論される
     val c: Int  // 初期値が与えられない場合、型指定が必要
-    c = 3       // あとで代入
+    c = 3       // あとから代入
 //sampleEnd
     println("a = $a, b = $b, c = $c")
 }
@@ -299,7 +299,7 @@ Kotlinのブロックコメントは入れ子にすることができます。
 and ends here. */
 ```
 
-ドキュメンテーションコメントの構文の詳細については、[Kotlinコードの文章化](kotlin-doc.html)を参照してください。
+ドキュメンテーションコメントの構文の詳細については、[Kotlinコードの文書化](kotlin-doc.html)を参照してください。
 
 ## 文字列テンプレートの使用
 

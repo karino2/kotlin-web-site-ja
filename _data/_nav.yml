@@ -63,7 +63,7 @@ reference:
         - url: /docs/exceptions.html
           title: 例外
       - url: /docs/packages.html
-        title: パッケージ
+        title: パッケージとインポート
       - title: クラスとオブジェクト
         isFolder: true
         items:

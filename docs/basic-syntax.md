@@ -520,7 +520,7 @@ fun main() {
 {% endcapture %}
 {% include kotlin_quote.html body=kotlin-basic-syntax-iterate-range %}
 
-順番以外の例：
+等差数列の上を反復処理する例：
 
 {% capture kotlin-basic-syntax-iterate-progression %}
 fun main() {

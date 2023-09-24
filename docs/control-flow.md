@@ -473,7 +473,7 @@ do {
 ## Break and continue in loops
 -->
 
-Kotlinは従来通りの、ループ中の *break*{: .keyword }と*continue*{: .keyword } 演算子をサポートしています。[Returnとジャンプ](returns.html)を参照してください。
+Kotlinは従来通りの、ループ内の *break*{: .keyword }と*continue*{: .keyword } 演算子をサポートしています。[Returnとジャンプ](returns.html)を参照してください。
 
 <!--original
 Kotlin supports traditional *break*{: .keyword } and *continue*{: .keyword } operators in loops. See [Returns and jumps](returns.html).

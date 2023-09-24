@@ -137,6 +137,10 @@ reference:
               title: コレクション
             - url: /docs/java-to-kotlin-nullability-guide.html
               title: Nullability
+  - title: 標準ライブラリ
+    items:
+      - url: /docs/opt-in-requirements.html
+        title: オプトインの要求
   - title: Tools
     description:
     items:

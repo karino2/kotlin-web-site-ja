@@ -352,7 +352,7 @@ Classes can contain
 * [関数](functions.html)
 * [プロパティ](properties.html)
 * [ネストされたインナークラス](nested-classes.html)
-* [オブジェクトの宣言](object-declarations.html)
+* [オブジェクト宣言](object-declarations.md)
 
 
 <!--original

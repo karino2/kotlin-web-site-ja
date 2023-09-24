@@ -21,7 +21,7 @@ title: "Object Expressions and Declarations"
 -->
 
 時には、あるクラスをわずかに修正しただけのオブジェクトを、それのための新しいサブクラスを明示的に宣言せずに作成する必要があります。Javaでは *無名内部クラス* でこの事例を処理します。
-Kotlinでは*オブジェクト式* と *オブジェクトの宣言* だけでこの概念を一般化します。
+Kotlinでは*オブジェクト式* と *オブジェクト宣言* だけでこの概念を一般化します。
 
 <!--original
 Sometimes we need to create an object of a slight modification of some class, without explicitly declaring a new subclass for it.
@@ -170,7 +170,7 @@ fun countClicks(window: JComponent) {
 ```
 -->
 
-## オブジェクトの宣言
+## オブジェクト宣言
 
 <!--original
 ## Object declarations
@@ -192,7 +192,7 @@ object DataProviderManager {
     get() = // ...
 }
 ```
-- これはオブジェクトの宣言と呼ばれ、それは常に object キーワードの後に名前を持ちます。ちょうど変数宣言と同じように、オブジェクトの宣言は式ではなく、代入文の右側に使用することはできません。
+- これはオブジェクト宣言と呼ばれ、それは常に object キーワードの後に名前を持ちます。ちょうど変数宣言と同じように、オブジェクト宣言は式ではなく、代入文の右側に使用することはできません。
 
 <!--original
 ``` kotlin
@@ -271,7 +271,7 @@ object DefaultListener : MouseAdapter() {
 ### Companion Objects
 -->
 
-クラス内のオブジェクトの宣言は、 *companion*{: .keyword } キーワードでマークすることができます。
+クラス内のオブジェクト宣言は、 *companion*{: .keyword } キーワードでマークすることができます。
 
 <!--original
 An object declaration inside a class can be marked with the *companion*{: .keyword } keyword:
@@ -387,7 +387,7 @@ for more details.
 ### Semantic difference between object expressions and declarations
 -->
 
-オブジェクト式とオブジェクトの宣言の間には、ある重要な意味上の違いがあります：
+オブジェクト式とオブジェクト宣言の間には、ある重要な意味上の違いがあります：
 
 <!--original
 There is one important semantic difference between object expressions and object declarations:

@@ -68,7 +68,9 @@ reference:
         isFolder: true
         items:
           - url: /docs/classes.html
-            title: クラスと継承
+            title: クラス
+          - url: /docs/inheritance.html
+            title: 継承
           - url: /docs/properties.html
             title: プロパティとフィールド
           - url: /docs/interfaces.html

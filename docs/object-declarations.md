@@ -265,7 +265,9 @@ object DefaultListener : MouseAdapter() {
 
 -->
 
-### コンパニオンオブジェクト (Companion Objects)
+### コンパニオンオブジェクト
+
+ (Companion Objects)
 
 <!--original
 ### Companion Objects

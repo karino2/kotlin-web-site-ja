@@ -1,150 +1,151 @@
 ---
-type: doc
 layout: reference
-category: "Syntax"
-title: "Ranges"
+title: "範囲と数列"
 ---
+# 範囲(Range)と数列(Progression)
 
-# Ranges
+Kotlin lets you easily create ranges of values using the [`.rangeTo()`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.ranges/range-to.html)
+and [`.rangeUntil()`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.ranges/range-until.html) functions from the 
+`kotlin.ranges` package. 
 
-Range expressions are formed with `rangeTo` functions that have the operator form `..` which is complemented by *in*{: .keyword } and *!in*{: .keyword }.
-Range is defined for any comparable type, but for integral primitive types it has an optimized implementation. Here are some examples of using ranges
+To create:
+* a closed-ended range, call the `.rangeTo()` function with the `..` operator.
+* an open-ended range, call the `.rangeUntil()` function with the `..<` operator.
 
-``` kotlin
-if (i in 1..10) { // equivalent of 1 <= i && i <= 10
-  println(i)
+For example:
+
+```kotlin
+fun main() {
+//sampleStart
+    // Closed-ended range
+    println(4 in 1..4)
+    // true
+    
+    // Open-ended range
+    println(4 in 1..<4)
+    // false
+//sampleEnd
 }
 ```
+{kotlin-runnable="true" kotlin-min-compiler-version="1.3" id="kotlin-ranges-rangeto-rangeuntil"}
 
-Integral type ranges (`IntRange`, `LongRange`, `CharRange`) have an extra feature: they can be iterated over.
-The compiler takes care of converting this analogously to Java's indexed *for*{: .keyword }-loop, without extra overhead.
+Ranges are particularly useful for iterating over `for` loops:
 
-``` kotlin
-for (i in 1..4) print(i) // prints "1234"
-
-for (i in 4..1) print(i) // prints nothing
+```kotlin
+fun main() {
+//sampleStart
+    for (i in 1..4) print(i)
+    // 1234
+//sampleEnd
+}
 ```
+{kotlin-runnable="true" kotlin-min-compiler-version="1.3" id="kotlin-ranges-for-loop"}
 
-What if you want to iterate over numbers in reverse order? It's simple. You can use the `downTo()` function defined in the standard library
+To iterate numbers in reverse order, use the [`downTo`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.ranges/down-to.html)
+function instead of `..`.
 
-``` kotlin
-for (i in 4 downTo 1) print(i) // prints "4321"
+```kotlin
+fun main() {
+//sampleStart
+    for (i in 4 downTo 1) print(i)
+    // 4321
+//sampleEnd
+}
 ```
+{kotlin-runnable="true" kotlin-min-compiler-version="1.3" id="kotlin-ranges-downto"}
 
-Is it possible to iterate over numbers with arbitrary step, not equal to 1? Sure, the `step()` function will help you
+It is also possible to iterate over numbers with an arbitrary step (not necessarily 1). This is done via the
+[`step`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.ranges/step.html) function.
 
-``` kotlin
-for (i in 1..4 step 2) print(i) // prints "13"
+```kotlin
 
-for (i in 4 downTo 1 step 2) print(i) // prints "42"
+fun main() {
+//sampleStart
+    for (i in 0..8 step 2) print(i)
+    println()
+    // 02468
+    for (i in 0..<8 step 2) print(i)
+    println()
+    // 0246
+    for (i in 8 downTo 0 step 2) print(i)
+    // 86420
+//sampleEnd
+}
 ```
+{kotlin-runnable="true" kotlin-min-compiler-version="1.3" id="kotlin-ranges-step"}
 
+## Progression
 
-## How it works
+The ranges of integral types, such as `Int`, `Long`, and `Char`, can be treated as
+[arithmetic progressions](https://en.wikipedia.org/wiki/Arithmetic_progression).
+In Kotlin, these progressions are defined by special types: [`IntProgression`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.ranges/-int-progression/index.html),
+[`LongProgression`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.ranges/-long-progression/index.html),
+and [`CharProgression`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.ranges/-char-progression/index.html).
 
-Ranges implement a common interface in the library: `ClosedRange<T>`.
+Progressions have three essential properties: the `first` element, the `last` element, and a non-zero `step`.
+The first element is `first`, subsequent elements are the previous element plus a `step`. 
+Iteration over a progression with a positive step is equivalent to an indexed `for` loop in Java/JavaScript.
 
-`ClosedRange<T>` denotes a closed interval in the mathematical sense, defined for comparable types.
-It has two endpoints: `start` and `endInclusive`, which are included in the range.
-The main operation is `contains`, usually used in the form of *in*{: .keyword }/*!in*{: .keyword } operators.
-
-Integral type progressions (`IntProgression`, `LongProgression`, `CharProgression`) denote an arithmetic progression.
-Progressions are defined by the `first` element, the `last` element and a non-zero `increment`.
-The first element is `first`, subsequent elements are the previous element plus `increment`. The `last` element is always hit by iteration unless the progression is empty.
-
-A progression is a subtype of `Iterable<N>`, where `N` is `Int`, `Long` or `Char` respectively, so it can be used in *for*{: .keyword }-loops and functions like `map`, `filter`, etc.
-Iteration over `Progression` is equivalent to an indexed *for*{: .keyword }-loop in Java/JavaScript:
-
-``` java
-for (int i = first; i != last; i += increment) {
+```java
+for (int i = first; i <= last; i += step) {
   // ...
 }
 ```
 
-For integral types, the `..` operator creates an object which implements both `ClosedRange<T>` and `*Progression`.
-For example, `IntRange` implements `ClosedRange<Int>` and extends `IntProgression`, thus all operations defined for `IntProgression` are available for `IntRange` as well.
-The result of the `downTo()` and `step()` functions is always a `*Progression`.
+When you create a progression implicitly by iterating a range, this progression's `first` and `last` elements are the
+range's endpoints, and the `step` is 1.
 
-Progressions are constructed with the `fromClosedRange` function defined in their companion objects:
-
-``` kotlin
-  IntProgression.fromClosedRange(start, end, increment)
-```
-
-The `last` element of the progression is calculated to find maximum value not greater than the `end` value for positive `increment` or minimum value not less than the `end` value for negative `increment` such that `(last - first) % increment == 0`.
-
-
-
-## Utility functions
-
-### `rangeTo()`
-
-The `rangeTo()` operators on integral types simply call the constructors of `*Range` classes, e.g.:
-
-``` kotlin
-class Int {
-  //...
-  operator fun rangeTo(other: Long): LongRange = LongRange(this, other)
-  //...
-  operator fun rangeTo(other: Int): IntRange = IntRange(this, other)
-  //...
+```kotlin
+fun main() {
+//sampleStart
+    for (i in 1..10) print(i)
+    // 12345678910
+//sampleEnd
 }
 ```
+{kotlin-runnable="true" kotlin-min-compiler-version="1.3" id="kotlin-ranges-progressions"}
 
-Floating point numbers (`Double`, `Float`) do not define their `rangeTo` operator, and the one provided by the standard library for generic `Comparable` types is used instead:
+To define a custom progression step, use the `step` function on a range.
 
-``` kotlin
-  public operator fun <T: Comparable<T>> T.rangeTo(that: T): ClosedRange<T>
-```
+```kotlin
 
-The range returned by this function cannot be used for iteration.
-
-### `downTo()`
-
-The `downTo()` extension function is defined for any pair of integral types, here are two examples:
-
-``` kotlin
-fun Long.downTo(other: Int): LongProgression {
-  return LongProgression.fromClosedRange(this, other, -1.0)
-}
-
-fun Byte.downTo(other: Int): IntProgression {
-  return IntProgression.fromClosedRange(this, other, -1)
+fun main() {
+//sampleStart
+    for (i in 1..8 step 2) print(i)
+    // 1357
+//sampleEnd
 }
 ```
+{kotlin-runnable="true" kotlin-min-compiler-version="1.3" id="kotlin-ranges-progressions-step"}
 
-### `reversed()`
+The `last` element of the progression is calculated this way:
+* For a positive step: the maximum value not greater than the end value such that `(last - first) % step == 0`.
+* For a negative step: the minimum value not less than the end value such that `(last - first) % step == 0`.
 
-The `reversed()` extension functions are defined for each `*Progression` classes, and all of them return reversed progressions.
+Thus, the `last` element is not always the same as the specified end value.
 
-``` kotlin
-fun IntProgression.reversed(): IntProgression {
-  return IntProgression.fromClosedRange(last, first, -increment)
+```kotlin
+
+fun main() {
+//sampleStart
+    for (i in 1..9 step 3) print(i) // the last element is 7
+    // 147
+//sampleEnd
 }
 ```
+{kotlin-runnable="true" kotlin-min-compiler-version="1.3" id="kotlin-ranges-progressions-last"}
 
-### `step()`
+Progressions implement `Iterable<N>`, where `N` is `Int`, `Long`, or `Char` respectively, so you can use them in various
+[collection functions](collection-operations.md) like `map`, `filter`, and other.
 
-`step()` extension functions are defined for `*Progression` classes,
-all of them return progressions with modified `step` values (function parameter).
-The step value is required to be always positive, therefore this function never changes the direction of iteration.
+```kotlin
 
-``` kotlin
-fun IntProgression.step(step: Int): IntProgression {
-  if (step <= 0) throw IllegalArgumentException("Step must be positive, was: $step")
-  return IntProgression.fromClosedRange(first, last, if (increment > 0) step else -step)
-}
-
-fun CharProgression.step(step: Int): CharProgression {
-  if (step <= 0) throw IllegalArgumentException("Step must be positive, was: $step")
-  return CharProgression.fromClosedRange(first, last, step)
+fun main() {
+//sampleStart
+    println((1..10).filter { it % 2 == 0 })
+    // [2, 4, 6, 8, 10]
+//sampleEnd
 }
 ```
+{kotlin-runnable="true" kotlin-min-compiler-version="1.3" id="kotlin-ranges-progressions-filter"}
 
-Note that the `last` value of the returned progression may become different from the `last` value of the original progression in order to preserve the invariant `(last - first) % increment == 0`. Here is an example:
-
-``` kotlin
-  (1..12 step 2).last == 11  // progression with values [1, 3, 5, 7, 9, 11]
-  (1..12 step 3).last == 10  // progression with values [1, 4, 7, 10]
-  (1..12 step 4).last == 9   // progression with values [1, 5, 9]
-```

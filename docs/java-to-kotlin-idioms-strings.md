@@ -4,7 +4,7 @@
 This guide contains examples of how to perform typical tasks with strings in Java and Kotlin.
 It will help you migrate from Java to Kotlin and write your code in the authentically Kotlin way.
 
-## Concatenate strings
+## 文字列の連結
 
 In Java, you can do this in the following way:
 

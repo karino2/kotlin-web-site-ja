@@ -539,7 +539,7 @@ fun main() {
 ```
 {kotlin-runnable="true" id="group-elements-kotlin"}
 
-## Filter elements
+## 要素のフィルタリング
 
 In Java, to filter elements from a collection, you need to use the [Stream API](https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/stream/package-summary.html). 
 The Stream API has `intermediate` and `terminal` operations. `filter()` is an intermediate operation, which returns a stream. 

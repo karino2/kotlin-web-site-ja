@@ -1489,7 +1489,6 @@ a:hover {
   float: right;
   height: 34px;
   width: 0;
-  display: inline-block;
   vertical-align: middle;
   opacity: 0;
   transition: all 0.4s;
@@ -1525,8 +1524,8 @@ a:hover {
 }
 
 .global-search._expanded {
-  background-color: white;
   border-radius: 4px;
+  font-size: 14px;
 }
 
 .global-search._expanded .search-button .icon {
@@ -1537,6 +1536,7 @@ a:hover {
   opacity: 1;
   width: 300px;
 }
+
 
 .global-nav {
   display: -ms-flexbox;

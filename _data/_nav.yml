@@ -86,7 +86,7 @@ reference:
             title: 委譲
           - url: /docs/delegated-properties.html
             title: 委譲プロパティ
-      - title: 関数関連
+      - title: 関数など
         isFolder: true
         items:
           - url: /docs/functions.html
@@ -117,57 +117,26 @@ reference:
         title: Reflection
       - url: /docs/type-safe-builders.html
         title: Type-Safe Builders
-
-
-
-  - title: Reference
-    description: API and Grammar
+  - title: プラットフォーム
     items:
-      - url: /api/latest/jvm/stdlib/index.html
-        title: API Reference
-      - url: /docs/grammar.html
-        title: Grammar
-
-
-  - title: Java Interop
-    description: What you need to know about interoperability with Java.
-    items:
-      - url: /docs/java-interop.html
-        title: Calling Java from Kotlin
-      - url: /docs/java-to-kotlin-interop.html
-        title: Calling Kotlin from Java
-
-  - title: JavaScript
-    description: Using Kotlin with JavaScript
-    items:
-     - url: /docs/dynamic-type.html
-       title: Dynamic Type
-     - url: /docs/js-interop.html
-       title: JavaScript Interoperability
-     - url: /docs/js-reflection.html
-       title: JavaScript Reflection
-
+    - title: JVM
+      isFolder: true
+      items:
+        - url: /docs/java-interop.html
+          title: Calling Java from Kotlin
+        - url: /docs/java-to-kotlin-interop.html
+          title: Calling Kotlin from Java
+        - title: JavaからKotlinへの移行ガイド
+          isFolder: true
+          items:
+            - url: /docs/java-to-kotlin-idioms-strings.html
+              title: 文字列
+            - url: /docs/java-to-kotlin-collections-guide.html
+              title: コレクション
+            - url: /docs/java-to-kotlin-nullability-guide.html
+              title: Nullability
   - title: Tools
     description:
     items:
-#      - /docs/kotlin-build-tools.html: Kotlin Build Tools
       - url: /docs/kotlin-doc.html
-        title: Documenting Kotlin Code
-      - url: /docs/using-maven.html
-        title: Using Maven
-      - url: /docs/using-ant.html
-        title: Using Ant
-      - url: /docs/using-gradle.html
-        title: Using Gradle
-      - url: /docs/kotlin-osgi.html
-        title: Kotlin and OSGi
-
-  - title: FAQ
-    description: Every question you could possibly think of, might be answered.
-    items:
-      - url: /docs/faq.html
-        title: FAQ
-      - url: /docs/comparison-to-java.html
-        title: Comparison to Java
-      - url: /docs/comparison-to-scala.html
-        title: Comparison to Scala
+        title: KDoc

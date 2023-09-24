@@ -79,6 +79,8 @@ reference:
             title: 拡張
           - url: /docs/data-classes.html
             title: データクラス
+          - url: /docs/sealed-classes.html
+            title: sealedクラスとインターフェース
           - url: /docs/generics.html
             title: ジェネリクス
           - url: /docs/nested-classes.html

@@ -4,99 +4,105 @@ title: "例外"
 ---
 # 例外(Exceptions)
 
-## Exception classes
+## Exceptionクラス
 
-All exception classes in Kotlin inherit the `Throwable` class.
-Every exception has a message, a stack trace, and an optional cause.
+Kotlinのすべての例外クラスは`Throwable`クラスを継承しています。
+すべてのexceptionはメッセージ、スタックトレース、そしてオプショナルですが理由（cause）を持ちます。
 
-To throw an exception object, use the `throw` expression:
+例外オブジェクトを投げるには、`throw`式を使います：
 
-```kotlin
+{% capture hello-exception %}
 fun main() {
 //sampleStart
     throw Exception("Hi There!")
 //sampleEnd
 }
-```
-{kotlin-runnable="true" kotlin-min-compiler-version="1.3"}
+{% endcapture %}
+{% include kotlin_quote.html body=hello-exception %}
 
-To catch an exception, use the `try`...`catch` expression:
+例外をcatchするには、`try` ... `catch`式を使います：
 
 ```kotlin
 try {
-    // some code
+    // 適当なコード
 } catch (e: SomeException) {
-    // handler
+    // 例外ハンドラー
 } finally {
-    // optional finally block
+    //　finallyブロック（オプショナル）
 }
 ```
 
-There may be zero or more `catch` blocks, and the `finally` block may be omitted.
-However, at least one `catch` or `finally` block is required.
+`catch`ブロックは一つもなかったり、もっとたくさんあっても良いです。
+そしてfinallyブロックは省略しても良いです。
+しかし、`catch`か`finally`ブロックのどちらか一つは最低でも必要です。
 
-### Try is an expression
+### tryは式である
 
-`try` is an expression, which means it can have a return value:
+`try`は式です。つまり、それは値を返す事が出来ます：
 
 ```kotlin
 val a: Int? = try { input.toInt() } catch (e: NumberFormatException) { null }
 ```
 
-The returned value of a `try` expression is either the last expression in the `try` block or the
-last expression in the `catch` block (or blocks).
-The contents of the `finally` block don't affect the result of the expression.
+`try`式の返す値は`try`ブロックの最後の式か`catch`ブロックの最後の値です。
+`finally`ブロックの中身は式の結果となる値には影響を与えません。
 
-## Checked exceptions
+## Checked例外（検査例外）
 
-Kotlin does not have checked exceptions. There are many reasons for this, but we will provide a simple example that illustrates why it is the case.
+Kotlinにはchecked例外(checked exception)はありません。
+それにはたくさんの理由がありますが、どうして無いのかを示す簡単な例を挙げておきましょう。
 
-The following is an example interface from the JDK implemented by the `StringBuilder` class:
+以下は、JDK実装から持ってきた`StringBuilder`クラスのインターフェースです：
 
 ``` java
 Appendable append(CharSequence csq) throws IOException;
 ```
 
-This signature says that every time I append a string to something (a `StringBuilder`, some kind of a log, a console, etc.),
-I have to catch the `IOExceptions`. Why? Because the implementation might be performing IO operations (`Writer` also implements `Appendable`).
-The result is code like this all over the place:
+このシグニチャは何か(何らかの`StringBuilder`、例えばログとかコンソールとか)に文字列を追加（append）する都度、
+`IOException`をcatchしなくてはいけない、と言っています。
+なぜでしょう？それは実装によってはIOオペレーションを実行するかもしれないらです（`Writer`も`Appendable`を実装しています）。
+結果としてコードは、いたる所で以下のようになります：
 
 ```kotlin
 try {
     log.append(message)
 } catch (IOException e) {
-    // Must be safe
+    // 必ず問題無い
 }
 ```
 
-And that's not good. Just take a look at [Effective Java, 3rd Edition](https://www.oracle.com/technetwork/java/effectivejava-136174.html), Item 77: *Don't ignore exceptions*.
+そしてこれは良くない事です。
 
-Bruce Eckel says this about checked exceptions:
+[Effective Java, 3rd Edition](https://www.oracle.com/technetwork/java/effectivejava-136174.html)を見てみると、Item 77には、*Exceptionを無視してはいけない（Don't ignore exceptions）*とあります。
 
-> Examination of small programs leads to the conclusion that requiring exception specifications
->could both enhance developer productivity and enhance code quality, but experience with large software projects suggests
->a different result – decreased productivity and little or no increase in code quality.
+Bruce Eckelはchecked例外についてこう述べています：
 
-And here are some additional thoughts on the matter:
+> 小さいプログラムを調査すると、例外仕様を要求するのは、開発者の生産性もコードの質も上がり得る、と結論出来ます。
+> ですが大規模なソフトウェアプロジェクトの経験は、違う結論を示唆しています。生産性は低下し、コードの質の向上もほとんどあるいは全く無い、というものです。
+>
+{: .tip}
 
-* [Java's checked exceptions were a mistake](https://radio-weblogs.com/0122027/stories/2003/04/01/JavasCheckedExceptionsWereAMistake.html) (Rod Waldhoff)
-* [The Trouble with Checked Exceptions](https://www.artima.com/intv/handcuffs.html) (Anders Hejlsberg)
+このトピックについてのさらなる考察を以下にリンクしておきます：
 
-If you want to alert callers about possible exceptions when calling Kotlin code from Java, Swift, or Objective-C,
-you can use the `@Throws` annotation. Read more about using this annotation [for Java](java-to-kotlin-interop.md#checked-exceptions)
-and [for Swift and Objective-C](native-objc-interop.md#errors-and-exceptions).
+* [Javaのchecked例外は誤りだった（Java's checked exceptions were a mistake）](https://radio-weblogs.com/0122027/stories/2003/04/01/JavasCheckedExceptionsWereAMistake.html) (Rod Waldhoff)
+* [checked例外の問題点（The Trouble with Checked Exceptions）](https://www.artima.com/intv/handcuffs.html) (Anders Hejlsberg)
+
+Java, Swift, Objective-CなどからKotlinのコードを呼ぶ時に呼び出し元に発生しうる例外を警告したければ、
+`@Throws`アノテーションを使う事が出来ます。
+このアノテーションについては、[Javaについてはこちらを](java-to-kotlin-interop.md#checked-exceptions)、
+[SwiftとObjective-Cはこちら](https://kotlinlang.org/docs/native-objc-interop.html#errors-and-exceptions)を参照ください。
 
 ## Nothing型
 
-`throw` is an expression in Kotlin, so you can use it, for example, as part of an Elvis expression:
+`throw`はKotlinにおいては式です。だからそれを例えば、Elvis式などの一部として使えます：
 
 ```kotlin
-val s = person.name ?: throw IllegalArgumentException("Name required")
+val s = person.name ?: throw IllegalArgumentException("名前が必要です")
 ```
 
-The `throw` expression has the type `Nothing`.
-This type has no values and is used to mark code locations that can never be reached.
-In your own code, you can use `Nothing` to mark a function that never returns:
+`throw`式は`Nothing`型を持ちます。
+この型は値を持たず、そこには絶対にコードが到達しない事を表します。
+あなたのコードでも、決して戻ってこない関数には`Nothing`でその旨マークすることが出来ます：
 
 ```kotlin
 fun fail(message: String): Nothing {
@@ -104,23 +110,23 @@ fun fail(message: String): Nothing {
 }
 ```
 
-When you call this function, the compiler will know that the execution doesn't continue beyond the call:
+この関数を呼ぶ時は、コンパイラは実行はそのコードの続きに行く事は無いという事を認識出来ます：
 
 ```kotlin
-val s = person.name ?: fail("Name required")
-println(s)     // 's' is known to be initialized at this point
+val s = person.name ?: fail("名前が必要です")
+println(s)     // この地点では 's' は初期化されていると分かっている
 ```
 
-You may also encounter this type when dealing with type inference. The nullable variant of this type,
-`Nothing?`, has exactly one possible value, which is `null`. If you use `null` to initialize
-a value of an inferred type and there's no other information that can be used to determine a more
-specific type, the compiler will infer the `Nothing?` type:
+あなたはまた、型推論の所でもNothing型と遭遇する事があるかもしれません。
+Nothing型のnullable版である`Nothing?`は、一つだけ可能な値があります。それは`null`です。
+あなたがもし推論される型の所で`null`の値を用いて初期化し、他に何も型情報を推測する手がかりが無いケースでは、
+コンパイラはこれを`Nothing?`型だと推測します：
 
 ```kotlin
-val x = null           // 'x' has type `Nothing?`
-val l = listOf(null)   // 'l' has type `List<Nothing?>
+val x = null           // 'x' は`Nothing?`型
+val l = listOf(null)   // 'l' は`List<Nothing?>型
 ```
 
-## Java interoperability
+## Javaインターオペラビリティ
 
-Please see the section on exceptions in the [Java interoperability page](java-interop.md) for information about Java interoperability.
+例外に関してのJavaとのインターオペラビリティの詳細については、[Javaとのインターオペラビリティのページ](java-interop.md)を参照ください。

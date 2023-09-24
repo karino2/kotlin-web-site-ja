@@ -35,3 +35,4 @@ $ docker run --rm --volume="$PWD:/srv/jekyll" -it -p 4000:4000 karino2/jekyll je
 ## 誰か直してくれないかな〜と思っている事
 
 - blockquote.noteのアイコンが気に食わない
+  - warningはblockquoteのスタイルがそもそも無いのでアイコンつけて何かしたい

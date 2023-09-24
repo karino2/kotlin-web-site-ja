@@ -36,37 +36,41 @@ val oneByte: Byte = 1
 
 ## 浮動小数点型
 
-For real numbers, Kotlin provides floating-point types `Float` and `Double` that adhere to the [IEEE 754 standard](https://en.wikipedia.org/wiki/IEEE_754).
-`Float` reflects the IEEE 754 _single precision_, while `Double` reflects _double precision_.
+実数に関しては、Kotlinは`Float`と`Double`の浮動小数点を提供しています。
+[IEEE 754 standard](https://en.wikipedia.org/wiki/IEEE_754)の標準に準拠していて、
+`Float` は IEEE 754 の**single precision（単精度）**に、`Double` は **double precision(倍精度)**に対応しています。
 
-These types differ in their size and provide storage for floating-point numbers with different precision:
+（訳注：日本語のリンク[IEEE 754](https://ja.wikipedia.org/wiki/IEEE_754)）
 
-| Type	 |Size (bits)|Significant bits|Exponent bits|Decimal digits|
+これらの型はサイズが異なり、つまり格納する領域の大きさが異なります。
+これは対応出来る精度の違いとなります：
+
+| 型	 |サイズ (bits)|仮数（Significant） bits|指数（Exponent） bits|10進数での桁数|
 |--------|-----------|--------------- |-------------|--------------|
 | `Float`	 | 32        |24              |8            |6-7            |
 | `Double` | 64        |53              |11           |15-16          |    
 
-You can initialize `Double` and `Float` variables  with numbers having a fractional part.
-It's separated from the integer part by a period (`.`)
-For variables initialized with fractional numbers, the compiler infers the `Double` type:
+`Double`と`Float`は、小数部を持つ数字を使う事で初期化出来る。
+整数部と小数部はピリオド(`.`)で区切られる。
+小数を持つ数で初期化すると、コンパイラは`Double`型だと推測する。
 
 ```kotlin
 val pi = 3.14 // Double
-// val one: Double = 1 // Error: type mismatch
+// val one: Double = 1 // Error: 型が合わない
 val oneDouble = 1.0 // Double
 ```
 
-To explicitly specify the `Float` type for a value, add the suffix `f` or `F`.
-If such a value contains more than 6-7 decimal digits, it will be rounded:
+値を明示的に`Float`としたければ、サフィックスに`f`か`F`を使う。
+それらのサフィックスをつけて、しかも6〜7桁より大きい桁数の場合は丸められる。
 
 ```kotlin
 val e = 2.7182818284 // Double
-val eFloat = 2.7182818284f // Float, actual value is 2.7182817
+val eFloat = 2.7182818284f // Float, 実際の値は 2.7182817 と解釈される
 ```
 
-Unlike some other languages, there are no implicit widening conversions for numbers in Kotlin.
-For example, a function with a `Double` parameter can be called only on `Double` values, but not `Float`,
-`Int`, or other numeric values:
+他の言語と違い、Kotlinでは数字の暗黙の拡張側への変換は行いません。
+例えば`Double`の引数の関数は、`Double`に対してしか呼べず、`Float`、`Int`、そのほかの数値型に対しては呼ぶ事ができません：
+
 
 ```kotlin
 fun main() {
@@ -77,12 +81,12 @@ fun main() {
     val f = 1.0f 
 
     printDouble(d)
-//    printDouble(i) // Error: Type mismatch
-//    printDouble(f) // Error: Type mismatch
+//    printDouble(i) // Error: 型が合わない
+//    printDouble(f) // Error: 型が合わない
 }
 ```
 
-To convert numeric values to different types, use [explicit conversions](#explicit-number-conversions).
+数値の値を別の型に変換するには、[明示的な変換](#数値の明示的な変換)を使用してください。
 
 ## 数値のリテラル定数
 
@@ -267,7 +271,7 @@ fun main() {
 {% endcapture %}
 {% include kotlin_quote.html body=number-int-div-as-double %}
 
-### Bitwise operations
+### ビット演算
 
 Kotlinは、整数値に対する一通りの**ビット演算（bitwise operations）**を提供します。
 それらの演算は数値の内部表現レベルでビットに直接演算を行います。
@@ -289,30 +293,30 @@ val x = (1 shl 2) and 0x000FF000
 * `inv()` – 各ビットを反転
 
 
-### Floating-point numbers comparison
+### 浮動小数点数の比較
 
-The operations on floating-point numbers discussed in this section are:
+このセクションで議論する浮動小数点数の演算は以下になります：
 
-* Equality checks: `a == b` and `a != b`
-* Comparison operators: `a < b`, `a > b`, `a <= b`, `a >= b`
-* Range instantiation and range checks: `a..b`, `x in a..b`, `x !in a..b`
+* Equalityチェック: `a == b` and `a != b`
+* 比較演算: `a < b`, `a > b`, `a <= b`, `a >= b`
+* 範囲（range）作成と範囲チェック: `a..b`, `x in a..b`, `x !in a..b`
 
-When the operands `a` and `b` are statically known to be `Float` or `Double` or their nullable counterparts (the type is
-declared or inferred or is a result of a [smart cast](typecasts.md#smart-casts)), the operations on the
-numbers and the range that they form follow the [IEEE 754 Standard for Floating-Point Arithmetic](https://en.wikipedia.org/wiki/IEEE_754).
+オペランド`a`と`b`が静的に`Float`か`Double`、またはそのnullableバージョンと判定出来る場合（型が明示的に宣言されているか型推論で決まるか[スマートキャスト](typecasts.md#スマートキャスト)の結果決まる場合）、
+数値に対する演算やそれに基づいて作られる範囲（range）は、[IEEE 754 Standard for Floating-Point Arithmetic](https://en.wikipedia.org/wiki/IEEE_754)に従います。
 
-However, to support generic use cases and provide total ordering, the behavior is different for operands that are **not**
-statically typed as floating-point numbers. For example, `Any`, `Comparable<...>`, or `Collection<T>` types. In this case, the 
-operations use the `equals` and `compareTo` implementations for `Float` and `Double`. As a result:
+しかしながら、ジェネリクスや全順序を与えるために、静的に型が浮動小数点数と**決まらない**ケースではこれらの振る舞いは異なります。
+例えば、`Any`、`Comparable<...>`、`Collection<T>`型など。
+このケースでは、上記の演算は`Float`と`Double`に定義されている`equals`と`compareTo`を使います。
+その結果：
 
-* `NaN` is considered equal to itself
-* `NaN` is considered greater than any other element including `POSITIVE_INFINITY`
-* `-0.0` is considered less than `0.0`
+* `NaN` のequalは自身と一致する
+* `NaN` は`POSITIVE_INFINITY`を含むいかなる他の要素よりも大きい
+* `-0.0` は`0.0`より小さい
 
-Here is an example that shows the difference in behavior between operands statically typed as floating-point numbers 
-(`Double.NaN`) and operands **not** statically typed as floating-point numbers (`listOf(T)`).
+以下に、静的に浮動小数点数と型付けされるオペランド(`Double.NaN`)と、
+静的に型付け**されない**オペランド(`listOf(T)`)による違いを示します：
 
-```kotlin
+{% capture kotlin-numbers-floating-comp %}
 fun main() {
     //sampleStart
     println(Double.NaN == Double.NaN)                 // false
@@ -325,5 +329,5 @@ fun main() {
     // [-0.0, 0.0, Infinity, NaN]
     //sampleEnd
 }
-```
-{kotlin-runnable="true" kotlin-min-compiler-version="1.3" id="kotlin-numbers-floating-comp"}
+{% endcapture %}
+{% include kotlin_quote.html body=kotlin-numbers-floating-comp %}

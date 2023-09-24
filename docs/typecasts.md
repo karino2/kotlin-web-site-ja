@@ -1,11 +1,16 @@
 ---
-type: doc
 layout: reference
-category: "Syntax"
-title: "Type Checks and Casts"
+title: "型チェックとキャスト"
 ---
+# 型チェックとキャスト
 
-# Type Checks and Casts
+In Kotlin, you can perform type checks to check the type of an object at runtime. Type casts convert objects to a 
+different type.
+
+> To learn specifically about **generics** type checks and casts, for example `List<T>`, `Map<K,V>`, see [Generics type checks and casts](generics.md#generics-type-checks-and-casts).
+>
+{: .tip}
+
 
 ## `is` and `!is` Operators
 
@@ -24,10 +29,10 @@ else {
 }
 ```
 
-## Smart Casts
+## スマートキャスト
 
-In many cases, one does not need to use explicit cast operators in Kotlin, because the compiler tracks the
-`is`-checks for immutable values and inserts (safe) casts automatically when needed:
+In most cases, you don't need to use explicit cast operators in Kotlin because the compiler tracks the
+`is`-checks and [explicit casts](#unsafeなキャスト演算子) for immutable values and inserts (safe) casts automatically when necessary:
 
 ``` kotlin
 fun demo(x: Any) {
@@ -47,17 +52,17 @@ The compiler is smart enough to know a cast to be safe if a negative check leads
 or in the right-hand side of `&&` and `||`:
 
 ``` kotlin
-  // x is automatically cast to string on the right-hand side of `||`
-  if (x !is String || x.length == 0) return
+// x is automatically cast to String on the right-hand side of `||`
+if (x !is String || x.length == 0) return
 
-  // x is automatically cast to string on the right-hand side of `&&`
-  if (x is String && x.length > 0)
-      print(x.length) // x is automatically cast to String
+// x is automatically cast to String on the right-hand side of `&&`
+if (x is String && x.length > 0) {
+    print(x.length) // x is automatically cast to String
+}
 ```
 
-
-Such _smart casts_ work for [*when*{: .keyword }-expressions](control-flow.html#when-expressions)
-and [*while*{: .keyword }-loops](control-flow.html#while-loops) as well:
+スマートキャストは[`when`式](control-flow.md#when式)と
+[`while`ループ](control-flow.md#whileループ)でも同様に機能します:
 
 ``` kotlin
 when (x) {
@@ -67,16 +72,19 @@ when (x) {
 }
 ```
 
-Note that smart casts do not work when the compiler cannot guarantee that the variable cannot change between the check and the usage.
-More specifically, smart casts are applicable according to the following rules:
+> Note that smart casts work only when the compiler can guarantee that the variable won't change between the check and its usage.
+>
+{: .warning}
 
-  * *val*{: .keyword } local variables - always;
-  * *val*{: .keyword } properties - if the property is private or internal or the check is performed in the same module where the property is declared. Smart casts aren't applicable to open properties or properties that have custom getters;
-  * *var*{: .keyword } local variables - if the variable is not modified between the check and the usage and is not captured in a lambda that modifies it;
-  * *var*{: .keyword } properties - never (because the variable can be modified at any time by other code).
+Smart casts can be used in the following conditions:
+
+  * *val*{: .keyword } local variables - Always, except [local delegated properties](delegated-properties.md).
+  * *val*{: .keyword } properties - If the property is private or internal, or the check is performed in the same [module](visibility-modifiers.md#モジュール) where the property is declared. Smart casts can't be used to `open`` properties or properties that have custom getters.
+  * *var*{: .keyword } local variables - If the variable is not modified between the check and its usage, is not captured in a lambda that modifies it, and is not a local delegated property.
+  * *var*{: .keyword } properties - Never, because the variable can be modified at any time by other code.
 
 
-## "Unsafe" cast operator
+## "Unsafe"なキャスト演算子
 
 Usually, the cast operator throws an exception if the cast is not possible. Thus, we call it *unsafe*.
 The unsafe cast in Kotlin is done by the infix operator *as*{: .keyword } (see [operator precedence](grammar.html#operator-precedence)):

@@ -144,7 +144,7 @@ val numericValue = when (getRandomBit()) {
 ```
 
 `when`**文**では、以下のケースでは `else`節は必須です：
-* `when`の条件が`Boolean`、[`enum`](enum-classes.md)、[`sealed`](sealed-classes.md) 型か、そのnullableバージョンの場合（訳注：この文は誤りな気がする）
+* `when`の条件が`Boolean`、[`enum`](enum-classes.md)、[`sealed`](sealed-classes.md) 型か、そのnullableバージョンの場合（訳注：この文は誤りな気がする、たぶんBooleanの場合だけが正解）
 * `when`の分岐が対象のすべてのケースをカバーしていない場合
 
 <!-- original
@@ -367,7 +367,7 @@ As mentioned before, *for*{: .keyword } iterates through anything that provides 
 All of these three functions need to be marked as `operator`.
 -->
 
-数字の範囲を繰り返し実行したい場合は、[range式](ranges.md)を使えます：
+数字の範囲を繰り返し実行したい場合は、[range式](ranges.md) が使えます：
 
 {% capture range-for-sample-1 %}
 fun main() {
@@ -390,7 +390,7 @@ rangeや配列の`for`ループはインデックスベースのループにコ�
 A `for` loop over an array is compiled to an index-based loop that does not create an iterator object.
 -->
 
-もし配列やリストをインデックス付きで繰り返し処理したいならば、この方法を使用できる： 
+もし配列やリストをインデックス付きで繰り返し処理したいならば、以下の方法を使用できる： 
 
 <!--original
 If you want to iterate through an array or a list with an index, you can do it this way:
@@ -419,7 +419,7 @@ fun main() {
     val array = arrayOf("a", "b", "c")
 //sampleStart
     for ((index, value) in array.withIndex()) {
-        println("the element at $index is $value")
+        println("$index 番目の要素は $value")
     }
 //sampleEnd
 }
@@ -431,8 +431,6 @@ fun main() {
 <!--original
 ## While Loops
 -->
-
-*while*{: .keyword } と *do*{: .keyword }..*while*{: .keyword } はいつものように動きます：
 
 `while`と`do-while`ループは与えられた条件が満たされている間、本体を実行し続けます。
 両者の違いは条件を確認するタイミングです：
@@ -475,7 +473,7 @@ do {
 ## Break and continue in loops
 -->
 
-Kotlinはループ中の従来の *break*{: .keyword }と*continue*{: .keyword } 演算子をサポートしています。[Returnとジャンプ](returns.html)を参照してください。
+Kotlinは従来通りの、ループ中の *break*{: .keyword }と*continue*{: .keyword } 演算子をサポートしています。[Returnとジャンプ](returns.html)を参照してください。
 
 <!--original
 Kotlin supports traditional *break*{: .keyword } and *continue*{: .keyword } operators in loops. See [Returns and jumps](returns.html).

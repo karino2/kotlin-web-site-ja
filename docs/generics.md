@@ -721,3 +721,186 @@ fun <T> cloneWhenGreater(list: List<T>, threshold: T): List<T>
 }
 ```
 -->
+
+## Definitely non-nullable types
+
+To make interoperability with generic Java classes and interfaces easier, Kotlin supports declaring a generic type parameter
+as **definitely non-nullable**. 
+
+To declare a generic type `T` as definitely non-nullable, declare the type with `& Any`. For example: `T & Any`.
+
+A definitely non-nullable type must have a nullable [upper bound](#upper-bounds).
+
+The most common use case for declaring definitely non-nullable types is when you want to override a Java method that 
+contains `@NotNull` as an argument. For example, consider the `load()` method:
+
+```java
+import org.jetbrains.annotations.*;
+
+public interface Game<T> {
+    public T save(T x) {}
+    @NotNull
+    public T load(@NotNull T x) {}
+}
+```
+
+To override the `load()` method in Kotlin successfully, you need `T1` to be declared as definitely non-nullable:
+
+```kotlin
+interface ArcadeGame<T1> : Game<T1> {
+    override fun save(x: T1): T1
+    // T1 is definitely non-nullable
+    override fun load(x: T1 & Any): T1 & Any
+}
+```
+
+When working only with Kotlin, it's unlikely that you will need to declare definitely non-nullable types explicitly because 
+Kotlin's type inference takes care of this for you.
+
+## Type erasure
+
+The type safety checks that Kotlin performs for generic declaration usages are done at compile time.
+At runtime, the instances of generic types do not hold any information about their actual type arguments.
+The type information is said to be _erased_. For example, the instances of `Foo<Bar>` and `Foo<Baz?>` are erased to
+just `Foo<*>`.
+
+### ジェネリクスの型チェックとキャスト
+
+Due to the type erasure, there is no general way to check whether an instance of a generic type was created with certain type
+arguments at runtime, and the compiler prohibits such `is`-checks such as
+`ints is List<Int>` or `list is T` (type parameter). However, you can check an instance against a star-projected type:
+
+```kotlin
+if (something is List<*>) {
+    something.forEach { println(it) } // The items are typed as `Any?`
+}
+```
+
+Similarly, when you already have the type arguments of an instance checked statically (at compile time),
+you can make an `is`-check or a cast that involves the non-generic part of the type. Note that
+angle brackets are omitted in this case:
+
+```kotlin
+fun handleStrings(list: MutableList<String>) {
+    if (list is ArrayList) {
+        // `list` is smart-cast to `ArrayList<String>`
+    }
+}
+```
+
+The same syntax but with the type arguments omitted can be used for casts that do not take type arguments into account: `list as ArrayList`.
+
+The type arguments of generic function calls are also only checked at compile time. Inside the function bodies,
+the type parameters cannot be used for type checks, and type casts to type parameters (`foo as T`) are unchecked.
+The only exclusion is inline functions with [reified type parameters](inline-functions.md#reified-type-parameters),
+which have their actual type arguments inlined at each call site. This enables type checks and casts for the type parameters.
+However, the restrictions described above still apply for instances of generic types used inside checks or casts.
+For example, in the type check `arg is T`, if `arg` is an instance of a generic type itself, its type arguments are still erased.
+
+```kotlin
+//sampleStart
+inline fun <reified A, reified B> Pair<*, *>.asPairOf(): Pair<A, B>? {
+    if (first !is A || second !is B) return null
+    return first as A to second as B
+}
+
+val somePair: Pair<Any?, Any?> = "items" to listOf(1, 2, 3)
+
+
+val stringToSomething = somePair.asPairOf<String, Any>()
+val stringToInt = somePair.asPairOf<String, Int>()
+val stringToList = somePair.asPairOf<String, List<*>>()
+val stringToStringList = somePair.asPairOf<String, List<String>>() // Compiles but breaks type safety!
+// Expand the sample for more details
+
+//sampleEnd
+
+fun main() {
+    println("stringToSomething = " + stringToSomething)
+    println("stringToInt = " + stringToInt)
+    println("stringToList = " + stringToList)
+    println("stringToStringList = " + stringToStringList)
+    //println(stringToStringList?.second?.forEach() {it.length}) // This will throw ClassCastException as list items are not String
+}
+```
+{kotlin-runnable="true" kotlin-min-compiler-version="1.3"}
+
+### Unchecked casts
+
+Type casts to generic types with concrete type arguments such as `foo as List<String>` cannot be checked at runtime.  
+These unchecked casts can be used when type safety is implied by the high-level program logic but cannot be inferred 
+directly by the compiler. See the example below.
+
+```kotlin
+fun readDictionary(file: File): Map<String, *> = file.inputStream().use { 
+    TODO("Read a mapping of strings to arbitrary elements.")
+}
+
+// We saved a map with `Int`s into this file
+val intsFile = File("ints.dictionary")
+
+// Warning: Unchecked cast: `Map<String, *>` to `Map<String, Int>`
+val intsDictionary: Map<String, Int> = readDictionary(intsFile) as Map<String, Int>
+```
+A warning appears for the cast in the last line. The compiler can't fully check it at runtime and provides
+no guarantee that the values in the map are `Int`.
+
+To avoid unchecked casts, you can redesign the program structure. In the example above, you could use the
+`DictionaryReader<T>` and `DictionaryWriter<T>` interfaces with type-safe implementations for different types.
+You can introduce reasonable abstractions to move unchecked casts from the call site to the implementation details.
+Proper use of [generic variance](#variance) can also help.
+
+For generic functions, using [reified type parameters](inline-functions.md#reified-type-parameters) makes casts
+like `arg as T` checked, unless `arg`'s type has *its own* type arguments that are erased.
+
+An unchecked cast warning can be suppressed by [annotating](annotations.md) the statement or the
+declaration where it occurs with `@Suppress("UNCHECKED_CAST")`:
+
+```kotlin
+inline fun <reified T> List<*>.asListOfType(): List<T>? =
+    if (all { it is T })
+        @Suppress("UNCHECKED_CAST")
+        this as List<T> else
+        null
+```
+
+>**On the JVM**: [array types](arrays.md) (`Array<Foo>`) retain information about the erased type of
+>their elements, and type casts to an array type are partially checked: the
+>nullability and actual type arguments of the element type are still erased. For example,
+>the cast `foo as Array<List<String>?>` will succeed if `foo` is an array holding any `List<*>`, whether it is nullable or not.
+>
+{type="note"}
+
+## Underscore operator for type arguments
+
+The underscore operator `_` can be used for type arguments. Use it to automatically infer a type of the argument when other types are explicitly specified:
+
+```kotlin
+abstract class SomeClass<T> {
+    abstract fun execute() : T
+}
+
+class SomeImplementation : SomeClass<String>() {
+    override fun execute(): String = "Test"
+}
+
+class OtherImplementation : SomeClass<Int>() {
+    override fun execute(): Int = 42
+}
+
+object Runner {
+    inline fun <reified S: SomeClass<T>, T> run() : T {
+        return S::class.java.getDeclaredConstructor().newInstance().execute()
+    }
+}
+
+fun main() {
+    // T is inferred as String because SomeImplementation derives from SomeClass<String>
+    val s = Runner.run<SomeImplementation, _>()
+    assert(s == "Test")
+
+    // T is inferred as Int because OtherImplementation derives from SomeClass<Int>
+    val n = Runner.run<OtherImplementation, _>()
+    assert(n == 42)
+}
+```

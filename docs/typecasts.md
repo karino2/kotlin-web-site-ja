@@ -4,25 +4,27 @@ title: "型チェックとキャスト"
 ---
 # 型チェックとキャスト
 
-In Kotlin, you can perform type checks to check the type of an object at runtime. Type casts convert objects to a 
-different type.
+Kotlinでは、オブジェクトの型を実行時にチェックする事が出来ます。
+Typeキャストはオブジェクトを別の型に変換します。
 
-> To learn specifically about **generics** type checks and casts, for example `List<T>`, `Map<K,V>`, see [Generics type checks and casts](generics.md#generics-type-checks-and-casts).
+
+> **ジェネリクス**の型チェックとキャストについてを知りたい人、たとえば`List<T>`、 `Map<K,V>`などの型チェックやキャストについて知りたい人は、[ジェネリクスの型チェックとキャスト](generics.md#ジェネリクスの型チェックとキャスト)を参照されたし
 >
 {: .tip}
 
 
-## `is` and `!is` Operators
+## `is`と`!is`演算子
 
-We can check whether an object conforms to a given type at runtime by using the `is` operator or its negated form `!is`:
+`is`演算子やその否定形の`!is`演算子を用いて、
+あるオブジェクトが指定された型に準拠しているかを実行時にチェック出来ます：
 
 ``` kotlin
 if (obj is String) {
   print(obj.length)
 }
 
-if (obj !is String) { // same as !(obj is String)
-  print("Not a String")
+if (obj !is String) { // !(obj is String) と同じ意味
+  print("Stringではありません")
 }
 else {
   print(obj.length)
@@ -31,33 +33,34 @@ else {
 
 ## スマートキャスト
 
-In most cases, you don't need to use explicit cast operators in Kotlin because the compiler tracks the
-`is`-checks and [explicit casts](#unsafeなキャスト演算子) for immutable values and inserts (safe) casts automatically when necessary:
+ほとんどの場合、Kotlinでは明示的なキャストを使う必要はありません。
+なぜならコンパイラは`is`のチェックや[明示的なキャスト](#unsafeなキャスト演算子)を追跡して、
+必要な所には(safeな)キャストを自動的に挿入してくれるからです：
 
 ``` kotlin
 fun demo(x: Any) {
   if (x is String) {
-    print(x.length) // x is automatically cast to String
+    print(x.length) // x は自動的にStringにキャストされる
   }
 }
 ```
 
-The compiler is smart enough to know a cast to be safe if a negative check leads to a return:
+コンパイラは十分に賢いので否定のチェックがreturnをしているケースでもキャストがsafeかどうかを判断出来ます：
 
 ``` kotlin
   if (x !is String) return
-  print(x.length) // x is automatically cast to String
+  print(x.length) // x は自動的に String にキャストされる
 ```
 
-or in the right-hand side of `&&` and `||`:
+また、`&&` や `||` の右側も判断出来ます：
 
 ``` kotlin
-// x is automatically cast to String on the right-hand side of `||`
+// `||`の右側では x は自動的に String にキャストされる
 if (x !is String || x.length == 0) return
 
-// x is automatically cast to String on the right-hand side of `&&`
+// `&&`の右側では x は自動的に String にキャストされる
 if (x is String && x.length > 0) {
-    print(x.length) // x is automatically cast to String
+    print(x.length) // x は自動的に String にキャストされる
 }
 ```
 
@@ -72,42 +75,44 @@ when (x) {
 }
 ```
 
-> Note that smart casts work only when the compiler can guarantee that the variable won't change between the check and its usage.
+> スマートキャストはチェックした所と使用する所の間で変数が変更されないと補償出来る場合のみ行われる事に注意しましょう。
 >
 {: .warning}
 
-Smart casts can be used in the following conditions:
+スマートキャストは以下のケースで使う事が出来ます：
 
-  * *val*{: .keyword } local variables - Always, except [local delegated properties](delegated-properties.md).
-  * *val*{: .keyword } properties - If the property is private or internal, or the check is performed in the same [module](visibility-modifiers.md#モジュール) where the property is declared. Smart casts can't be used to `open`` properties or properties that have custom getters.
-  * *var*{: .keyword } local variables - If the variable is not modified between the check and its usage, is not captured in a lambda that modifies it, and is not a local delegated property.
-  * *var*{: .keyword } properties - Never, because the variable can be modified at any time by other code.
+  * *val*{: .keyword } ローカル変数 - [ローカル委譲プロパティ](delegated-properties.md)を除いていつでも。
+  * *val*{: .keyword } プロパティ - プロパティがprivateかinternalか、チェックが宣言されたのと同一[モジュール](visibility-modifiers.md#モジュール)内で行われている場合。カスタムgetterがある場合と`open`なプロパティの場合はスマートキャストは使えません。
+  * *var*{: .keyword } ローカル変数 - もし変数がチェックと使用の間で変更されていなく、その変数を変更するラムダに変数捕捉されていなくて、ローカル委譲プロパティで無い場合。
+  * *var*{: .keyword } プロパティ - 使えるケースはありません。なぜならこの変数はどんな時でも他のコードに変更され得るからです。
 
 
 ## "Unsafe"なキャスト演算子
 
-Usually, the cast operator throws an exception if the cast is not possible. Thus, we call it *unsafe*.
-The unsafe cast in Kotlin is done by the infix operator *as*{: .keyword } (see [operator precedence](grammar.html#operator-precedence)):
+通常、キャスト演算子はキャストが出来ない時は例外を投げます。だからこのキャストは**unsafe**と呼ばれます。
+Kotlinでは**unsafe**なキャストは中置演算子である *as*{: .keyword } でおこおないます：
 
 ``` kotlin
 val x: String = y as String
 ```
 
-Note that *null*{: .keyword } cannot be cast to `String` as this type is not [nullable](null-safety.html),
-i.e. if `y` is null, the code above throws an exception.
-In order to match Java cast semantics we have to have nullable type at cast right hand side, like
+ここで`null`は`String`にはキャスト出来ない事に注意してください。
+なぜなら`String`は[nullable](null-safety.md)では無いからです。
+つまり、`y`がもしnullだったら、上のコードは例外を投げます。
+このようなコードでnullの場合も許したければ、キャストの右側の型をnullabeにします：
 
 ``` kotlin
 val x: String? = y as String?
 ```
 
-## "Safe" (nullable) cast operator
+## "Safe" (nullable)なキャスト演算子
 
-To avoid an exception being thrown, one can use a *safe* cast operator *as?*{: .keyword } that returns *null*{: .keyword } on failure:
+例外が投げられないようにしたければ、
+*safe*なキャスト演算子、*as?*{: .keyword }を使う事が出来ます。
+この演算子はキャストに失敗すると`null`を返します。
 
 ``` kotlin
 val x: String? = y as? String
 ```
 
-Note that despite the fact that the right-hand side of *as?*{: .keyword } is a non-null type `String` the result of the cast is nullable.
-
+`as?`の右側の型がnullable**では無い**`String`型なのに、結果の型はnullableなのに注目してください。

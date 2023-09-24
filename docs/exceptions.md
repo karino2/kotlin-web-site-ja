@@ -86,7 +86,7 @@ If you want to alert callers about possible exceptions when calling Kotlin code 
 you can use the `@Throws` annotation. Read more about using this annotation [for Java](java-to-kotlin-interop.md#checked-exceptions)
 and [for Swift and Objective-C](native-objc-interop.md#errors-and-exceptions).
 
-## The Nothing type
+## Nothing型
 
 `throw` is an expression in Kotlin, so you can use it, for example, as part of an Elvis expression:
 

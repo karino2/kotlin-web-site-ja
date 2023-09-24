@@ -53,12 +53,17 @@ reference:
                 title: 配列
           - title: 型チェックとキャスト
             url: /docs/typecasts.html
+      - title: 制御フロー
+        isFolder: true
+        items:
+        - url: /docs/control-flow.html
+          title: 条件式とループ
+        - url: /docs/returns.html
+          title: returnとジャンプ
+        - url: /docs/exceptions.html
+          title: 例外
       - url: /docs/packages.html
         title: パッケージ
-      - url: /docs/control-flow.html
-        title: 制御フロー
-      - url: /docs/returns.html
-        title: returnとジャンプ
       - title: クラスとオブジェクト
         isFolder: true
         items:
@@ -111,8 +116,6 @@ reference:
         title: Operator overloading
       - url: /docs/null-safety.html
         title: Null Safety
-      - url: /docs/exceptions.html
-        title: Exceptions
       - url: /docs/annotations.html
         title: Annotations
       - url: /docs/reflection.html

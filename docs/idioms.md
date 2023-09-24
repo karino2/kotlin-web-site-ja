@@ -41,7 +41,7 @@ provides a `Customer` class with the following functionality:
 * `hashCode()`
 * `toString()`
 * `copy()`
-* すべてのプロパティに対して、`component1()`, `component2()`, …, （[Dataクラス](data-classes.html)を参照してください）
+* すべてのプロパティに対して、`component1()`, `component2()`, …, （[データクラス](data-classes.html)を参照してください）
 関数の引数に対するデフォルト値
 
 <!--original

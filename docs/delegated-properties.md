@@ -161,61 +161,6 @@ NEW has been assigned to ‘p’ in Example@33a17727.
 ```
 -->
 
-## プロパティデリゲートの要件
-
-<!--original
-## Property Delegate Requirements
--->
-
-ここでは、オブジェクトを委譲するための要件をまとめます。
-
-<!--original
-Here we summarize requirements to delegate objects. 
--->
-
-**読み取り専用**プロパティ（すなわち *val*{:.keyword}）のために、デリゲートは、次のパラメータを取る `getValue` という名前の関数を提供する必要があります。
-
-<!--original
-For a **read-only** property (i.e. a *val*{:.keyword}), a delegate has to provide a function named `getValue` that takes the following parameters:
--->
-
-* レシーバ --- _プロパティ所有者_ のものと同じかスーパータイプでなければなりません（拡張プロパティー --- 拡張されるタイプの場合）。
-* メタデータ --- 型 `KProperty <*>`またはそのスーパータイプでなければなりません。
-
-<!--original
-* receiver --- must be the same or a supertype of the _property owner_ (for extension properties --- the type being extended),
-* metadata --- must be of type `KProperty<*>` or its supertype,
--->
-
-この関数は、プロパティ（またはそのサブタイプ）と同じ型を返さなければなりません。
-
-<!--original
-this function must return the same type as property (or its subtype).
--->
-
-**変更可能な** プロパティ ( *var*{:.keyword} ) の場合、デリゲートは、さらに次のパラメータを取り `setValue` という名前の関数を _追加で_ 提供する必要があります。
-
-<!--original
-For a **mutable** property (a *var*{:.keyword}), a delegate has to _additionally_ provide a function named `setValue` that takes the following parameters:
--->
- 
-* レシーバ --- `getValue()` と同じ
-* メタデータ --- `getValue()` と同じ
-* 新しい値 --- プロパティまたはそのスーパータイプと同じタイプでなければなりません。
-
-<!--original
-* receiver --- same as for `getValue()`,
-* metadata --- same as for `getValue()`,
-* new value --- must be of the same type as a property or its supertype.
--->
- 
-`getValue()` および/または `setValue()` 関数は、いずれかの委譲クラスや拡張機能のメンバ関数として提供することができます。これらの機能を提供していないオブジェクトにプロパティを委譲する必要がある場合、後者が便利です。関数の両方を `operator` キーワードでマークする必要があります。
-
-<!--original
-`getValue()` and/or `setValue()` functions may be provided either as member functions of the delegate class or extension functions.
-The latter is handy when you need to delegate property to an object which doesn't originally provide these functions.
-Both of the functions need to be marked with the `operator` keyword.
-
 ## 標準デリゲート
 
 <!--original
@@ -354,6 +299,50 @@ If you want to be able to intercept an assignment and "veto" it, use `vetoable()
 The handler passed to the `vetoable` is called _before_ the assignment of a new property value has been performed.
 -->
 
+## Delegating to another property
+
+A property can delegate its getter and setter to another property. Such delegation is available for
+both top-level and class properties (member and extension). The delegate property can be:
+* A top-level property
+* A member or an extension property of the same class
+* A member or an extension property of another class
+
+To delegate a property to another property, use the `::` qualifier in the delegate name, for example, `this::delegate` or
+`MyClass::delegate`.
+
+```kotlin
+var topLevelInt: Int = 0
+class ClassWithDelegate(val anotherClassInt: Int)
+
+class MyClass(var memberInt: Int, val anotherClassInstance: ClassWithDelegate) {
+    var delegatedToMember: Int by this::memberInt
+    var delegatedToTopLevel: Int by ::topLevelInt
+    
+    val delegatedToAnotherClass: Int by anotherClassInstance::anotherClassInt
+}
+var MyClass.extDelegated: Int by ::topLevelInt
+```
+
+This may be useful, for example, when you want to rename a property in a backward-compatible way: introduce a new property,
+annotate the old one with the `@Deprecated` annotation, and delegate its implementation.
+
+```kotlin
+class MyClass {
+   var newName: Int = 0
+   @Deprecated("Use 'newName' instead", ReplaceWith("newName"))
+   var oldName: Int by this::newName
+}
+fun main() {
+   val myClass = MyClass()
+   // Notification: 'oldName: Int' is deprecated.
+   // Use 'newName' instead
+   myClass.oldName = 42
+   println(myClass.newName) // 42
+}
+```
+{kotlin-runnable="true" kotlin-min-compiler-version="1.4"}
+
+
 ## Map 中のストアリングプロパティ (Storing Properties in a Map)
 
 <!--original
@@ -446,3 +435,280 @@ class MutableUser(val map: MutableMap<String, Any?>) {
 }
 ```
 -->
+
+## ローカル委譲プロパティ
+
+(Local delegated properties)
+
+You can declare local variables as delegated properties.
+For example, you can make a local variable lazy:
+
+```kotlin
+fun example(computeFoo: () -> Foo) {
+    val memoizedFoo by lazy(computeFoo)
+
+    if (someCondition && memoizedFoo.isValid()) {
+        memoizedFoo.doSomething()
+    }
+}
+```
+
+The `memoizedFoo` variable will be computed on first access only.
+If `someCondition` fails, the variable won't be computed at all.
+
+## プロパティデリゲートの要件
+
+<!--original
+## Property Delegate Requirements
+-->
+
+ここでは、オブジェクトを委譲するための要件をまとめます。
+
+<!--original
+Here we summarize requirements to delegate objects. 
+-->
+
+**読み取り専用**プロパティ（すなわち *val*{:.keyword}）のために、デリゲートは、次のパラメータを取る `getValue` という名前の関数を提供する必要があります。
+
+<!--original
+For a **read-only** property (i.e. a *val*{:.keyword}), a delegate has to provide a function named `getValue` that takes the following parameters:
+-->
+
+* レシーバ --- _プロパティ所有者_ のものと同じかスーパータイプでなければなりません（拡張プロパティー --- 拡張されるタイプの場合）。
+* メタデータ --- 型 `KProperty <*>`またはそのスーパータイプでなければなりません。
+
+<!--original
+* receiver --- must be the same or a supertype of the _property owner_ (for extension properties --- the type being extended),
+* metadata --- must be of type `KProperty<*>` or its supertype,
+-->
+
+この関数は、プロパティ（またはそのサブタイプ）と同じ型を返さなければなりません。
+
+<!--original
+this function must return the same type as property (or its subtype).
+-->
+
+**変更可能な** プロパティ ( *var*{:.keyword} ) の場合、デリゲートは、さらに次のパラメータを取り `setValue` という名前の関数を _追加で_ 提供する必要があります。
+
+<!--original
+For a **mutable** property (a *var*{:.keyword}), a delegate has to _additionally_ provide a function named `setValue` that takes the following parameters:
+-->
+ 
+* レシーバ --- `getValue()` と同じ
+* メタデータ --- `getValue()` と同じ
+* 新しい値 --- プロパティまたはそのスーパータイプと同じタイプでなければなりません。
+
+<!--original
+* receiver --- same as for `getValue()`,
+* metadata --- same as for `getValue()`,
+* new value --- must be of the same type as a property or its supertype.
+-->
+ 
+`getValue()` および/または `setValue()` 関数は、いずれかの委譲クラスや拡張機能のメンバ関数として提供することができます。これらの機能を提供していないオブジェクトにプロパティを委譲する必要がある場合、後者が便利です。関数の両方を `operator` キーワードでマークする必要があります。
+
+<!--original
+`getValue()` and/or `setValue()` functions may be provided either as member functions of the delegate class or extension functions.
+The latter is handy when you need to delegate property to an object which doesn't originally provide these functions.
+Both of the functions need to be marked with the `operator` keyword. -->
+
+
+## Translation rules for delegated properties
+
+Under the hood, the Kotlin compiler generates auxiliary properties for some kinds of delegated properties and then delegates to them. 
+
+> For the optimization purposes, the compiler [_does not_ generate auxiliary properties in several cases](#optimized-cases-for-delegated-properties). 
+> Learn about the optimization on the example of [delegating to another property](#translation-rules-when-delegating-to-another-property).
+>
+{type="note"}
+
+For example, for the property `prop` it generates the hidden property `prop$delegate`, and the code of the accessors
+simply delegates to this additional property:
+
+```kotlin
+class C {
+    var prop: Type by MyDelegate()
+}
+
+// this code is generated by the compiler instead:
+class C {
+    private val prop$delegate = MyDelegate()
+    var prop: Type
+        get() = prop$delegate.getValue(this, this::prop)
+        set(value: Type) = prop$delegate.setValue(this, this::prop, value)
+}
+```
+
+The Kotlin compiler provides all the necessary information about `prop` in the arguments: the first argument `this`
+refers to an instance of the outer class `C`, and `this::prop` is a reflection object of the `KProperty` type describing `prop` itself.
+
+### Optimized cases for delegated properties
+
+The `$delegate` field will be omitted if a delegate is:
+* A referenced property:
+
+  ```kotlin
+  class C<Type> {
+      private var impl: Type = ...
+      var prop: Type by ::impl
+  }
+  ```
+
+* A named object:
+
+  ```kotlin
+  object NamedObject {
+      operator fun getValue(thisRef: Any?, property: KProperty<*>): String = ...
+  }
+
+  val s: String by NamedObject
+  ```
+
+* A final `val` property with a backing field and a default getter in the same module:
+
+  ```kotlin
+  val impl: ReadOnlyProperty<Any?, String> = ...
+
+  class A {
+      val s: String by impl
+  }
+  ```
+
+* A constant expression, enum entry, `this`, `null`. The example of `this`:
+
+  ```kotlin
+  class A {
+      operator fun getValue(thisRef: Any?, property: KProperty<*>) ...
+ 
+      val s by this
+  }
+  ```
+
+### Translation rules when delegating to another property
+
+When delegating to another property, the Kotlin compiler generates immediate access to the referenced property.
+This means that the compiler doesn't generate the field `prop$delegate`. This optimization helps save memory.
+
+Take the following code, for example:
+
+```kotlin
+class C<Type> {
+    private var impl: Type = ...
+    var prop: Type by ::impl
+}
+```
+
+Property accessors of the `prop` variable invoke the `impl` variable directly, skipping the delegated property's `getValue`and `setValue` operators, 
+and thus the `KProperty` reference object is not needed.
+
+For the code above, the compiler generates the following code:
+
+```kotlin
+class C<Type> {
+    private var impl: Type = ...
+
+    var prop: Type
+        get() = impl
+        set(value) {
+            impl = value
+        }
+    
+    fun getProp$delegate(): Type = impl // This method is needed only for reflection
+}
+```
+
+## Providing a delegate
+
+By defining the `provideDelegate` operator, you can extend the logic for creating the object to which the property implementation
+is delegated. If the object used on the right-hand side of `by` defines `provideDelegate` as a member or extension function,
+that function will be called to create the property delegate instance.
+
+One of the possible use cases of `provideDelegate` is to check the consistency of the property upon its initialization.
+
+For example, to check the property name before binding, you can write something like this:
+
+```kotlin
+class ResourceDelegate<T> : ReadOnlyProperty<MyUI, T> {
+    override fun getValue(thisRef: MyUI, property: KProperty<*>): T { ... }
+}
+    
+class ResourceLoader<T>(id: ResourceID<T>) {
+    operator fun provideDelegate(
+            thisRef: MyUI,
+            prop: KProperty<*>
+    ): ReadOnlyProperty<MyUI, T> {
+        checkProperty(thisRef, prop.name)
+        // create delegate
+        return ResourceDelegate()
+    }
+
+    private fun checkProperty(thisRef: MyUI, name: String) { ... }
+}
+
+class MyUI {
+    fun <T> bindResource(id: ResourceID<T>): ResourceLoader<T> { ... }
+
+    val image by bindResource(ResourceID.image_id)
+    val text by bindResource(ResourceID.text_id)
+}
+```
+
+The parameters of `provideDelegate` are the same as those of `getValue`:
+
+* `thisRef` must be the same type as, or a supertype of, the _property owner_ (for extension properties, it should be the type being extended);
+* `property` must be of type `KProperty<*>` or its supertype.
+
+The `provideDelegate` method is called for each property during the creation of the `MyUI` instance, and it performs
+the necessary validation right away.
+
+Without this ability to intercept the binding between the property and its delegate, to achieve the same functionality
+you'd have to pass the property name explicitly, which isn't very convenient:
+
+```kotlin
+// Checking the property name without "provideDelegate" functionality
+class MyUI {
+    val image by bindResource(ResourceID.image_id, "image")
+    val text by bindResource(ResourceID.text_id, "text")
+}
+
+fun <T> MyUI.bindResource(
+        id: ResourceID<T>,
+        propertyName: String
+): ReadOnlyProperty<MyUI, T> {
+    checkProperty(this, propertyName)
+    // create delegate
+}
+```
+
+In the generated code, the `provideDelegate` method is called to initialize the auxiliary `prop$delegate` property.
+Compare the generated code for the property declaration `val prop: Type by MyDelegate()` with the generated code
+[above](#translation-rules-for-delegated-properties) (when the `provideDelegate` method is not present):
+
+```kotlin
+class C {
+    var prop: Type by MyDelegate()
+}
+
+// this code is generated by the compiler 
+// when the 'provideDelegate' function is available:
+class C {
+    // calling "provideDelegate" to create the additional "delegate" property
+    private val prop$delegate = MyDelegate().provideDelegate(this, this::prop)
+    var prop: Type
+        get() = prop$delegate.getValue(this, this::prop)
+        set(value: Type) = prop$delegate.setValue(this, this::prop, value)
+}
+```
+
+Note that the `provideDelegate` method affects only the creation of the auxiliary property and doesn't affect the code
+generated for the getter or the setter.
+
+With the `PropertyDelegateProvider` interface from the standard library, you can create delegate providers without creating new classes.
+
+```kotlin
+val provider = PropertyDelegateProvider { thisRef: Any?, property ->
+    ReadOnlyProperty<Any?, Int> {_, property -> 42 }
+}
+val delegate: Int by provider
+```
+
+

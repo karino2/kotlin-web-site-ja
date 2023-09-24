@@ -80,6 +80,8 @@ reference:
             title: ネストされたクラス
           - url: /docs/enum-classes.html
             title: 列挙型クラス
+          - url: /docs/inline-classes.html
+            title: Inline value classes
           - url: /docs/object-declarations.html
             title: オブジェクト
           - url: /docs/delegation.html

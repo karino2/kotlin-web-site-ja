@@ -41,12 +41,23 @@ for an enum type is also restricted, but each enum constant exists only as a _si
 of a sealed class can have _multiple_ instances, each with its own state.
 -->
 
+例として、ライブラリのAPIを考えてみましょう。
+ライブラリにはライブラリのユーザーがハンドルしたりthrow出来るエラーを含む場合があります。
+そのようなエラーの継承ツリーにインターフェースや抽象クラスが含まれていてパブリックなAPIとして可視であるなら、
+クライアント側でそのエラーを実装したり継承したりする事を防ぐ方法はありません。
+ですがライブラリ側は外側で定義されたそんなエラーを知らないので、
+自身のエラーの時と一貫した形で扱う事は出来ません。
+sealedな継承階層のエラークラスなら、
+ライブラリの作者は可能なすべてのエラーの型を確実に知る事が出来て、
+後からそれ以外のものが追加されない事を確信出来ます。
+
+<!--
 As an example, consider a library's API. It's likely to contain error classes to let the library users handle errors 
 that it can throw. If the hierarchy of such error classes includes interfaces or abstract classes visible in the public API,
 then nothing prevents implementing or extending them in the client code. However, the library doesn't know about errors
 declared outside it, so it can't treat them consistently with its own classes. With a sealed hierarchy of error classes,
 library authors can be sure that they know all possible error types and no other ones can appear later.
-
+ -->
 
 sealedクラスやsealedインターフェースを宣言するには、
 `sealed` 修飾子を名前の前に置きます：
@@ -66,16 +77,21 @@ class DatabaseError(val source: DataSource): IOError()
 object RuntimeError : Error
 ```
 
-A sealed class is [abstract](classes.md#abstract-classes) by itself, it cannot be instantiated directly and can have `abstract` members.
+sealedクラスはそれ自身は[abstract](classes.md#抽象クラス)で、直接インスタンシエートは出来ません。
+また、`abstract`なメンバを持つ事が可能です。
 
-Constructors of sealed classes can have one of two [visibilities](visibility-modifiers.md): `protected` (by default) or
-`private`:
+<!-- 
+A sealed class is [abstract](classes.md#abstract-classes) by itself, it cannot be instantiated directly and can have `abstract` members.
+-->
+
+sealedクラスのコンストラクタの[可視性](visibility-modifiers.md)は二つに一つです：
+`protected` (こちらがデフォルト)　または `private` です：
 
 ```kotlin
 sealed class IOError {
-    constructor() { /*...*/ } // protected by default
-    private constructor(description: String): this() { /*...*/ } // private is OK
-    // public constructor(code: Int): this() {} // Error: public and internal are not allowed
+    constructor() { /*...*/ } // デフォルトなのでprotected
+    private constructor(description: String): this() { /*...*/ } // privateはOK
+    // public constructor(code: Int): this() {} // Error: publicとinternalは許可されない
 }
 ```
 
@@ -104,22 +120,30 @@ it can be extended in any way that its modifiers allow:
 -->
 
 ```kotlin
-sealed interface Error // has implementations only in same package and module
+sealed interface Error // 同じパッケージとモジュールにだけ実装を持つ
 
-sealed class IOError(): Error // extended only in same package and module
-open class CustomError(): Error // can be extended wherever it's visible
+sealed class IOError(): Error // 同じパッケージとモジュールでだけ継承可能
+open class CustomError(): Error // このクラスが見える所ならどこでも継承可能
 ```
 
-### multiplatformプロジェクトでの継承
+### マルチプラットフォームプロジェクトでの継承
 
-There is one more inheritance restriction in [multiplatform projects](multiplatform-get-started.md): direct subclasses of sealed classes must
-reside in the same source set. It applies to sealed classes without the [`expect` and `actual` modifiers](multiplatform-connect-to-apis.md).
+[マルチプラットフォームプロジェクト](https://kotlinlang.org/docs/multiplatform-get-started.html)の場合はさらにもう一つ継承に関わる制約があります：
+sealedクラスの直接のサブクラスは同じソースセットに存在していないといけません。
+これは[`expect` と `actual` 修飾子](https://kotlinlang.org/docs/multiplatform-connect-to-apis.html)の無いsealed クラスに適用されるルールです。
 
+もしsealedクラスがcommonソースセットの方で`expect`と定義されてプラットフォーム側のソースセットに`actual`として実装されていたら、
+`expect`側も`actual`側もそれぞれのソースセットでサブクラスを持ち得ます。
+さらに、[hierarchical structure](https://kotlinlang.org/docs/multiplatform-share-on-platforms.html#share-code-on-similar-platforms)を用いると、
+`expect`と`actual`の宣言の間のどのソースセットでもサブクラスを作る事が出来ます。
+
+<!-- 
 If a sealed class is declared as `expect` in a common source set and have `actual` implementations in platform source sets,
 both `expect` and `actual` versions can have subclasses in their source sets. Moreover, if you use a [hierarchical structure](multiplatform-share-on-platforms.md#share-code-on-similar-platforms),
 you can create subclasses in any source set between the `expect` and `actual` declarations. 
+-->
 
-[Learn more about the hierarchical structure of multiplatform projects](multiplatform-share-on-platforms.md#share-code-on-similar-platforms). 
+[multiplatform projectsのhierarchical structureについてもっと学ぶ](https://kotlinlang.org/docs/multiplatform-share-on-platforms.html#share-code-on-similar-platforms)
 
 ## Sealedクラスとwhen式
 
@@ -153,8 +177,8 @@ fun eval(expr: Expr): Double = when(expr) {
 -->
 
 
-> `when` expressions on [`expect`](multiplatform-connect-to-apis.md) sealed classes in the common code of multiplatform projects still 
-> require an `else` branch. This happens because subclasses of `actual` platform implementations aren't known in the 
-> common code.
+> マルチプラットフォームプロジェクトのcommonコードの中で、
+> [`expect`](https://kotlinlang.org/docs/multiplatform-connect-to-apis.html) sealedクラスに対してwhen式を使う時は、
+> `else`節は必要です。これはcommonコード側としてはプラットフォーム側のサブクラスとなる`actual`実装を知らないからです。
 >
 {: .note}

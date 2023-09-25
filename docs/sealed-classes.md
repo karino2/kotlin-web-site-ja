@@ -1,20 +1,45 @@
 ---
 layout: reference
-title: "sealedクラスとインターフェース"
+title: "sealedクラスとsealedインターフェース"
 ---
-# sealedクラスとインターフェース
+# sealedクラスとsealedインターフェース
 
+**sealed**クラスと**sealed**インターフェースは、
+制限されたクラスヒエラルキーを表現し、継承のさらなる制御の方法を提供します。
+sealedクラスの直接のサブクラスは、全てコンパイル時にしられている必要があります。
+それ以外のサブクラスがsealedクラスの定義されているパッケージやモジュールの外にあらわれてはいけません。
+例えば、サードパーティーのクライアントはあなたのsealedクラスを彼らのコードの中で継承する事は出来ません。
+かくして、sealedクラスの各インスタンスは、
+このクラスがコンパイルされた時点で知られている限られた種類だけからなる型を持ち得ます。
+
+<!--original
 _Sealed_ classes and interfaces represent restricted class hierarchies that provide more control over inheritance.
 All direct subclasses of a sealed class are known at compile time. No other subclasses may appear outside
 the module and package within which the sealed class is defined. For example, third-party clients can't extend your sealed class in their code.
 Thus, each instance of a sealed class has a type from a limited set that is known when this class is compiled.
 
+-->
+
+同様の事はsealedインターフェースとその実装についても言えます：
+ひとたびsealdインターフェースのあるモジュールがコンパイルされれば、
+それ以後新たな実装が現れる事はありえません。
+
+<!--original
 The same works for sealed interfaces and their implementations: once a module with a sealed interface is compiled,
 no new implementations can appear.
+-->
 
+
+ある意味では、[`enum`](enum-classes.md)クラスに似ています。
+enum型の値の種類も同じく制限されています。
+けれど、それぞれのenum定数はシングルインスタンスとしてのみ存在するのに対し、
+sealedクラスのサブクラスは複数のインスタンスをもつことができ、それぞれが独自の状態を保持できます。
+
+<!--original
 In some sense, sealed classes are similar to [`enum`](enum-classes.md) classes: the set of values
 for an enum type is also restricted, but each enum constant exists only as a _single instance_, whereas a subclass
 of a sealed class can have _multiple_ instances, each with its own state.
+-->
 
 As an example, consider a library's API. It's likely to contain error classes to let the library users handle errors 
 that it can throw. If the hierarchy of such error classes includes interfaces or abstract classes visible in the public API,
@@ -22,9 +47,15 @@ then nothing prevents implementing or extending them in the client code. However
 declared outside it, so it can't treat them consistently with its own classes. With a sealed hierarchy of error classes,
 library authors can be sure that they know all possible error types and no other ones can appear later.
 
-To declare a sealed class or interface, put the `sealed` modifier before its name:
 
-```kotlin
+sealedクラスやsealedインターフェースを宣言するには、
+`sealed` 修飾子を名前の前に置きます：
+
+<!--original
+To declare a sealed class or interface, put the `sealed` modifier before its name:
+-->
+
+``` kotlin
 sealed interface Error
 
 sealed class IOError(): Error
@@ -48,20 +79,29 @@ sealed class IOError {
 }
 ```
 
-## Location of direct subclasses
+## 直接のサブクラスの置き場所
 
-Direct subclasses of sealed classes and interfaces must be declared in the same package. They may be top-level or nested
-inside any number of other named classes, named interfaces, or named objects. Subclasses can have any [visibility](visibility-modifiers.md)
-as long as they are compatible with normal inheritance rules in Kotlin.
+sealedクラスやsealedインターフェースの直接のサブクラスは、同じパッケージに宣言されなくてはいけません。
+それらはトップレベルでも他のクラスやインターフェースやオブジェクトにネストした中でも構いません。
+サブクラスは通常のKotlinの継承ルールに従っている範囲の、
+いかなる[可視性](visibility-modifiers.md)も持ち得ます。
 
-Subclasses of sealed classes must have a proper qualified name. They can't be local nor anonymous objects.
+sealedクラスのサブクラスはちゃんとした名前を持っていなくてはなりません。
+ローカルオブジェクトや無名オブジェクトではいけません。
 
-> `enum` classes can't extend a sealed class (as well as any other class), but they can implement sealed interfaces.
+> `enum`クラスはsealedクラスを継承出来ません(sealedクラス以外のクラスと同様)が、sealedインターフェースを実装する事は出来ます。
 >
-{type="note"}
+{: .note}
 
+
+sealedクラスの間接的なサブクラスにはこれらの制約は適用されません。
+もしも直接のサブクラスがsealedとマークされていなければ、
+そのサブクラスは通常の修飾子が許すいかなるようにも継承出来ます。
+
+<!--original
 These restrictions don't apply to indirect subclasses. If a direct subclass of a sealed class is not marked as sealed,
 it can be extended in any way that its modifiers allow:
+-->
 
 ```kotlin
 sealed interface Error // has implementations only in same package and module
@@ -70,7 +110,7 @@ sealed class IOError(): Error // extended only in same package and module
 open class CustomError(): Error // can be extended wherever it's visible
 ```
 
-### Inheritance in multiplatform projects
+### multiplatformプロジェクトでの継承
 
 There is one more inheritance restriction in [multiplatform projects](multiplatform-get-started.md): direct subclasses of sealed classes must
 reside in the same source set. It applies to sealed classes without the [`expect` and `actual` modifiers](multiplatform-connect-to-apis.md).
@@ -81,23 +121,40 @@ you can create subclasses in any source set between the `expect` and `actual` de
 
 [Learn more about the hierarchical structure of multiplatform projects](multiplatform-share-on-platforms.md#share-code-on-similar-platforms). 
 
-## Sealed classes and when expression
+## Sealedクラスとwhen式
 
-The key benefit of using sealed classes comes into play when you use them in a [`when`](control-flow.md#when-expression)
-expression. 
-If it's possible to verify that the statement covers all cases, you don't need to add an `else` clause to the statement:
 
-```kotlin
+sealedクラスの主な利点は [`when`式](control-flow.md#when式) の中で使用されたときに発揮されます。
+もし文が全てのケースをカバーすることを確認できれば、 `else` 句を追加する必要はありません。
+
+<!--original
+The key benefit of using sealed classes comes into play when you use them in a [`when` expression](control-flow.html#when-expression). If it's possible
+to verify that the statement covers all cases, you don't need to add an `else` clause to the statement.
+-->
+
+``` kotlin
 fun log(e: Error) = when(e) {
-    is FileReadError -> { println("Error while reading file ${e.file}") }
-    is DatabaseError -> { println("Error while reading from database ${e.source}") }
-    is RuntimeError ->  { println("Runtime error") }
-    // the `else` clause is not required because all the cases are covered
+    is FileReadError -> { println("ファイルを読んでいる時にエラー： ${e.file}") }
+    is DatabaseError -> { println("データベースを読んでいる時にエラー： ${e.source}") }
+    is RuntimeError ->  { println("実行時エラー") }
+    // 全てのケースをカバーした為、`else` 句は不要
 }
 ```
+
+<!--original
+``` kotlin
+fun eval(expr: Expr): Double = when(expr) {
+    is Expr.Const -> expr.number
+    is Expr.Sum -> eval(expr.e1) + eval(expr.e2)
+    Expr.NotANumber -> Double.NaN
+    // the `else` clause is not required because we've covered all the cases
+}
+```
+-->
+
 
 > `when` expressions on [`expect`](multiplatform-connect-to-apis.md) sealed classes in the common code of multiplatform projects still 
 > require an `else` branch. This happens because subclasses of `actual` platform implementations aren't known in the 
 > common code.
 >
-{type="note"}
+{: .note}

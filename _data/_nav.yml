@@ -72,7 +72,7 @@ reference:
           - url: /docs/inheritance.html
             title: 継承
           - url: /docs/properties.html
-            title: プロパティとフィールド
+            title: プロパティ
           - url: /docs/interfaces.html
             title: 継承
           - url: /docs/visibility-modifiers.html

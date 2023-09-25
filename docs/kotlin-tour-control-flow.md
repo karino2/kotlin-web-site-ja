@@ -109,7 +109,7 @@ fun main() {
         "1" -> "One"
         // もし obj が "Hello" と等しければ、resultを"Greeting"にセットする
         "Hello" -> "Greeting"
-        // ここまえの条件がどれも成立しなければ、result を "Unknown"にセットする
+        // ここまでの条件がどれも成立しなければ、result を "Unknown"にセットする
         else -> "Unknown"
     }
     println(result)

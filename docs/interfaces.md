@@ -1,31 +1,21 @@
 ---
-type: doc
 layout: reference
-category: "Syntax"
 title: "インタフェース"
 ---
-
-<!--original
-- --
-type: doc
-layout: reference
-category: "Syntax"
-title: "Interfaces"
-- --
--->
-
 # インターフェース
 
 <!--original
 # Interfaces
 -->
 
-Kotlinでのインタフェースは、Java 8と非常によく似ています。インタフェースは抽象メソッドの宣言と同様に、メソッドの実装を含めることができます。抽象クラスと違って、インタフェースは状態を持てません。インタフェースはプロパティを持つことができますが、これらは abstract であること、またはアクセサの実装を提供することが必要です。
+Kotlinでのインタフェースは、抽象メソッドの宣言と、さらにメソッドの実装も含めることができます。
+抽象クラスと違う所は、インタフェースは状態を持てません。
+インタフェースはプロパティを持つことができますが、これらは abstract であること、またはアクセサの実装を提供することが必要です。
 
 <!--original
-Interfaces in Kotlin are very similar to Java 8. They can contain declarations of abstract methods, as well as method
+Interfaces in Kotlin can contain declarations of abstract methods, as well as method
 implementations. What makes them different from abstract classes is that interfaces cannot store state. They can have
-properties but these need to be abstract or to provide accessor implementations.
+properties, but these need to be abstract or provide accessor implementations.
 -->
 
 インタフェースは、 *interface*{: .keyword } キーワードを使用して定義されます。
@@ -38,7 +28,7 @@ An interface is defined using the keyword *interface*{: .keyword }
 interface MyInterface {
     fun bar()
     fun foo() {
-      // 本体は任意
+      // 本体(body)をつけてもいい
     }
 }
 ```
@@ -90,7 +80,9 @@ class Child : MyInterface {
 ## Properties in Interfaces
 -->
 
-インターフェイス内にプロパティを宣言することができます。インタフェースで宣言されたプロパティは、 abstract にすることも、アクセサの実装を提供することもできます。インタフェース内で宣言されたプロパティはバッキングフィールドを持つことはできず、それ故にインタフェース内で宣言されたアクセサはそれらを参照できません。
+インターフェイス内にプロパティを宣言することができます。
+インタフェースで宣言されたプロパティは、 abstract にするか、アクセサの実装を提供するかしなくてはいけません。
+インタフェース内で宣言されたプロパティはバッキングフィールドを持つことはできず、それ故にインタフェース内で宣言されたアクセサはそれらを参照できません。
 
 <!--original
 You can declare properties in interfaces. A property declared in an interface can either be abstract, or it can provide
@@ -100,39 +92,50 @@ declared in interfaces can't reference them.
 
 ``` kotlin
 interface MyInterface {
-    val property: Int // abstract
+    val prop: Int // abstract
 
     val propertyWithImplementation: String
         get() = "foo"
 
     fun foo() {
-        print(property)
+        print(prop)
     }
 }
 
 class Child : MyInterface {
-    override val property: Int = 29
+    override val prop: Int = 29
 }
 ```
 
-<!--original
-``` kotlin
-interface MyInterface {
-    val property: Int // abstract
+## インターフェースの継承
 
-    val propertyWithImplementation: String
-        get() = "foo"
+インターフェースは他のインターフェースを継承する事が出来ます。
+それが意味する所は、
+継承元のメンバを継承先のインターフェースが実装して提供したり、
+さらに追加で新たな関数やプロパティを宣言出来たりもするという事です。
+自然な帰結として、
+そのようなインターフェースを実装するクラスは、
+実装がまだ提供されていないものだけを実装すれば良くなります。
 
-    fun foo() {
-        print(property)
-    }
+```kotlin
+interface Named {
+    val name: String
 }
 
-class Child : MyInterface {
-    override val property: Int = 29
+interface Person : Named {
+    val firstName: String
+    val lastName: String
+    
+    override val name: String get() = "$firstName $lastName"
 }
+
+data class Employee(
+    // 'name'の実装は必要では無い
+    override val firstName: String,
+    override val lastName: String,
+    val position: Position
+) : Person
 ```
--->
 
 ## オーバーライドの競合解決
 
@@ -148,59 +151,42 @@ When we declare many types in our supertype list, it may appear that we inherit 
 
 ``` kotlin
 interface A {
-  fun foo() { print("A") }
-  fun bar()
+    fun foo() { print("A") }
+    fun bar()
 }
 
 interface B {
-  fun foo() { print("B") }
-  fun bar() { print("bar") }
+    fun foo() { print("B") }
+    fun bar() { print("bar") }
 }
 
 class C : A {
-  override fun bar() { print("bar") }
+    override fun bar() { print("bar") }
 }
 
 class D : A, B {
-  override fun foo() {
-    super<A>.foo()
-    super<B>.foo()
-  }
+    override fun foo() {
+        super<A>.foo()
+        super<B>.foo()
+    }
+
+    override fun bar() {
+        super<B>.bar()
+    }
 }
 ```
 
-<!--original
-``` kotlin
-interface A {
-  fun foo() { print("A") }
-  fun bar()
-}
+インタフェース *A* と *B* は、両方とも関数 *foo()* と *bar()* を宣言しています。両方とも *foo()* を実装していますが、 *B* のみが *bar()* を実装しています。（ *bar()* は *A* では abstract としてマークされていません。abstractなのはインタフェースで関数が本体を持たないときのデフォルトだからです。） 
+さて、もし具象クラス *C* を *A* から継承すれば、 *bar()* をオーバライドし、実装を提供しなければならないことは明らかです。
 
-interface B {
-  fun foo() { print("B") }
-  fun bar() { print("bar") }
-}
-
-class C : A {
-  override fun bar() { print("bar") }
-}
-
-class D : A, B {
-  override fun foo() {
-    super<A>.foo()
-    super<B>.foo()
-  }
-}
-```
--->
-
-インタフェース *A* と *B* は、両方とも関数 *foo()* と *bar()* を宣言しています。両方とも *foo()* を実装していますが、 *B* のみが *bar()* を実装しています。（ *bar()* は *A* では abstract としてマークされていません。これは関数が本体を持たないときのインタフェースのデフォルトだからです。） 
-さて、もし具体クラス *C* を *A* から得れば、 *bar()* をオーバライドし、実装を提供しなければならないことは明らかです。そしてもし *D* を *A* と *B* から得れば、 *bar()* をオーバライドする必要はありません。なぜなら1つの実装を継承したからです。
-しかし *foo()* の実装を2つ継承してしまったため、コンパイラはどっちを選んだら良いかわかりません。したがって *foo()* のオーバライドが強制され、何が欲しいのかを明示する必要があります。
+しかしながら、もし *D* を *A* と *B* から継承すれば、 
+複数のインターフェースから継承した全メソッドを実装する必要があり、
+つまり*D*でもそれらを実装する必要があります。
+このルールは一つの実装だけを継承しているもの（*bar()*）にも、
+複数の実装を継承しているもの（*foo()*）にも、どちらにも適用されます。
 
 <!--original
-Interfaces *A* and *B* both declare functions *foo()* and *bar()*. Both of them implement *foo()*, but only *B* implements *bar()* (*bar()* is not marked abstract in *A*,
-because this is the default for interfaces, if the function has no body). Now, if we derive a concrete class *C* from *A*, we, obviously, have to override *bar()* and provide
-an implementation. And if we derive *D* from *A* and *B*, we don’t have to override *bar()*, because we have inherited only one implementation of it.
-But we have inherited two implementations of *foo()*, so the compiler does not know which one to choose, and forces us to override *foo()* and say what we want explicitly.
+However, if you derive *D* from *A* and *B*, you need to implement all the methods that you have
+inherited from multiple interfaces, and you need to specify how exactly *D* should implement them. This rule applies
+both to methods for which you've inherited a single implementation (*bar()*) and to those for which you've inherited multiple implementations (*foo()*).
 -->

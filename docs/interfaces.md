@@ -1,6 +1,6 @@
 ---
 layout: reference
-title: "インタフェース"
+title: "インターフェース"
 ---
 # インターフェース
 

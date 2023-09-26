@@ -2,7 +2,7 @@
 type: doc
 layout: reference
 category: "Syntax"
-title: "オブジェクト式と宣言"
+title: "オブジェクト式とオブジェクト宣言"
 ---
 
 <!--original
@@ -14,7 +14,7 @@ title: "Object Expressions and Declarations"
 - --
 -->
 
-# オブジェクト式と宣言
+# オブジェクト式とオブジェクト宣言
 
 <!--original
 # Object Expressions and Declarations

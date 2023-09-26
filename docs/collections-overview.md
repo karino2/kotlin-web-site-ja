@@ -1,4 +1,8 @@
-[//]: # (title: Collections overview)
+---
+layout: reference
+title: "コレクション概要"
+---
+# コレクション概要
 
 The Kotlin Standard Library provides a comprehensive set of tools for managing _collections_ – groups of a variable number 
 of items (possibly zero) that are significant to the problem being solved and are commonly operated on.

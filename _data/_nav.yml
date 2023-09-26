@@ -146,6 +146,11 @@ reference:
               title: Nullability
   - title: 標準ライブラリ
     items:
+      - title: コレクション
+        isFolder: true
+        items:
+          - title: 概要
+            url: /docs/collections-overview.html
       - url: /docs/opt-in-requirements.html
         title: オプトインの要求
   - title: Tools

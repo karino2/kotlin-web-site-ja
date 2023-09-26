@@ -129,6 +129,12 @@ fun main() {
 もしラムダ式からだけ復帰する必要がある場合は、そのラムダ式にラベルを付け、 *return*{: .keyword } をラベルで修飾する必要があります：
 
 <!--original
+{% capture xxx %}
+{% endcapture %}
+{% include kotlin_quote.html body=xxx %}
+
+
+
 Note that such non-local returns are supported only for lambda expressions passed to [inline functions](inline-functions.md).
 To return from a lambda expression, label it and qualify the `return`:
 -->

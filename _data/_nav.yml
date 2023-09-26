@@ -99,6 +99,8 @@ reference:
             title: 委譲
           - url: /docs/delegated-properties.html
             title: 委譲プロパティ
+          - url: /docs/type-aliases.html
+            title: Typeエイリアス
       - title: 関数など
         isFolder: true
         items:

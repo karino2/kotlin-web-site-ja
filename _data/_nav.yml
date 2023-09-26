@@ -84,7 +84,7 @@ reference:
           - url: /docs/data-classes.html
             title: データクラス
           - url: /docs/sealed-classes.html
-            title: sealedクラスとsealedインターフェース
+            title: sealedクラスとインターフェース
           - url: /docs/generics.html
             title: ジェネリクス
           - url: /docs/nested-classes.html

@@ -112,7 +112,7 @@ reference:
             title: インライン関数
           - url: /docs/operator-overloading.html
             title: Operator overloading
-      - url: /docs/multi-declarations.html
+      - url: /docs/destructuring-declarations.html
         title: Destructuring Declarations
       - url: /docs/collections.html
         title: Collections

@@ -75,6 +75,8 @@ reference:
             title: プロパティ
           - url: /docs/interfaces.html
             title: インターフェース
+          - url: /docs/fun-interfaces.html
+            title: 関数型インターフェース（SAM）
           - url: /docs/visibility-modifiers.html
             title: 可視性修飾子
           - url: /docs/extensions.html

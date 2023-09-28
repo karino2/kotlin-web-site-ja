@@ -94,7 +94,7 @@ reference:
           - url: /docs/inline-classes.html
             title: Inline value classes
           - url: /docs/object-declarations.html
-            title: オブジェクト式と宣言
+            title: object式とobject宣言
           - url: /docs/delegation.html
             title: 委譲
           - url: /docs/delegated-properties.html

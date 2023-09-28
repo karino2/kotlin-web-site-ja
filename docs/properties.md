@@ -331,7 +331,7 @@ Properties the value of which is known at compile time can be marked as _compile
 Such properties need to fulfil the following requirements:
 -->
 
-  * トップレベルまたは [オブジェクト宣言](object-declarations.md#オブジェクト宣言)か**[コンパニオンオブジェクト](object-declarations.md#コンパニオンオブジェクト)**のメンバ
+  * トップレベルまたは [object宣言](object-declarations.md#object宣言)か**[コンパニオンオブジェクト](object-declarations.md#コンパニオンオブジェクト)**のメンバ
   * String 型の値またはプリミティブ型で初期化される
   * カスタムゲッターが無い
 

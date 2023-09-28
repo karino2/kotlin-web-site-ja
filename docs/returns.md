@@ -103,7 +103,7 @@ A *continue*{: .keyword } proceeds to the next iteration of that loop.
 ## Return at Labels
 -->
 
-Kotlinでは、関数リテラル、ローカル変数、オブジェクト式を使用すると、関数を入れ子にすることができます。
+Kotlinでは、関数リテラル、ローカル変数、object式を使用すると、関数を入れ子にすることができます。
 ラベル付きの *return*{: .keyword }を使うと、外側の関数からreturnすることができます。
 最も重要なユースケースは、ラムダ式からのreturnです。
 以下のように書くと、`return`式は最も近いそれを包んでいる関数、つまり`foo`からreturnする事を思い出してください：

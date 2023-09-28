@@ -273,7 +273,7 @@ class Rectangle(var height: Double, var length: Double): Shape() {
 }
 ```
 
-[クラス](classes.md)と[オブジェクト式と宣言](object-declarations.md)を参照ください。
+[クラス](classes.md)と[object式と宣言](object-declarations.md)を参照ください。
 
 ## コメント
 

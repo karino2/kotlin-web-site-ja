@@ -156,7 +156,7 @@ The `import` keyword is not restricted to importing classes; you can also use it
 -->
 
 * トップレベルの関数とプロパティ
-* [オブジェクト宣言](object-declarations.md#オブジェクト宣言)で宣言された関数とプロパティ
+* [object宣言](object-declarations.md#object宣言)で宣言された関数とプロパティ
 * [enum定数](enum-classes.md)
 
 <!--original

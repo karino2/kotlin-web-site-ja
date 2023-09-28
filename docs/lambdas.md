@@ -502,7 +502,7 @@ an anonymous function will return from the anonymous function itself.
 ### Closures
 -->
 
-ラムダ式や無名関数（ならびに[ローカル関数](functions.html#local-functions)や[オブジェクト式](object-declarations.html#object-expressions)）は、その _クロージャ_ 、すなわち、外側のスコープで宣言された変数にアクセスすることができます。Javaとは異なり、クロージャに取り込まれた変数を変更することができます。
+ラムダ式や無名関数（ならびに[ローカル関数](functions.html#local-functions)や[object式](object-declarations.html#object-expressions)）は、その _クロージャ_ 、すなわち、外側のスコープで宣言された変数にアクセスすることができます。Javaとは異なり、クロージャに取り込まれた変数を変更することができます。
 
 <!--original
 A lambda expression or anonymous function (as well as a [local function](functions.html#local-functions) and an [object expression](object-declarations.html#object-expressions))

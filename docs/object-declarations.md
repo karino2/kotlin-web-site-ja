@@ -2,7 +2,7 @@
 type: doc
 layout: reference
 category: "Syntax"
-title: "オブジェクト式とオブジェクト宣言"
+title: "object式とobject宣言"
 ---
 
 <!--original
@@ -14,14 +14,14 @@ title: "Object Expressions and Declarations"
 - --
 -->
 
-# オブジェクト式とオブジェクト宣言
+# object式とobject宣言
 
 <!--original
 # Object Expressions and Declarations
 -->
 
 時には、あるクラスをわずかに修正しただけのオブジェクトを、それのための新しいサブクラスを明示的に宣言せずに作成する必要があります。Javaでは *無名内部クラス* でこの事例を処理します。
-Kotlinでは*オブジェクト式* と *オブジェクト宣言* だけでこの概念を一般化します。
+Kotlinでは*object式* と *object宣言* だけでこの概念を一般化します。
 
 <!--original
 Sometimes we need to create an object of a slight modification of some class, without explicitly declaring a new subclass for it.
@@ -29,7 +29,7 @@ Java handles this case with *anonymous inner classes*.
 Kotlin slightly generalizes this concept with *object expressions* and *object declarations*.
 -->
 
-## オブジェクト式
+## object式
 
 <!--original
 ## Object expressions
@@ -125,7 +125,7 @@ print(adHoc.x + adHoc.y)
 ```
 -->
 
-ただ、Javaの無名内部クラスのように、内包するスコープからオブジェクト式のコードが変数にアクセスすることができます。（Javaのものとは違って、これは final の変数に限定されるものではありません。）
+ただ、Javaの無名内部クラスのように、内包するスコープからobject式のコードが変数にアクセスすることができます。（Javaのものとは違って、これは final の変数に限定されるものではありません。）
 
 <!--original
 Just like Java's anonymous inner classes, code in object expressions can access variables from the enclosing scope.
@@ -170,7 +170,7 @@ fun countClicks(window: JComponent) {
 ```
 -->
 
-## オブジェクト宣言
+## object宣言
 
 <!--original
 ## Object declarations
@@ -192,7 +192,7 @@ object DataProviderManager {
     get() = // ...
 }
 ```
-- これはオブジェクト宣言と呼ばれ、それは常に object キーワードの後に名前を持ちます。ちょうど変数宣言と同じように、オブジェクト宣言は式ではなく、代入文の右側に使用することはできません。
+- これはobject宣言と呼ばれ、それは常に object キーワードの後に名前を持ちます。ちょうど変数宣言と同じように、object宣言は式ではなく、代入文の右側に使用することはできません。
 
 <!--original
 ``` kotlin
@@ -258,7 +258,7 @@ object DefaultListener : MouseAdapter() {
 ```
 -->
 
-**注**：オブジェクト宣言はローカルにすることはできません（つまり、関数内で直接ネストする必要があります）。ただし、他のオブジェクト宣言または非内部クラスにネストすることもできます。
+**注**：object宣言はローカルにすることはできません（つまり、関数内で直接ネストする必要があります）。ただし、他のobject宣言または非内部クラスにネストすることもできます。
 
 <!--original
 **NOTE**: object declarations can't be local (i.e. be nested directly inside a function), but they can be nested into other object declarations or non-inner classes.
@@ -273,7 +273,7 @@ object DefaultListener : MouseAdapter() {
 ### Companion Objects
 -->
 
-クラス内のオブジェクト宣言は、 *companion*{: .keyword } キーワードでマークすることができます。
+クラス内のobject宣言は、 *companion*{: .keyword } キーワードでマークすることができます。
 
 <!--original
 An object declaration inside a class can be marked with the *companion*{: .keyword } keyword:
@@ -383,20 +383,20 @@ for more details.
 
 -->
 
-### オブジェクト式と宣言の間の意味の違い
+### object式と宣言の間の意味の違い
 
 <!--original
 ### Semantic difference between object expressions and declarations
 -->
 
-オブジェクト式とオブジェクト宣言の間には、ある重要な意味上の違いがあります：
+object式とobject宣言の間には、ある重要な意味上の違いがあります：
 
 <!--original
 There is one important semantic difference between object expressions and object declarations:
 -->
 
-* オブジェクト式は **すぐに** 実行され（初期化され）、そこで使用されます
-* オブジェクト宣言は、初回アクセス時に **遅延して** 初期化されます
+* object式は **すぐに** 実行され（初期化され）、そこで使用されます
+* object宣言は、初回アクセス時に **遅延して** 初期化されます
 * コンパニオンオブジェクトは、対応するクラスが読み込まれた（解決）されたときに初期化され、これは Java の静的初期化子のセマンティクスに一致します
 
 <!--original

@@ -371,7 +371,7 @@ Classes can contain
 * [関数](functions.md)
 * [プロパティ](properties.md)
 * [ネストしたクラスやインナークラス](nested-classes.md)
-* [オブジェクト宣言](object-declarations.md)
+* [object宣言](object-declarations.md)
 
 
 <!--original
@@ -453,7 +453,7 @@ package-level functions instead.
 -->
 
 もしクラスインスタンス無しで呼べるがクラス内部へのアクセスが必要な関数（例えばファクトリメソッド）を書く必要があれば、
-そのクラスの中で [オブジェクト宣言](object-declaration.html) のメンバとして書くことができます。
+そのクラスの中で [object宣言](object-declaration.html) のメンバとして書くことができます。
 
 <!--original
 If you need to write a function that can be called without having a class instance but needs access to the internals

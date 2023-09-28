@@ -148,7 +148,7 @@ Inlinable lambdas can only be called inside the inline functions or passed as in
 but `noinline` ones can be manipulated in any way we like: stored in fields, passed around etc.
 -->
 
-インライン関数にインライン化できる関数の引数がなく、[具体化型パラメータ](#reified-type-parameters)が指定されていない場合、コンパイラは警告を発します。このような関数のインライン展開は有益ではないためです（インライン展開が必要な場合は警告を抑制できます）。
+インライン関数にインライン化できる関数の引数がなく、[reified型パラメータ](#reified型パラメータ)が指定されていない場合、コンパイラは警告を発します。このような関数のインライン展開は有益ではないためです（インライン展開が必要な場合は警告を抑制できます）。
 
 <!--original
 Note that if an inline function has no inlinable function parameters and no
@@ -276,7 +276,9 @@ inline fun f(crossinline body: () -> Unit) {
 > `break` and `continue` are not yet available in inlined lambdas, but we are planning to support them too
 -->
 
-## 具体化型パラメータ (Reified type parameters)
+## reified型パラメータ
+
+(訳注：reifyは具体化する、というような意味)
 
 <!--original
 ## Reified type parameters
@@ -345,7 +347,7 @@ myTree.findParentOfType<MyTreeNodeType>()
 ```
 -->
 
-これを有効にするには、インライン関数が *具体化型パラメータ* をサポートするので、私たちはこのように書くことができます：
+これを有効にするには、インライン関数が *reified型パラメータ* をサポートするので、私たちはこのように書くことができます：
 
 <!--original
 To enable this, inline functions support *reified type parameters*, so we can write something like this:
@@ -381,7 +383,7 @@ almost as if it were a normal class. Since the function is inlined, no reflectio
 and `as` are working now. Also, we can call it as mentioned above: `myTree.findParentOfType<MyTreeNodeType>()`.
 -->
 
-リフレクションは多くの場合に必要とされないかもしれませんが、具体化型パラメータで型パラメータを使用することができます：
+リフレクションは多くの場合に必要とされないかもしれませんが、reified型パラメータで型パラメータを使用することができます：
 
 <!--original
 Though reflection may not be needed in many cases, we can still use it with a reified type parameter:

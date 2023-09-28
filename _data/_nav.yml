@@ -155,6 +155,8 @@ reference:
         items:
           - title: 概要
             url: /docs/collections-overview.html
+          - title: 要素の順番
+            url: /docs/collection-ordering.html
       - url: /docs/opt-in-requirements.html
         title: オプトインの要求
   - title: Tools

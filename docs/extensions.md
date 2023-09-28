@@ -428,7 +428,7 @@ fun main() {
 {% include kotlin_quote.html body=multiple-receiver %}
 
 ディスパッチレシーバのメンバーと拡張レシーバの名前が衝突する場合には、拡張レシーバが優先されます。
-ディスパッチレシーバのメンバを参照するには、[限定子付き `this` の構文](this-expressions.md#qualified-this)を使用することができます。
+ディスパッチレシーバのメンバを参照するには、[限定子付き `this` の構文](this-expressions.md#限定子付きthis)を使用することができます。
 
 <!--original
 In case of a name conflict between the members of the dispatch receiver and the extension receiver, the extension receiver takes

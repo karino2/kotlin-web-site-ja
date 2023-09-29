@@ -1,40 +1,30 @@
 ---
-type: doc
 layout: reference
-category: "Syntax"
-title: "委譲プロパティ"
+title: "委譲プロパティ (Delegated Properties)"
 ---
-
-<!--original
-- --
-type: doc
-layout: reference
-category: "Syntax"
-title: "Delegated Properties"
-- --
--->
-
 # 委譲プロパティ (Delegated Properties)
 
 <!--original
 # Delegated Properties
 -->
-
-必要なときに手動で実装することはできますが、一度実装してライブラリに入っていると非常にうれしいといった、ある種のよくある一般的なのプロパティはあります。例としては、
+ある種のプロパティは、
+必要なときに毎回手作りで実装することもできなくは無いけれど、
+一度実装してライブラリに入れて、それをあとで再利用出来る方が嬉しい事があります。
+例としては：
 
 <!--original
 There are certain common kinds of properties, that, though we can implement them manually every time we need them, 
 would be very nice to implement once and for all, and put into a library. Examples include
 -->
 
-* 遅延プロパティ (lazy properties) ：値は最初のアクセス時に初めて計算されます
-* オブザーバブルプロパティ (observable properties) ：リスナがこのプロパティの変更に関する通知を受け取ります
-* フィールドとは分かれていない、map内でのストアリングプロパティ (storing properties)
+* 遅延プロパティ (_lazy_ properties) ：値は最初のアクセス時に初めて計算されます
+* _observable_プロパティ：リスナがこのプロパティの変更に関する通知を受け取ります
+* 各プロパティをそれぞれ別のフィールドにはせずに、_マップ_に保存するようなプロパティ
 
 <!--original
-* lazy properties: the value gets computed only upon first access,
-* observable properties: listeners get notified about changes to this property,
-* storing properties in a map, not in separate field each.
+* _Lazy_ properties: the value is computed only on first access.
+* _Observable_ properties: listeners are notified about changes to this property.
+* Storing properties in a _map_ instead of a separate field for each property.
 -->
 
 これら（およびその他）のケースをカバーするために、Kotlinは、 _委譲プロパティ (delegated properties)_ をサポートしています。
@@ -45,7 +35,7 @@ To cover these (and other) cases, Kotlin supports _delegated properties_:
 
 ``` kotlin
 class Example {
-  var p: String by Delegate()
+    var p: String by Delegate()
 }
 ```
 
@@ -57,48 +47,58 @@ class Example {
 ```
 -->
 
-構文は次のとおりです `val/var <property name>: <Type> by <expression>`
-`get()` （と `set()` ）はその `getValue()` および `setValue()` メソッドに委譲されるプロパティに対応するため、 `by` の後に続く式は、 _委譲 (delegate)_ です。プロパティの委譲には、任意のインターフェイスを実装する必要はありませんが、 `getValue()` 関数（そして `setValue()` --- *var*{:.keyword}用に）を提供する必要があります。例えば：
+構文は次のとおりです `val/var <プロパティ名>: <型> by <式>`。
+`by`の後の式は_委譲（delegate）_です。
+というのは、そのプロパティに対応した`get()` （と `set()` ）は、
+その式の `getValue()` および `setValue()` メソッドに委譲されるからです。
+プロパティの委譲には、特別なインターフェイスを実装する必要はありませんが、
+`getValue()` 関数（そして*var*{:.keyword}の場合は `setValue()`関数）を提供する必要があります。例えば：
 
 <!--original
-The syntax is: `val/var <property name>: <Type> by <expression>`. The expression after *by*{:.keyword} is the _delegate_, 
-because `get()` (and `set()`) corresponding to the property will be delegated to its `getValue()` and `setValue()` methods.
-Property delegates don’t have to implement any interface, but they have to provide a `getValue()` function (and `setValue()` --- for *var*{:.keyword}'s).
+The syntax is: `val/var <property name>: <Type> by <expression>`. The expression after `by` is a _delegate_,
+because the `get()` (and `set()`) that correspond to the property will be delegated to its `getValue()` and `setValue()` methods.
+Property delegates don't have to implement an interface, but they have to provide a `getValue()` function (and `setValue()` for `var`s).
+
 For example:
 -->
 
 ``` kotlin
+import kotlin.reflect.KProperty
+
 class Delegate {
-  operator fun getValue(thisRef: Any?, property: KProperty<*>): String {
-    return "$thisRef, thank you for delegating '${property.name}' to me!"
-  }
+    operator fun getValue(thisRef: Any?, property: KProperty<*>): String {
+        return "$thisRef, '${property.name}'を私に委譲してくれてありがとう！"
+    }
  
-  operator fun setValue(thisRef: Any?, property: KProperty<*>, value: String) {
-    println("$value has been assigned to '${property.name} in $thisRef.'")
-  }
+    operator fun setValue(thisRef: Any?, property: KProperty<*>, value: String) {
+        println("$value は $thisRef の '${property.name}' に代入された。")
+    }
 }
 ```
 
 <!--original
 ``` kotlin
+import kotlin.reflect.KProperty
+
 class Delegate {
-  operator fun getValue(thisRef: Any?, property: KProperty<*>): String {
-    return "$thisRef, thank you for delegating '${property.name}' to me!"
-  }
+    operator fun getValue(thisRef: Any?, property: KProperty<*>): String {
+        return "$thisRef, thank you for delegating '${property.name}' to me!"
+    }
  
-  operator fun setValue(thisRef: Any?, property: KProperty<*>, value: String) {
-    println("$value has been assigned to '${property.name} in $thisRef.'")
-  }
+    operator fun setValue(thisRef: Any?, property: KProperty<*>, value: String) {
+        println("$value has been assigned to '${property.name}' in $thisRef.")
+    }
 }
 ```
 -->
 
-Delegate インスタンスのデリゲートである `p` を読み込むとき、 `Delegate` の`getValue()` 関数が呼び出されています。そのため、その最初のパラメータは、 `p` を読み取る先のオブジェクトであり、2番目のパラメータは、 `p` 自体の説明を保持しています（例えば、あなたがその名前を得ることができます）。例えば：
+`p` を読み込むと、`Delegate`のインスタンスに委譲されて、`Delegate`の`getValue()`が呼ばれます。
+その最初のパラメータは、 `p` を読み取る対象となるオブジェクトであり、2番目のパラメータは、 `p` 自体の情報を保持しています（例えば、そこから名前を得ることができます）。例えば：
 
 <!--original
-When we read from `p` that delegates to an instance of `Delegate`, the `getValue()` function from `Delegate` is called,
-so that its first parameter is the object we read `p` from and the second parameter holds a description of `p` itself 
-(e.g. you can take its name). For example:
+When you read from `p`, which delegates to an instance of `Delegate`, the `getValue()` function from `Delegate` is called.
+Its first parameter is the object you read `p` from, and the second parameter holds a description of `p` itself
+(for example, you can take its name). 
 -->
 
 ``` kotlin
@@ -120,7 +120,7 @@ This prints
 -->
 
 ```
-Example@33a17727, thank you for delegating ‘p’ to me!
+Example@33a17727, 'p'を私に委譲してくれてありがとう！
 ```
 
 <!--original
@@ -129,7 +129,8 @@ Example@33a17727, thank you for delegating ‘p’ to me!
 ```
 -->
  
-`p` に代入するのと同様に、`setValue()` 関数が呼び出されます。最初の2つのパラメータは同じであり、3つ目は、割り当てられた値を保持します。
+同様に、`p` に代入すると`setValue()` 関数が呼び出されます。
+最初の2つのパラメータは同じであり、3つ目は、代入された値を保持します。
 
 <!--original
 Similarly, when we assign to `p`, the `setValue()` function is called. The first two parameters are the same, and the third holds the value being assigned:
@@ -152,7 +153,7 @@ This prints
 -->
  
 ```
-NEW has been assigned to ‘p’ in Example@33a17727.
+NEW は Example@33a17727 の ‘p’ に代入された。
 ```
 
 <!--original
@@ -160,6 +161,12 @@ NEW has been assigned to ‘p’ in Example@33a17727.
 NEW has been assigned to ‘p’ in Example@33a17727.
 ```
 -->
+
+委譲される側のオブジェクトに要求される仕様は[以下](#プロパティを委譲するための要件)に説明があります。
+
+関数やコードブロックの中で委譲プロパティを定義する事も出来ます。別にクラスのメンバである必要はありません。
+以下に[その例](#ローカル委譲プロパティ)も出てきます。
+
 
 ## 標準デリゲート
 
@@ -173,20 +180,35 @@ Kotlin標準ライブラリでは、いくつかの有用なデリゲートの�
 The Kotlin standard library provides factory methods for several useful kinds of delegates.
 -->
 
-### 遅延 (lazy)
+### 遅延プロパティ (lazy properties)
 
 <!--original
-### Lazy
+### Lazy properties
 -->
 
-`lazy()` はラムダをとり、遅延プロパティを実装するためのデリゲートとして機能する `Lazy<T>` のインスタンスを返す関数です。`get()` の最初の呼び出しは `lazy()` に渡されたラムダを実行し、結果を保持します。 それ以降、`get()` を呼び出すと、単に記憶された結果が返されます。
+[`lazy()`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/lazy.html) はラムダを引数にとり、遅延プロパティを実装するためのデリゲートとして機能する `Lazy<T>` のインスタンスを返す関数です。
+最初の`get()` の呼び出しは `lazy()` に渡されたラムダを実行し、結果を記憶します。 それ以降、`get()` を呼び出すと、単に記憶された結果が返されます。
 
 <!--original
-`lazy()` is a function that takes a lambda and returns an instance of `Lazy<T>` which can serve as a delegate for implementing a lazy property:
-the first call to `get()` executes the lambda passed to `lazy()` and remembers the result, 
-subsequent calls to `get()` simply return the remembered result. 
+[`lazy()`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/lazy.html) is a function that takes a lambda and returns an instance of `Lazy<T>`, which can serve as a delegate for implementing a lazy property.
+The first call to `get()` executes the lambda passed to `lazy()` and remembers the result.
+Subsequent calls to `get()` simply return the remembered result. 
 -->
 
+{% capture lazy-delegate %}
+val lazyValue: String by lazy {
+    println("計算実行!")
+    "Hello"
+}
+
+fun main(args: Array<String>) {
+    println(lazyValue)
+    println(lazyValue)
+}
+{% endcapture %}
+{% include kotlin_quote.html body=lazy-delegate %}
+
+<!--original
 ``` kotlin
 val lazyValue: String by lazy {
     println("computed!")
@@ -198,22 +220,14 @@ fun main(args: Array<String>) {
     println(lazyValue)
 }
 ```
-
-<!--original
-``` kotlin
-val lazyValue: String by lazy {
-    println("computed!")
-    "Hello"
-}
-
-fun main(args: Array<String>) {
-    println(lazyValue)
-    println(lazyValue)
-}
-```
 -->
 
-デフォルトでは、遅延特性の評価が **同期されます** 。値は1つのスレッドで計算され、すべてのスレッドで同じ値が表示されます。もし初期化デリゲートの同期が必要ではない場合は、 複数のスレッドが同時に初期化を実行できるように `LazyThreadSafetyMode.PUBLICATION` を `lazy()` 関数のパラメータとして渡します。初期化が常に単一のスレッドで起こると確信しているなら、任意のスレッドの安全性の保証および関連するオーバーヘッドが発生しない `LazyThreadSafetyMode.NONE` モードを使用することができます。
+デフォルトでは、遅延プロパティの評価は **同期されます(synchronized)** 。
+値は1つのスレッドで計算され、すべてのスレッドから同じ値が見えます。
+もし初期化デリゲートの同期が必要ではない場合は、 複数のスレッドが同時に初期化を実行できるように `LazyThreadSafetyMode.PUBLICATION` を `lazy()` 関数のパラメータとして渡します。
+
+初期化が常に単一のスレッドで起こると確信しているなら、任意のスレッドの安全性の保証および関連するオーバーヘッドが発生しない `LazyThreadSafetyMode.NONE` モードを使用することができます。
+このモードは一切のスレッドセーフティの保証をせず、関連するオーバーヘッドも存在しません。
 
 <!--original
 By default, the evaluation of lazy properties is **synchronized**: the value is computed only in one thread, and all threads
@@ -224,13 +238,16 @@ which doesn't incur any thread-safety guarantees and the related overhead.
 
 -->
 
-### オブザーバブル (Observable)
+### Observableプロパティ
 
 <!--original
 ### Observable
 -->
 
-`Delegates.observable()` は、2つの引数を取ります。初期値と修正のためのハンドラです。ハンドラは（割り当てが行われた _後_ に）プロパティに割り当てるたびに呼び出されます。それには3つのパラメータがあり、割り当てられているプロパティ、古い値、そして新しい値です：
+[`Delegates.observable()`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.properties/-delegates/observable.html) は、2つの引数を取ります。
+初期値と修正のためのハンドラです。
+ハンドラはプロパティに値が代入されるたびに（代入が行われた _後_ に）呼び出されます。
+それには3つのパラメータがあり、割り当てられているプロパティ、古い値、そして新しい値です：
 
 <!--original
 `Delegates.observable()` takes two arguments: the initial value and a handler for modifications.
@@ -238,6 +255,25 @@ The handler gets called every time we assign to the property (_after_ the assign
 parameters: a property being assigned to, the old value and the new one:
 -->
 
+{% capture observable-delegate %}
+import kotlin.properties.Delegates
+
+class User {
+    var name: String by Delegates.observable("<no name>") {
+        prop, old, new ->
+        println("$old -> $new")
+    }
+}
+
+fun main(args: Array<String>) {
+    val user = User()
+    user.name = "first"
+    user.name = "second"
+}
+{% endcapture %}
+{% include kotlin_quote.html body=observable-delegate %}
+
+<!--original
 ``` kotlin
 import kotlin.properties.Delegates
 
@@ -254,53 +290,30 @@ fun main(args: Array<String>) {
     user.name = "second"
 }
 ```
-
-<!--original
-``` kotlin
-import kotlin.properties.Delegates
-
-class User {
-    var name: String by Delegates.observable("<no name>") {
-        prop, old, new ->
-        println("$old -> $new")
-    }
-}
-
-fun main(args: Array<String>) {
-    val user = User()
-    user.name = "first"
-    user.name = "second"
-}
-```
 -->
 
-この例の出力：
-
-<!--original
-This example prints
--->
-
-```
-<no name> -> first
-first -> second
-```
-
-<!--original
-```
-<no name> -> first
-first -> second
-```
--->
-
-もし代入を傍受し、それに対し 「拒否権」を発動できるようにしたい場合は、observable() の代わりに `vetoable()` を使います。 `vetoable` に渡されたハンドラは、新しいプロパティ値の割り当てが行われる _前_ に呼び出されます。
+もし代入に割り込んで、場合によってはそれを*拒否(veto)*したい場合には、
+`observable()`の代わりに[`vetoable()`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.properties/-delegates/vetoable.html)を使うと良いでしょう。
+ `vetoable` に渡されたハンドラは、新しいプロパティ値の割り当てが行われる _前_ に呼び出されます。
 
 <!--original
 If you want to be able to intercept an assignment and "veto" it, use `vetoable()` instead of `observable()`.
 The handler passed to the `vetoable` is called _before_ the assignment of a new property value has been performed.
 -->
 
-## Delegating to another property
+## 他のプロパティへの委譲
 
+プロパティは、そのゲッターとセッターを他のプロパティに委譲する事が出来ます。
+そのような委譲はトップレベルとクラスのプロパティで使用可能です（メンバと拡張（extension））。
+委譲されるプロパティは：
+* トップレベルのプロパティ
+* 同じクラスのメンバや拡張（extension）プロパティ
+* 他のクラスのメンバや拡張プロパティ
+
+あるプロパティを別のプロパティに委譲するには、委譲先の名前に`::`の限定子（qualifier）をつけます。
+例えば、`this::delegate`や`MyClass::delegate`など。
+
+<!--
 A property can delegate its getter and setter to another property. Such delegation is available for
 both top-level and class properties (member and extension). The delegate property can be:
 * A top-level property
@@ -309,6 +322,9 @@ both top-level and class properties (member and extension). The delegate propert
 
 To delegate a property to another property, use the `::` qualifier in the delegate name, for example, `this::delegate` or
 `MyClass::delegate`.
+
+ -->
+
 
 ```kotlin
 var topLevelInt: Int = 0
@@ -323,37 +339,39 @@ class MyClass(var memberInt: Int, val anotherClassInstance: ClassWithDelegate) {
 var MyClass.extDelegated: Int by ::topLevelInt
 ```
 
-This may be useful, for example, when you want to rename a property in a backward-compatible way: introduce a new property,
-annotate the old one with the `@Deprecated` annotation, and delegate its implementation.
+この機能は例えば、プロパティのりネームを後方互換を保ちつつ行う時などに便利でしょう：
+新しいプロパティを作り、古い方には`@Deprecated`アノテーションをつけて、そして実装を委譲する訳です。
 
-```kotlin
+{% capture backward-compat-rename %}
 class MyClass {
    var newName: Int = 0
-   @Deprecated("Use 'newName' instead", ReplaceWith("newName"))
+   @Deprecated("代わりに 'newName' を使ってね", ReplaceWith("newName"))
    var oldName: Int by this::newName
 }
 fun main() {
    val myClass = MyClass()
    // Notification: 'oldName: Int' is deprecated.
-   // Use 'newName' instead
+   // 代わりに 'newName' を使ってね
    myClass.oldName = 42
    println(myClass.newName) // 42
 }
-```
-{kotlin-runnable="true" kotlin-min-compiler-version="1.4"}
+{% endcapture %}
+{% include kotlin_quote.html body=backward-compat-rename %}
 
 
-## Map 中のストアリングプロパティ (Storing Properties in a Map)
+## プロパティをマップに格納する
 
 <!--original
 ## Storing Properties in a Map
 -->
 
-一般的な使用例のひとつとして、map 内のプロパティの値を記憶することが挙げられます。これはJSONをパースしたり、他の「動的」なことをやるようなアプリケーションで頻繁に起こっています。この事例では、委譲プロパティのデリゲートとして map のインスタンス自体を使用することができます。
+一般的な委譲プロパティの使用例のひとつとして、プロパティの値をマップ内に記憶するというのがあります。
+これはJSONをパースしたり、他の「動的」なことをやるようなアプリケーションで頻繁に遭遇します。
+このケースでは、委譲プロパティのデリゲートとしてマップのインスタンス自体を使用することができます。
 
 <!--original
 One common use case is storing the values of properties in a map.
-This comes up often in applications like parsing JSON or doing other “dynamic” things.
+This comes up often in applications for things like parsing JSON or performing other dynamic tasks.
 In this case, you can use the map instance itself as the delegate for a delegated property.
 -->
 
@@ -373,7 +391,7 @@ class User(val map: Map<String, Any?>) {
 ```
 -->
 
-この例では、コンストラクタは、 map を取ります。
+この例では、コンストラクタは、マップを取ります。
 
 <!--original
 In this example, the constructor takes a map:
@@ -395,29 +413,37 @@ val user = User(mapOf(
 ```
 -->
 
-委譲プロパティは、このマップから（文字列 --- この場合プロパティの名前 --- のキーを使って）値を取ります：
+委譲プロパティは、このマップから文字列キーを使って値を取り出します。
+この文字列キーはプロパティの名前に対応しています：
 
 <!--original
-Delegated properties take values from this map (by the string keys --- names of properties):
-
+Delegated properties take values from this map through string keys, which are associated with the names of properties:
 -->
 
-``` kotlin
-println(user.name) // 出力："John Doe"
-println(user.age)  // 出力：25
-```
+{% capture delegate-map-example %}
+class User(val map: Map<String, Any?>) {
+    val name: String by map
+    val age: Int     by map
+}
+
+fun main() {
+    val user = User(mapOf(
+        "name" to "John Doe",
+        "age"  to 25
+    ))
+//sampleStart
+    println(user.name) // 出力："John Doe"
+    println(user.age)  // 出力：25
+//sampleEnd
+
+{% endcapture %}
+{% include kotlin_quote.html body=delegate-map-example %}
+
+
+読み取り専用 `Map` の代わりに `MutableMap` を使用すると、*var*{:.keyword} のプロパティに対しても動作します：
 
 <!--original
-``` kotlin
-println(user.name) // Prints "John Doe"
-println(user.age)  // Prints 25
-```
--->
-
-読み取り専用 `Map` の代わりに `MutableMap` を使用すると、これは *var*{:.keyword} のプロパティに対しても動作します：
-
-<!--original
-This works also for *var*{:.keyword}’s properties if you use a `MutableMap` instead of read-only `Map`:
+This also works for `var`'s properties if you use a `MutableMap` instead of a read-only `Map`:
 -->
 
 ``` kotlin
@@ -440,8 +466,8 @@ class MutableUser(val map: MutableMap<String, Any?>) {
 
 (Local delegated properties)
 
-You can declare local variables as delegated properties.
-For example, you can make a local variable lazy:
+ローカル変数を委譲プロパティとして宣言する事も出来ます。
+例えば、ローカル変数を遅延プロパティ（lazy）にしたり出来ます：
 
 ```kotlin
 fun example(computeFoo: () -> Foo) {
@@ -453,83 +479,141 @@ fun example(computeFoo: () -> Foo) {
 }
 ```
 
-The `memoizedFoo` variable will be computed on first access only.
-If `someCondition` fails, the variable won't be computed at all.
+（訳注：memoizedはいわゆる`メモ化`の事だと思われる）
 
-## プロパティデリゲートの要件
+`memoizedFoo`変数 は最初のアクセスの時だけ計算される。
+`someCondition`が満たされなければ、この変数は一切計算されない。
+
+## プロパティを委譲するための要件
 
 <!--original
 ## Property Delegate Requirements
 -->
 
-ここでは、オブジェクトを委譲するための要件をまとめます。
 
-<!--original
-Here we summarize requirements to delegate objects. 
--->
-
-**読み取り専用**プロパティ（すなわち *val*{:.keyword}）のために、デリゲートは、次のパラメータを取る `getValue` という名前の関数を提供する必要があります。
+**読み取り専用**プロパティ（すなわち *val*{:.keyword}）のために、デリゲートは、次のパラメータを取る `getValue()` という名前の関数を提供する必要があります。
 
 <!--original
 For a **read-only** property (i.e. a *val*{:.keyword}), a delegate has to provide a function named `getValue` that takes the following parameters:
 -->
 
-* レシーバ --- _プロパティ所有者_ のものと同じかスーパータイプでなければなりません（拡張プロパティー --- 拡張されるタイプの場合）。
-* メタデータ --- 型 `KProperty <*>`またはそのスーパータイプでなければなりません。
+* `thisRef` は、_プロパティの所有者_ のと同じ型かその基底型でなければなりません（拡張プロパティの場合は拡張される対象の型）。
+* `property` は、型 `KProperty <*>`またはその基底型でなければなりません。
 
 <!--original
-* receiver --- must be the same or a supertype of the _property owner_ (for extension properties --- the type being extended),
-* metadata --- must be of type `KProperty<*>` or its supertype,
+* `thisRef` must be the same type as, or a supertype of, the *property owner* (for extension properties, it should be the type being extended).
+* `property`  must be of type `KProperty<*>` or its supertype.
 -->
 
-この関数は、プロパティ（またはそのサブタイプ）と同じ型を返さなければなりません。
+`getValue()`は、プロパティと同じ型（またはそのサブタイプ）を返さなければなりません。
 
 <!--original
-this function must return the same type as property (or its subtype).
+`getValue()` must return the same type as the property (or its subtype).
 -->
 
-**変更可能な** プロパティ ( *var*{:.keyword} ) の場合、デリゲートは、さらに次のパラメータを取り `setValue` という名前の関数を _追加で_ 提供する必要があります。
+```kotlin
+class Resource
+
+class Owner {
+    val valResource: Resource by ResourceDelegate()
+}
+
+class ResourceDelegate {
+    operator fun getValue(thisRef: Owner, property: KProperty<*>): Resource {
+        return Resource()
+    }
+}
+```
+
+**変更可能な** プロパティ ( *var*{:.keyword} ) の場合、デリゲートは、さらに`setValue()` という名前の関数で次のパラメータを取るものを追加で提供する必要があります：
 
 <!--original
-For a **mutable** property (a *var*{:.keyword}), a delegate has to _additionally_ provide a function named `setValue` that takes the following parameters:
+For a *mutable* property (`var`), a delegate has to additionally provide an operator function `setValue()`
+with the following parameters:
 -->
  
-* レシーバ --- `getValue()` と同じ
-* メタデータ --- `getValue()` と同じ
-* 新しい値 --- プロパティまたはそのスーパータイプと同じタイプでなければなりません。
+* `thisRef`は、_プロパティの所有者_ のと同じ型かその基底型でなければなりません（拡張プロパティの場合は拡張される対象の型）。
+* `property` は、型 `KProperty <*>`またはその基底型でなければなりません。
+* `value` はプロパティと同じ型（またはその基底型）でなければなりません。
 
 <!--original
-* receiver --- same as for `getValue()`,
-* metadata --- same as for `getValue()`,
-* new value --- must be of the same type as a property or its supertype.
+* `thisRef` must be the same type as, or a supertype of, the *property owner* (for extension properties, it should be the type being extended).
+* `property` must be of type `KProperty<*>` or its supertype.
+* `value` must be of the same type as the property (or its supertype).
 -->
- 
-`getValue()` および/または `setValue()` 関数は、いずれかの委譲クラスや拡張機能のメンバ関数として提供することができます。これらの機能を提供していないオブジェクトにプロパティを委譲する必要がある場合、後者が便利です。関数の両方を `operator` キーワードでマークする必要があります。
+
+```kotlin
+class Resource
+
+class Owner {
+    var varResource: Resource by ResourceDelegate()
+}
+
+class ResourceDelegate(private var resource: Resource = Resource()) {
+    operator fun getValue(thisRef: Owner, property: KProperty<*>): Resource {
+        return resource
+    }
+    operator fun setValue(thisRef: Owner, property: KProperty<*>, value: Any?) {
+        if (value is Resource) {
+            resource = value
+        }
+    }
+}
+```
+
+`getValue()` および/または `setValue()` 関数は、委譲クラスのメンバ関数か、拡張関数のどちらかの形で提供することができます。
+もともとはこれらの機能を提供していないオブジェクトにプロパティを委譲する必要がある場合、後者が便利です。
+関数の両方を `operator` キーワードでマークする必要があります。
 
 <!--original
-`getValue()` and/or `setValue()` functions may be provided either as member functions of the delegate class or extension functions.
-The latter is handy when you need to delegate property to an object which doesn't originally provide these functions.
-Both of the functions need to be marked with the `operator` keyword. -->
+`getValue()` and/or `setValue()` functions can be provided either as member functions of the delegate class or as extension functions.
+The latter is handy when you need to delegate a property to an object that doesn't originally provide these functions.
+Both of the functions need to be marked with the `operator` keyword.
+-->
 
+新しいクラスを作らずに無名オブジェクトでデリゲートを作る事も出来ます。
+その為にはKotlinの標準ライブラリの`ReadOnlyProperty`と`ReadWriteProperty`インターフェースを使います。
+これらは必要なメソッドを提供しています：`getValue()`は`ReadOnlyProperty`に定義されていて、
+`ReadWriteProperty`はそれを継承してさらに`setValue()`を追加しています。
+これはつまり、`ReadOnlyProperty`が渡せる所にはいつでも`ReadWriteProperty`を渡す事が出来る、という事を意味します。
 
-## Translation rules for delegated properties
+<!--
+You can create delegates as anonymous objects without creating new classes, by using the interfaces `ReadOnlyProperty` and `ReadWriteProperty` from the Kotlin standard library.
+They provide the required methods: `getValue()` is declared in `ReadOnlyProperty`; `ReadWriteProperty`
+extends it and adds `setValue()`. This means you can pass a `ReadWriteProperty` whenever a `ReadOnlyProperty` is expected.
+-->
 
-Under the hood, the Kotlin compiler generates auxiliary properties for some kinds of delegated properties and then delegates to them. 
+```kotlin
+fun resourceDelegate(resource: Resource = Resource()): ReadWriteProperty<Any?, Resource> =
+    object : ReadWriteProperty<Any?, Resource> {
+        var curValue = resource 
+        override fun getValue(thisRef: Any?, property: KProperty<*>): Resource = curValue
+        override fun setValue(thisRef: Any?, property: KProperty<*>, value: Resource) {
+            curValue = value
+        }
+    }
 
-> For the optimization purposes, the compiler [_does not_ generate auxiliary properties in several cases](#optimized-cases-for-delegated-properties). 
-> Learn about the optimization on the example of [delegating to another property](#translation-rules-when-delegating-to-another-property).
+val readOnlyResource: Resource by resourceDelegate()  // ReadWriteProperty を val に使う
+var readWriteResource: Resource by resourceDelegate()
+```
+
+## 委譲プロパティのトランスレーションルール
+
+水面下では、Kotlinコンパイラはある種の委譲プロパティの場合には、補助的なプロパティを生成して、それに委譲します。
+
+> 最適化のために、コンパイラは[幾つかのケースでは補助的なプロパティを生成**しません**](#委譲プロパティが最適化されるケース)。
+> [他のプロパティへの委譲](#他のプロパティへの委譲の場合のトランスレーションルール)の例で最適化について学べます。
 >
-{type="note"}
+{: .note}
 
-For example, for the property `prop` it generates the hidden property `prop$delegate`, and the code of the accessors
-simply delegates to this additional property:
+例えば、プロパティ`prop`に対しては隠しプロパティの`prop$delegate`が生成されて、アクセサのコードは単にこの追加のプロパティに委譲します：
 
 ```kotlin
 class C {
     var prop: Type by MyDelegate()
 }
 
-// this code is generated by the compiler instead:
+// このコードがコンパイラに生成される
 class C {
     private val prop$delegate = MyDelegate()
     var prop: Type
@@ -538,13 +622,12 @@ class C {
 }
 ```
 
-The Kotlin compiler provides all the necessary information about `prop` in the arguments: the first argument `this`
-refers to an instance of the outer class `C`, and `this::prop` is a reflection object of the `KProperty` type describing `prop` itself.
+Kotlinコンパイラは`prop`についての必要な全情報を提供します： 最初の引数の`this`は外側のクラス`C`のインスタンスで、`this::prop`は`prop`自身を記述する`KProperty`型のリフレクションオブジェクトです。
 
-### Optimized cases for delegated properties
+### 委譲プロパティが最適化されるケース
 
-The `$delegate` field will be omitted if a delegate is:
-* A referenced property:
+`$delegate` フィールドはデリゲートが以下のケースでは省略されます：
+* プロパティの参照（referenced property）:
 
   ```kotlin
   class C<Type> {
@@ -553,7 +636,7 @@ The `$delegate` field will be omitted if a delegate is:
   }
   ```
 
-* A named object:
+* 名前付きオブジェクト:
 
   ```kotlin
   object NamedObject {
@@ -563,7 +646,7 @@ The `$delegate` field will be omitted if a delegate is:
   val s: String by NamedObject
   ```
 
-* A final `val` property with a backing field and a default getter in the same module:
+* finalな `val` プロパティでバッキングフィールドがあってデフォルトのゲッターで同じモジュールにある場合：
 
   ```kotlin
   val impl: ReadOnlyProperty<Any?, String> = ...
@@ -573,7 +656,7 @@ The `$delegate` field will be omitted if a delegate is:
   }
   ```
 
-* A constant expression, enum entry, `this`, `null`. The example of `this`:
+* 定数式、列挙型のエントリ、`this`、 `null`など。 以下は`this`の例：
 
   ```kotlin
   class A {
@@ -583,12 +666,13 @@ The `$delegate` field will be omitted if a delegate is:
   }
   ```
 
-### Translation rules when delegating to another property
+### 他のプロパティへの委譲の場合のトランスレーションルール
 
-When delegating to another property, the Kotlin compiler generates immediate access to the referenced property.
-This means that the compiler doesn't generate the field `prop$delegate`. This optimization helps save memory.
+他のプロパティへ委譲する時は、参照先のプロパティへ直接参照するコードを生成する。
+それが意味する所は、`prop$delegate`フィールドは生成されない、という事だ。
+この最適化はメモリを節約してくれる。
 
-Take the following code, for example:
+以下のコードを見てみよう：
 
 ```kotlin
 class C<Type> {
@@ -597,10 +681,10 @@ class C<Type> {
 }
 ```
 
-Property accessors of the `prop` variable invoke the `impl` variable directly, skipping the delegated property's `getValue`and `setValue` operators, 
-and thus the `KProperty` reference object is not needed.
+`prop`変数へのプロパティアクセサは、`impl`変数を直接実行し、
+`getValue`と`setValue`演算子を省略し、その結果`KProperty`参照オブジェクトは不要となる。
 
-For the code above, the compiler generates the following code:
+さきほどのコードから、コンパイラは以下のコードを生成する：
 
 ```kotlin
 class C<Type> {
@@ -612,19 +696,21 @@ class C<Type> {
             impl = value
         }
     
-    fun getProp$delegate(): Type = impl // This method is needed only for reflection
+    fun getProp$delegate(): Type = impl // このメソッドはリフレクションの為だけに必要
 }
 ```
 
-## Providing a delegate
+## 委譲の提供（Providing a delegate）
 
-By defining the `provideDelegate` operator, you can extend the logic for creating the object to which the property implementation
-is delegated. If the object used on the right-hand side of `by` defines `provideDelegate` as a member or extension function,
-that function will be called to create the property delegate instance.
+`provideDelegate`演算子を定義すると、
+プロパティの実装が委譲される対象のオブジェクトの生成のロジックを拡張出来る。
+`by`の右側で使われるオブジェクトに`provideDelegate`がメンバか拡張（extension）として定義してあると、
+プロパティの委譲先インスタンス（delegate instance）を作るのに呼ばれる。
 
-One of the possible use cases of `provideDelegate` is to check the consistency of the property upon its initialization.
+`provideDelegate`の考えられるユースケースの一つに、
+その初期化時に対象のプロパティの一貫性をチェックするというのが挙げられる。
 
-For example, to check the property name before binding, you can write something like this:
+例えば、バインディングに先立ちプロパティの名前をチェックするには、以下のようなコードを書く事が出来る：
 
 ```kotlin
 class ResourceDelegate<T> : ReadOnlyProperty<MyUI, T> {
@@ -637,7 +723,7 @@ class ResourceLoader<T>(id: ResourceID<T>) {
             prop: KProperty<*>
     ): ReadOnlyProperty<MyUI, T> {
         checkProperty(thisRef, prop.name)
-        // create delegate
+        // デリゲートの作成
         return ResourceDelegate()
     }
 
@@ -652,19 +738,21 @@ class MyUI {
 }
 ```
 
-The parameters of `provideDelegate` are the same as those of `getValue`:
+`provideDelegate`のパラメータは`getValue`のものと同じです：
 
-* `thisRef` must be the same type as, or a supertype of, the _property owner_ (for extension properties, it should be the type being extended);
-* `property` must be of type `KProperty<*>` or its supertype.
+* `thisRef` は、_プロパティの所有者_ のと同じ型かその基底型でなければなりません（拡張プロパティの場合は拡張される対象の型）。
+* `property` は、型 `KProperty <*>`またはその基底型でなければなりません。
 
-The `provideDelegate` method is called for each property during the creation of the `MyUI` instance, and it performs
-the necessary validation right away.
+`MyUI`インスタンスの作成時にその各プロパティに対してそれぞれ`provideDelegate`メソッドは呼ばれ、
+その場で必要なバリデーションを実行する。
 
-Without this ability to intercept the binding between the property and its delegate, to achieve the same functionality
-you'd have to pass the property name explicitly, which isn't very convenient:
+プロパティとデリゲートの間のバインディングを横取りするこの機能が無ければ、
+同じような機能を達成する為には、
+プロパティの名前を明示的に渡さないといけなくなってしまうが、
+それはあんまり便利とは言えない：
 
 ```kotlin
-// Checking the property name without "provideDelegate" functionality
+// "provideDelegate"の機能無しでのプロパティ名のチェック
 class MyUI {
     val image by bindResource(ResourceID.image_id, "image")
     val text by bindResource(ResourceID.text_id, "text")
@@ -675,23 +763,24 @@ fun <T> MyUI.bindResource(
         propertyName: String
 ): ReadOnlyProperty<MyUI, T> {
     checkProperty(this, propertyName)
-    // create delegate
+    // デリゲートの作成
 }
 ```
 
-In the generated code, the `provideDelegate` method is called to initialize the auxiliary `prop$delegate` property.
-Compare the generated code for the property declaration `val prop: Type by MyDelegate()` with the generated code
-[above](#translation-rules-for-delegated-properties) (when the `provideDelegate` method is not present):
+生成されたコードでは、`provideDelegate`メソッドは補助的なプロパティ `prop$delegate`を初期化するために呼ばれる。
+[上にある](#委譲プロパティのトランスレーションルール)`val prop: Type by MyDelegate()`と宣言された時に生成されるコード（`provideDelegate`メソッドが無い場合）と比較せよ：
+
+（訳注：たぶんvar prop: Type by MyDelegate()の間違いだと思う）
 
 ```kotlin
 class C {
     var prop: Type by MyDelegate()
 }
 
-// this code is generated by the compiler 
-// when the 'provideDelegate' function is available:
+// `provideDelegate`関数が使える時は、
+// 以下のコードがコンパイラにより生成される
 class C {
-    // calling "provideDelegate" to create the additional "delegate" property
+    // 追加の"delegate"プロパティを作る為に"provieDelegate"を呼び出す
     private val prop$delegate = MyDelegate().provideDelegate(this, this::prop)
     var prop: Type
         get() = prop$delegate.getValue(this, this::prop)
@@ -699,10 +788,11 @@ class C {
 }
 ```
 
-Note that the `provideDelegate` method affects only the creation of the auxiliary property and doesn't affect the code
-generated for the getter or the setter.
+`provideDelegate`メソッドは補助的なプロパティの生成に影響するだけで、
+ゲッターとセッターのために生成されるコードには影響を与えない事に注目して欲しい。
 
-With the `PropertyDelegateProvider` interface from the standard library, you can create delegate providers without creating new classes.
+標準ライブラリの`PropertyDelegateProvider`インターフェースを使えば、
+新しいクラスを作らずにデリゲートプロバイダを作成出来る：
 
 ```kotlin
 val provider = PropertyDelegateProvider { thisRef: Any?, property ->
@@ -710,5 +800,4 @@ val provider = PropertyDelegateProvider { thisRef: Any?, property ->
 }
 val delegate: Int by provider
 ```
-
 

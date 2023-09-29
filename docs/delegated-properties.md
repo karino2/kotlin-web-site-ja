@@ -17,9 +17,9 @@ There are certain common kinds of properties, that, though we can implement them
 would be very nice to implement once and for all, and put into a library. Examples include
 -->
 
-* 遅延プロパティ (_lazy_ properties) ：値は最初のアクセス時に初めて計算されます
-* _observable_プロパティ：リスナがこのプロパティの変更に関する通知を受け取ります
-* 各プロパティをそれぞれ別のフィールドにはせずに、_マップ_に保存するようなプロパティ
+* 遅延プロパティ (*lazy* properties) ：値は最初のアクセス時に初めて計算されます
+* *observable*プロパティ：リスナがこのプロパティの変更に関する通知を受け取ります
+* 各プロパティをそれぞれ別のフィールドにはせずに、*マップ*に保存するようなプロパティ
 
 <!--original
 * _Lazy_ properties: the value is computed only on first access.
@@ -27,7 +27,7 @@ would be very nice to implement once and for all, and put into a library. Exampl
 * Storing properties in a _map_ instead of a separate field for each property.
 -->
 
-これら（およびその他）のケースをカバーするために、Kotlinは、 _委譲プロパティ (delegated properties)_ をサポートしています。
+これら（およびその他）のケースをカバーするために、Kotlinは、 *委譲プロパティ (delegated properties)* をサポートしています。
 
 <!--original
 To cover these (and other) cases, Kotlin supports _delegated properties_:

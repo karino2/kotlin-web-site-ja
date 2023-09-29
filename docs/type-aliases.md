@@ -4,11 +4,11 @@ title: "Typeエイリアス"
 ---
 # Typeエイリアス
 
-Type aliases provide alternative names for existing types.
-If the type name is too long you can introduce a different shorter name and use the new one instead.
- 
-It's useful to shorten long generic types.
-For instance, it's often tempting to shrink collection types:
+Typeエイリアスは既存の型に別名を与える機能です。
+もし型の名前が長すぎたら、短い別の名前を導入してそれを使う事が出来ます。
+
+長いジェネリクスの型を短くするのは便利です。
+例えば、コレクションの型はよく短くしたくなります：
 
 ```kotlin
 typealias NodeSet = Set<Network.Node>
@@ -16,7 +16,7 @@ typealias NodeSet = Set<Network.Node>
 typealias FileTable<K> = MutableMap<K, MutableList<File>>
 ```
 
-You can provide different aliases for function types:
+関数の型に別のエイリアスを提供する事も出来ます：
 
 ```kotlin
 typealias MyHandler = (Int, String, Any) -> Unit
@@ -24,7 +24,7 @@ typealias MyHandler = (Int, String, Any) -> Unit
 typealias Predicate<T> = (T) -> Boolean
 ```
 
-You can have new names for inner and nested classes:
+内部クラスやネストされたクラスに新しい名前を持たせる事も出来ます：
 
 ```kotlin
 class A {
@@ -38,23 +38,25 @@ typealias AInner = A.Inner
 typealias BInner = B.Inner
 ```
 
-Type aliases do not introduce new types. 
-They are equivalent to the corresponding underlying types.
-When you add `typealias Predicate<T>` and use `Predicate<Int>` in your code, the Kotlin compiler always expands it to `(Int) -> Boolean`. 
-Thus you can pass a variable of your type whenever a general function type is required and vice versa:
+Typeエイリアスは別の型を導入する訳ではありません。
+下地になっている型と等価なものです。
 
-```kotlin
+あなたのコードに`typealias Predicate<T>`を足して`Predicate<Int>`を使うと、
+Kotlinコンパイラはいつでもその使っている場所を`(Int) -> Boolean`に展開します。
+だからこそ、一般的な関数の型を必要としている所にいつでもエイリアスの型の変数を渡す事が出来るし、逆も出来るのです：
+
+{% capture type-alias %}
 typealias Predicate<T> = (T) -> Boolean
 
 fun foo(p: Predicate<Int>) = p(42)
 
 fun main() {
     val f: (Int) -> Boolean = { it > 0 }
-    println(foo(f)) // prints "true"
+    println(foo(f)) // "true"と出力
 
     val p: Predicate<Int> = { it > 0 }
-    println(listOf(1, -2).filter(p)) // prints "[1]"
+    println(listOf(1, -2).filter(p)) // "[1]"と出力
 }
-```
-{kotlin-runnable="true"}
+{% endcapture %}
+{% include kotlin_quote.html body=type-alias %}
 

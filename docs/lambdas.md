@@ -401,6 +401,10 @@ ints.filter { it > 0 } // this literal is of type '(it: Int) -> Boolean'
 ```
 -->
 
+### トレーリングラムダを渡す
+
+(訳注：Passing trailing lambdas)
+
 関数が最後のパラメータとして別の関数を取る場合は、ラムダ式の引数は括弧で囲まれた引数リストの外に渡すことができることに注意してください。[callSuffix](grammar.html#call-suffix)のための文法を参照してください。
 
 <!--original
@@ -408,6 +412,21 @@ Note that if a function takes another function as the last parameter, the lambda
 outside the parenthesized argument list.
 See the grammar for [callSuffix](grammar.html#call-suffix).
 -->
+
+According to Kotlin convention, if the last parameter of a function is a function, then a lambda expression passed as the
+corresponding argument can be placed outside the parentheses:
+
+```kotlin
+val product = items.fold(1) { acc, e -> acc * e }
+```
+
+Such syntax is also known as *trailing lambda*.
+
+If the lambda is the only argument in that call, the parentheses can be omitted entirely:
+
+```kotlin
+run { println("...") }
+```
 
 ### 無名関数
 

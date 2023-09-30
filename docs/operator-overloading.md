@@ -1,22 +1,32 @@
 ---
-type: doc
 layout: reference
 title: "Operator overloading"
-category: "Syntax"
 ---
-
 # Operator overloading
 
-Kotlin allows us to provide implementations for a predefined set of operators on our types. These operators have fixed symbolic representation
-(like `+` or `*`) and fixed [precedence](grammar.html#precedence). To implement an operator, we provide a [member function](functions.html#member-functions)
-or an [extension function](extensions.html) with a fixed name, for the corresponding type, i.e. left-hand side type for binary operations and argument type for unary ones.
-Functions that overload operators need to be marked with the `operator` modifier.
+Kotlin allows you to provide custom implementations for the predefined set of operators on types. These operators have
+predefined symbolic representation (like `+` or `*`) and precedence. To implement an operator, provide a [member function](functions.md#member-functions)
+or an [extension function](extensions.md) with a specific name for the corresponding type. This type becomes the left-hand side type
+for binary operations and the argument type for the unary ones.
 
-## Conventions
+To overload an operator, mark the corresponding function with the `operator` modifier:
 
-Here we describe the conventions that regulate operator overloading for different operators.
+```kotlin
+interface IndexedContainer {
+    operator fun get(index: Int)
+}
+```
+When [overriding](inheritance.md#overriding-methods) your operator overloads, you can omit `operator`:
 
-### Unary operations
+```kotlin
+class OrdersList: IndexedContainer {
+    override fun get(index: Int) { /*...*/ }   
+}
+```
+
+## Unary operations
+
+### Unary prefix operators
 
 | Expression | Translated to |
 |------------|---------------|
@@ -27,44 +37,63 @@ Here we describe the conventions that regulate operator overloading for differen
 This table says that when the compiler processes, for example, an expression `+a`, it performs the following steps:
 
 * Determines the type of `a`, let it be `T`.
-* Looks up a function `unaryPlus()` with the `operator` modifier and no parameters for the receiver `T`, i.e. a member function or an extension function.
+* Looks up a function `unaryPlus()` with the `operator` modifier and no parameters for the receiver `T`, that means a member 
+function or an extension function.
 * If the function is absent or ambiguous, it is a compilation error.
 * If the function is present and its return type is `R`, the expression `+a` has type `R`.
 
-*Note* that these operations, as well as all the others, are optimized for [Basic types](basic-types.html) and do not introduce overhead of function calls for them.
+> These operations, as well as all the others, are optimized for [basic types](basic-types.md) and do not introduce 
+> overhead of function calls for them.
+>
+{type="note"}
+
+As an example, here's how you can overload the unary minus operator:
+
+```kotlin
+data class Point(val x: Int, val y: Int)
+
+operator fun Point.unaryMinus() = Point(-x, -y)
+
+val point = Point(10, 20)
+
+fun main() {
+   println(-point)  // prints "Point(x=-10, y=-20)"
+}
+```
+{kotlin-runnable="true"}
+
+### Increments and decrements
 
 | Expression | Translated to |
 |------------|---------------|
 | `a++` | `a.inc()` + see below |
 | `a--` | `a.dec()` + see below |
 
+The `inc()` and `dec()` functions must return a value, which will be assigned to the variable on which the
+`++` or `--` operation was used. They shouldn't mutate the object on which the `inc` or `dec` was invoked.
 
-These operations are supposed to change their receiver and (optionally) return a value.
-
-> **`inc()/dec()` shouldn't mutate the receiver object**.<br>
-> By "changing the receiver" we mean _the receiver-variable_, not the receiver object.
-{:.note}
-
-The compiler performs the following steps for resolution of an operator in the *postfix* form, e.g. `a++`:
+The compiler performs the following steps for resolution of an operator in the *postfix* form, for example `a++`:
 
 * Determines the type of `a`, let it be `T`.
 * Looks up a function `inc()` with the `operator` modifier and no parameters, applicable to the receiver of type `T`.
-* If the function returns a type `R`, then it must be a subtype of `T`.
+* Checks that the return type of the function is a subtype of `T`.
 
 The effect of computing the expression is:
 
-* Store the initial value of `a` to a temporary storage `a0`,
-* Assign the result of `a.inc()` to `a`,
-* Return `a0` as a result of the expression.
+* Store the initial value of `a` to a temporary storage `a0`.
+* Assign the result of `a0.inc()` to `a`.
+* Return `a0` as the result of the expression.
 
 For `a--` the steps are completely analogous.
 
 For the *prefix* forms `++a` and `--a` resolution works the same way, and the effect is:
 
-* Assign the result of `a.inc()` to `a`,
+* Assign the result of `a.inc()` to `a`.
 * Return the new value of `a` as a result of the expression.
 
-### Binary operations
+## Binary operations
+
+### Arithmetic operators 
 
 | Expression | Translated to |
 | -----------|-------------- |
@@ -72,10 +101,23 @@ For the *prefix* forms `++a` and `--a` resolution works the same way, and the ef
 | `a - b` | `a.minus(b)` |
 | `a * b` | `a.times(b)` |
 | `a / b` | `a.div(b)` |
-| `a % b` | `a.mod(b)` |
+| `a % b` | `a.rem(b)` |
 | `a..b ` | `a.rangeTo(b)` |
+| `a..<b ` | `a.rangeUntil(b)` |
 
 For the operations in this table, the compiler just resolves the expression in the *Translated to* column.
+
+Below is an example `Counter` class that starts at a given value and can be incremented using the overloaded `+` operator:
+
+```kotlin
+data class Counter(val dayIndex: Int) {
+    operator fun plus(increment: Int): Counter {
+        return Counter(dayIndex + increment)
+    }
+}
+```
+
+### in operator
 
 | Expression | Translated to |
 | -----------|-------------- |
@@ -83,9 +125,10 @@ For the operations in this table, the compiler just resolves the expression in t
 | `a !in b` | `!b.contains(a)` |
 
 For `in` and `!in` the procedure is the same, but the order of arguments is reversed.
-{:#in}
 
-| Symbol | Translated to |
+### Indexed access operator
+
+| Expression | Translated to |
 | -------|-------------- |
 | `a[i]`  | `a.get(i)` |
 | `a[i, j]`  | `a.get(i, j)` |
@@ -96,7 +139,9 @@ For `in` and `!in` the procedure is the same, but the order of arguments is reve
 
 Square brackets are translated to calls to `get` and `set` with appropriate numbers of arguments.
 
-| Symbol | Translated to |
+### invoke演算子
+
+| Expression | Translated to |
 |--------|---------------|
 | `a()`  | `a.invoke()` |
 | `a(i)`  | `a.invoke(i)` |
@@ -105,36 +150,48 @@ Square brackets are translated to calls to `get` and `set` with appropriate numb
 
 Parentheses are translated to calls to `invoke` with appropriate number of arguments.
 
+### Augmented assignments
+
 | Expression | Translated to |
 |------------|---------------|
 | `a += b` | `a.plusAssign(b)` |
 | `a -= b` | `a.minusAssign(b)` |
 | `a *= b` | `a.timesAssign(b)` |
 | `a /= b` | `a.divAssign(b)` |
-| `a %= b` | `a.modAssign(b)` |
-{:#assignments}
+| `a %= b` | `a.remAssign(b)` |
 
-For the assignment operations, e.g. `a += b`, the compiler performs the following steps:
+For the assignment operations, for example `a += b`, the compiler performs the following steps:
 
-* If the function from the right column is available
-  * If the corresponding binary function (i.e. `plus()` for `plusAssign()`) is available too, report error (ambiguity).
+* If the function from the right column is available:
+  * If the corresponding binary function (that means `plus()` for `plusAssign()`) is available too, `a` is a mutable variable, and the return type of `plus` is a subtype of the type of `a`, report an error (ambiguity).
   * Make sure its return type is `Unit`, and report an error otherwise.
-  * Generate code for `a.plusAssign(b)`
+  * Generate code for `a.plusAssign(b)`.
 * Otherwise, try to generate code for `a = a + b` (this includes a type check: the type of `a + b` must be a subtype of `a`).
 
-*Note*: assignments are *NOT* expressions in Kotlin.
-{:#Equals}
+> Assignments are *NOT* expressions in Kotlin.
+>
+{type="note"}
+
+### Equality and inequality operators
 
 | Expression | Translated to |
 |------------|---------------|
-| `a == b` | `a?.equals(b) ?: b === null` |
-| `a != b` | `!(a?.equals(b) ?: b === null)` |
+| `a == b` | `a?.equals(b) ?: (b === null)` |
+| `a != b` | `!(a?.equals(b) ?: (b === null))` |
 
-*Note*: `===` and `!==` (identity checks) are not overloadable, so no conventions exist for them
+These operators only work with the function [`equals(other: Any?): Boolean`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/equals.html), 
+which can be overridden to provide custom equality check implementation. Any other function with the same name (like `equals(other: Foo)`) will not be called.
 
-The `==` operation is special: it is translated to a complex expression that screens for `null`'s, and `null == null` is `true`.
+> `===` and `!==` (identity checks) are not overloadable, so no conventions exist for them.
+>
+{type="note"}
 
-| Symbol | Translated to |
+The `==` operation is special: it is translated to a complex expression that screens for `null`'s.
+`null == null` is always true, and `x == null` for a non-null `x` is always false and won't invoke `x.equals()`.
+
+### Comparison operators
+
+| Expression | Translated to |
 |--------|---------------|
 | `a > b`  | `a.compareTo(b) > 0` |
 | `a < b`  | `a.compareTo(b) < 0` |
@@ -143,6 +200,11 @@ The `==` operation is special: it is translated to a complex expression that scr
 
 All comparisons are translated into calls to `compareTo`, that is required to return `Int`.
 
+### Property delegation operators
+
+`provideDelegate`, `getValue` and `setValue` operator functions are described
+in [Delegated properties](delegated-properties.md).
+
 ## Infix calls for named functions
 
-We can simulate custom infix operations by using [infix function calls](functions.html#infix-notation).
+You can simulate custom infix operations by using [infix function calls](functions.md#infix-notation).

@@ -123,7 +123,7 @@ a class, only making new functions callable with the dot-notation on variables o
 -->
 
 拡張関数は **静的に** ディスパッチされます。
-つまり、どの拡張関数が呼ばれるかは、レシーバーの型によりコンパイル時にしられています。
+つまり、どの拡張関数が呼ばれるかは、レシーバの型によりコンパイル時にしられています。
 例えば：
 
 <!--original
@@ -209,7 +209,7 @@ fun main() {
 {% endcapture %}
 {% include kotlin_quote.html body=extension-overload %}
 
-## Nullableレシーバー
+## Nullableレシーバ
 
 <!--original
 ## Nullable Receiver
@@ -217,8 +217,8 @@ fun main() {
 
 拡張は、nullableなレシーバの型で定義できることに注意してください。
 このような拡張は、オブジェクトの変数に対して、その値がnullの場合でも呼び出すことができます。
-もしレシーバーが`null`なら`this`が`null`となります。
-だからnullableなレシーバー型に対して対して拡張を定義する時は、
+もしレシーバが`null`なら`this`が`null`となります。
+だからnullableなレシーバ型に対して対して拡張を定義する時は、
 コンパイルエラーを避ける為に関数の本体で`this == null`のチェックを実行する事を推奨しています。
 
 これにより、null をチェックせずに Kotlin で toString() を呼び出すことができます。チェックは拡張関数内で行われるからです。
@@ -537,4 +537,4 @@ fun main() {
 例えば：
 
 * ファイルのトップレベルに定義された拡張は、同じファイルの`private`のトップレベル宣言にアクセス出来る
-* 拡張がレシーバー型の外で定義されれば、レシーバーの`private`や`protected`のメンバにはアクセス出来ない
+* 拡張がレシーバ型の外で定義されれば、レシーバの`private`や`protected`のメンバにはアクセス出来ない

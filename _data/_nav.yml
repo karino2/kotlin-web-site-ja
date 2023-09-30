@@ -118,7 +118,7 @@ reference:
               - url: /docs/type-safe-builders.html
                 title: Typeセーフビルダー
               - url: /docs/using-builders-with-builder-inference.html
-                title: ビルダー型推論を伴うビルダーの使用
+                title: ビルダーの型推論を伴うビルダーの使用
       - url: /docs/null-safety.html
         title: Null Safety
       - url: /docs/equality.html

@@ -1,8 +1,8 @@
 ---
 layout: reference
-title: "ビルダー型推論を伴うビルダーの使用"
+title: "ビルダーの型推論を伴うビルダーの使用"
 ---
-# ビルダー型推論を伴うビルダーの使用
+# ビルダーの型推論を伴うビルダーの使用
 
 (訳注: Using builders with builder type inference)
 

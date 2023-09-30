@@ -134,7 +134,7 @@ reference:
       - url: /docs/destructuring-declarations.html
         title: Destructuring Declarations
       - url: /docs/reflection.html
-        title: Reflection
+        title: リフレクション
   - title: プラットフォーム
     items:
     - title: JVM

@@ -42,6 +42,8 @@ Kotlinの配列は**不変(invariant)**です。つまりKotlinでは`Array<Any>
 
 ## プリミティブ型の配列
 
+<!-- Primitive type arrays -->
+
 Kotlinはプリミティブ型の配列について、オーバーヘッド無しでボクシングができる特別なクラスを持ちます：（`ByteArray`、`ShortArray`、`IntArray`等）
 
 これらのクラスは`Array`クラスと継承関係を持ちませんが、同じメソッドとプロパティを持ちます。 それぞれのクラスにおいて、対応するファクトリ関数もあります：

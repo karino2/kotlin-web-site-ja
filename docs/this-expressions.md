@@ -4,39 +4,37 @@ title: "this式"
 ---
 # this式
 
-To denote the current _receiver_, you use `this` expressions:
+現在の*レシーバ*を指し示すには、`this`式が使えます：
 
-* In a member of a [class](classes.md#inheritance), `this` refers to the current object of that class.
-* In an [extension function](extensions.md) or a [function literal with receiver](lambdas.md#function-literals-with-receiver)
-`this` denotes the _receiver_ parameter that is passed on the left-hand side of a dot.
+* [クラス](classes.md#継承)のメンバの場合、`this`はそのクラスの現在のオブジェクトを指します。
+* [拡張関数](extensions.md)や[レシーバ付き関数リテラル](lambdas.md#レシーバ付き関数リテラル)の場合は、`this`はドットの左に渡された`レシーバ`パラメータを指します。
 
-If `this` has no qualifiers, it refers to the _innermost enclosing scope_. To refer to `this` in other scopes, _label qualifiers_ are used:
+`this`に限定子が無ければ、それは*一番内側の囲んでるスコープ*を指します。
+外側のスコープの`this`を参照するためには、`ラベル限定子`が使われます：
 
 ## 限定子付きthis 
 
 （訳注：qualified this）
 
-To access `this` from an outer scope (a [class](classes.md), [extension function](extensions.md),
-or labeled [function literal with receiver](lambdas.md#function-literals-with-receiver)) you write `this@label`,
- where `@label` is a [label](returns.md) on the scope `this` is meant to be from:
+外側のスコープの`this`（外側の[クラス](classes.md)、[拡張関数](extensions.md)、ラベル付けされた[レシーバ付き関数リテラル](lambdas.md#レシーバ付き関数リテラル)の`this`）にアクセスするには、
+`this@label`という形式を使います。ここで`@label`はアクセスしたいスコープの[ラベル](returns.md)です：
 
 ```kotlin
-class A { // implicit label @A
-    inner class B { // implicit label @B
-        fun Int.foo() { // implicit label @foo
-            val a = this@A // A's this
-            val b = this@B // B's this
+class A { // 暗黙のラベル @A
+    inner class B { // 暗黙のラベル @B
+        fun Int.foo() { // 暗黙のラベル @foo
+            val a = this@A // Aの this
+            val b = this@B // Bの this
 
-            val c = this // foo()'s receiver, an Int
-            val c1 = this@foo // foo()'s receiver, an Int
+            val c = this // foo()のレシーバ、Int
+            val c1 = this@foo // foo()のレシーバ、Int
 
             val funLit = lambda@ fun String.() {
-                val d = this // funLit's receiver, a String
+                val d = this // funLitのレシーバ、String
             }
 
             val funLit2 = { s: String ->
-                // foo()'s receiver, since enclosing lambda expression
-                // doesn't have any receiver
+                // foo()のレシーバ、なぜなら囲んでるラムダ式はレシーバを持たないから
                 val d1 = this
             }
         }
@@ -44,18 +42,18 @@ class A { // implicit label @A
 }
 ```
 
-## Implicit this
+## 暗黙のthis
 
-When you call a member function on `this`, you can skip the `this.` part.
-If you have a non-member function with the same name, use this with caution because in some cases it can be called instead:
+`this`のメンバ関数を呼ぶ時は、`this.`の部分をスキップする事が出来る。
+同じ名前の非メンバ関数があった場合は、注意してこの機能を使う事。なぜならそちらが代わりに呼ばれてしまう場合もあるから：
 
-```kotlin
+{% capture implicit-this %}
 fun main() {
 //sampleStart
-    fun printLine() { println("Top-level function") }
+    fun printLine() { println("トップレベル関数") }
     
     class A {
-        fun printLine() { println("Member function") }
+        fun printLine() { println("メンバ関数") }
 
         fun invokePrintLine(omitThis: Boolean = false)  { 
             if (omitThis) printLine()
@@ -63,10 +61,10 @@ fun main() {
         }
     }
     
-    A().invokePrintLine() // Member function
-    A().invokePrintLine(omitThis = true) // Top-level function
+    A().invokePrintLine() // メンバ関数
+    A().invokePrintLine(omitThis = true) // トップレベル関数
 //sampleEnd()
 }
-```
-{kotlin-runnable="true" kotlin-min-compiler-version="1.3"}
+{% endcapture %}
+{% include kotlin_quote.html body=implicit-this %}
 

@@ -124,7 +124,7 @@ reference:
       - url: /docs/equality.html
         title: Equality
       - url: /docs/this-expressions.html
-        title: This expressions
+        title: this式
       - url: /docs/async-programming.html
         title: 非同期プログラミング
       - url: /docs/coroutines-overview.html

@@ -453,7 +453,7 @@ Inside a function a `vararg`-parameter of type `T` is visible as an array of `T`
 `vararg` としてマーク出来るパラメータは一つだけです。
 `vararg` パラメータが変数リストの最後のひとつでない場合には、
 その後に続くパラメータは 
-名前付き引数の構文を使用するか、またはパラメータが関数型をもっている場合は括弧の外でラムダを渡すことによって、渡すことができます。
+名前付き引数の構文を使用するか、またはパラメータが関数の型をもっている場合は括弧の外でラムダを渡すことによって、渡すことができます。
 
 <!--original
 Only one parameter can be marked as `vararg`. If a `vararg` parameter is not the last one in the list, values for the
@@ -631,7 +631,7 @@ fun dfs(graph: Graph) {
 ```
 -->
 
-ローカル関数は、外側の関数のローカル変数にアクセスすることができます（すなわちクロージャ）。
+ローカル関数は、外側の関数のローカル変数（すなわちクロージャ）にアクセスすることができます。
 これにより、上記の場合には、 visited をローカル変数にすることができます。
 
 <!--original

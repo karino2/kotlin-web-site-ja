@@ -1,26 +1,16 @@
 ---
-type: doc
 layout: reference
-category: "Syntax"
 title: "インライン関数"
 ---
-
-<!--original
-- --
-type: doc
-layout: reference
-category: "Syntax"
-title: "Inline Functions"
-- --
--->
-
 # インライン関数
 
 <!--original
 # Inline Functions
 -->
 
-[高階関数](lambdas.html)を使用すると、特定のランタイムペナルティを課せられます。各関数はオブジェクトであり、それはクロージャ、すなわち、関数の本体でアクセスされるそれらの変数をキャプチャします。メモリ割り当て（関数オブジェクトとクラス用の両方）と仮想呼び出しは、実行時のオーバーヘッドを招きます。
+[高階関数](lambdas.html)を使用すると、ある種のランタイムペナルティを課せられます。
+各関数はオブジェクトであり、それはクロージャ、すなわち、関数の本体でアクセスされるそれらの変数をキャプチャします。
+メモリ割り当て（関数オブジェクトとクラス用の両方）と仮想呼び出しは、実行時のオーバーヘッドを招きます。
 
 <!--original
 Using [higher-order functions](lambdas.html) imposes certain runtime penalties: each function is an object, and it captures a closure,
@@ -28,7 +18,9 @@ i.e. those variables that are accessed in the body of the function.
 Memory allocations (both for function objects and classes) and virtual calls introduce runtime overhead.
 -->
 
-しかし、多くの場合、オーバーヘッドはこの種のラムダ式をインライン化することによって解消することができると思われます。以下に示す関数は、このような状況の良い例です。すなわち、`lock()` 関数は、簡単に呼び出し箇所でインライン化することができました。次のケースを考えてみます。
+しかし、多くの場合、オーバーヘッドはこの種のラムダ式をインライン化することによって解消することができると思われます。
+以下に示す関数は、このような状況の良い例です。
+すなわち、`lock()` 関数は、簡単に呼び出し箇所でインライン化することができました。次のケースを考えてみます。
 
 <!--original
 But it appears that in many cases this kind of overhead can be eliminated by inlining the lambda expressions.
@@ -46,7 +38,8 @@ lock(l) { foo() }
 ```
 -->
 
-パラメータやコールの生成のために関数オブジェクトを作成する代わりに、コンパイラは次のコードを放出する可能性があります：
+パラメータために関数オブジェクトを作成してコールを生成する代わりに、
+コンパイラは次のコードを生成しても良いでしょう：
 
 <!--original
 Instead of creating a function object for the parameter and generating a call, the compiler could emit the following code
@@ -55,10 +48,10 @@ Instead of creating a function object for the parameter and generating a call, t
 ``` kotlin
 l.lock()
 try {
-  foo()
+    foo()
 }
 finally {
-  l.unlock()
+    l.unlock()
 }
 ```
 
@@ -74,22 +67,14 @@ finally {
 ```
 -->
 
-それは我々が当初から欲しかったものではないですか？
-
-<!--original
-Isn't it what we wanted from the very beginning?
--->
-
-コンパイラがこれをできるようにするために、 `inline` 修飾子で `lock()` 関数をマークする必要があります：
+コンパイラがこのようにできるようにするためには、 `inline` 修飾子で `lock()` 関数をマークする必要があります：
 
 <!--original
 To make the compiler do this, we need to mark the `lock()` function with the `inline` modifier:
 -->
 
 ``` kotlin
-inline fun lock<T>(lock: Lock, body: () -> T): T {
-  // ...
-}
+inline fun <T> lock(lock: Lock, body: () -> T): T { ... }
 ```
 
 <!--original
@@ -100,21 +85,23 @@ inline fun lock<T>(lock: Lock, body: () -> T): T {
 ```
 -->
 
-`inline` 修飾子は、関数自体や関数の引数に渡されたラムダの両方を呼び出し箇所の中でインライン化させるはたらきをもちます。
+`inline` 修飾子は、関数自体や関数の引数に渡されたラムダの両方を呼び出し箇所にインライン化させるはたらきをもちます。
 
 <!--original
 The `inline` modifier affects both the function itself and the lambdas passed to it: all of those will be inlined
 into the call site.
 -->
 
-インライン化では生成されるコードが大きくなる可能性がありますが、合理的な方法で（大きな関数をインライン化しないで）実行すると、特にループ内の 「メガモーフィック (megamorphic)」な呼び出し箇所でパフォーマンスが向上します。
+インライン化では生成されるコードが大きくなる可能性がありますが、合理的な方法で（大きな関数をインライン化しないで）実行すると、
+パフォーマンスの向上で割に合います、
+特にループ内の 「メガモーフィック (megamorphic)」な呼び出し箇所では。
 
 <!--original
 Inlining may cause the generated code to grow, but if we do it in a reasonable way (do not inline big functions)
 it will pay off in performance, especially at "megamorphic" call-sites inside loops.
 -->
 
-## noinline
+## `noinline``
 
 <!--original
 ## noinline
@@ -128,32 +115,39 @@ parameters with the `noinline` modifier:
 -->
 
 ``` kotlin
-inline fun foo(inlined: () -> Unit, noinline notInlined: () -> Unit) {
-  // ...
-}
+inline fun foo(inlined: () -> Unit, noinline notInlined: () -> Unit) { ... }
 ```
 
 <!--original
 ``` kotlin
-inline fun foo(inlined: () -> Unit, noinline notInlined: () -> Unit) {
-  // ...
-}
+inline fun foo(inlined: () -> Unit, noinline notInlined: () -> Unit) { ... }
 ```
 -->
 
-インライン化されたラムダは、インライン関数内でのみ呼び出すことができます。または、インライン展開可能な引数として渡すこともできますが、 `noinline` は、好きなように操作できます。例えば、フィールドに保持したり、誰かに渡したり等。
+インライン化可能なラムダは、インライン関数内で呼び出すか、
+インライン可能な引数として他に渡すかのどちらかくらいしか出来ません。
+ですが、 `noinline` は、好きなように操作できます。例えば、フィールドに保持したり、誰かに渡したり等。
 
 <!--original
 Inlinable lambdas can only be called inside the inline functions or passed as inlinable arguments,
 but `noinline` ones can be manipulated in any way we like: stored in fields, passed around etc.
 -->
 
-インライン関数にインライン化できる関数の引数がなく、[reified型パラメータ](#reified型パラメータ)が指定されていない場合、コンパイラは警告を発します。このような関数のインライン展開は有益ではないためです（インライン展開が必要な場合は警告を抑制できます）。
-
+> インライン関数にインライン化できる関数の引数がなく、
+> [reified型パラメータ](#reified型パラメータ)が指定されていない場合、
+> コンパイラは警告を発します。
+> このような関数のインライン展開が有益な事はめったに無いためです
+> （自分のケースではインライン展開が必要と確信を持っているなら、`@Suppress("NOTHING_TO_INLINE")`
+> アノテーションで警告を抑制できます）。
+>
+{: .note}
 <!--original
-Note that if an inline function has no inlinable function parameters and no
-[reified type parameters](#reified-type-parameters), the compiler will issue a warning, since inlining such functions is
- very unlikely to be beneficial (you can suppress the warning if you are sure the inlining is needed).
+> If an inline function has no inlinable function parameters and no
+> [reified type parameters](#reified-type-parameters), the compiler will issue a warning, since inlining such functions
+> is very unlikely to be beneficial (you can use the `@Suppress("NOTHING_TO_INLINE")` annotation to suppress the warning
+> if you are sure the inlining is needed).
+>
+{type="note"}
 -->
 
 ## 非局所リターン
@@ -162,7 +156,9 @@ Note that if an inline function has no inlinable function parameters and no
 ## Non-local returns
 -->
 
-Kotlinでは、名前付き関数または無名関数から抜けるためには、通常、ラベル無し `return` のみが使用できます。これは、ラムダを終了するには[ラベル](returns.html#return-at-labels)を使用しなければならず、ラムダが自身を内包する関数からの `return` を作ることができないため、ラムダ内での裸のリターンは禁止されていることを意味します。
+Kotlinでは、名前付き関数または無名関数から抜けるためには、通常、ラベル無し `return` のみが使用できます。
+ラムダを終了するには[ラベル](returns.md#ラベルにreturnする)を使用しなければなりません。
+ラムダが自身を囲んでいる関数からの `return` を作ることができないため、ラムダ内での裸のリターンは禁止されています。
 
 <!--original
 In Kotlin, we can only use a normal, unqualified `return` to exit a named function or an anonymous function.
@@ -170,61 +166,65 @@ This means that to exit a lambda, we have to use a [label](returns.html#return-a
 inside a lambda, because a lambda can not make the enclosing function return:
 -->
 
-``` kotlin
-fun foo() {
-  ordinaryFunction {
-     return // エラー: `foo` をここで return することはできない
-  }
+{% capture lambda-no-return %}
+fun ordinaryFunction(block: () -> Unit) {
+    println("hi!")
 }
-```
-
-<!--original
-``` kotlin
+//sampleStart
 fun foo() {
-  ordinaryFunction {
-     return // ERROR: can not make `foo` return here
-  }
+    ordinaryFunction {
+        return // エラー: `foo` をここで return することはできない
+    }
 }
-```
--->
+//sampleEnd
+fun main() {
+    foo()
+}
 
-しかし、ラムダがインライン化されるために渡された関数の場合は、returnも同様にインライン化することができ、それが許可されています。
+{% endcapture %}
+{% include kotlin_quote.html body=lambda-no-return %}
+
+
+しかし、ラムダが渡された関数がインライン関数の場合、
+returnも同様にインライン化することができます。
+その場合はそれ（訳注：ラムダの中のreturn）が許可されています：
 
 <!--original
 But if the function the lambda is passed to is inlined, the return can be inlined as well, so it is allowed:
 -->
 
-``` kotlin
-fun foo() {
-  inlineFunction {
-    return // OK: ラムダはインライン
-  }
+{% capture lambda-return-inline %}
+inline fun inlined(block: () -> Unit) {
+    println("hi!")
 }
-```
+//sampleStart
+fun foo() {
+    inlined {
+        return // OK: ラムダはインライン化される
+    }
+}
+//sampleEnd
+fun main() {
+    foo()
+}
+{% endcapture %}
+{% include kotlin_quote.html body=lambda-return-inline %}
+
+（ラムダに位置するが、それを囲んでいる関数から抜ける）このようなリターンは、 *非局所リターン(non-local return)* と呼ばれています。
+このような構造は通常はループで起こるもので、
+そこではしばしばインライン関数に囲まれています：
 
 <!--original
-``` kotlin
-fun foo() {
-  inlineFunction {
-    return // OK: the lambda is inlined
-  }
-}
-```
--->
-
-（ラムダに位置するが、内包する関数から抜ける）このようなリターンは、 *非局所リターン* と呼ばれています。私たちは、インライン関数がしばしば内包するこのようなループの構造に慣れています。
-
-<!--original
-Such returns (located in a lambda, but exiting the enclosing function) are called *non-local* returns. We are used to
-this sort of constructs in loops, which inline functions often enclose:
+Such returns (located in a lambda, but exiting the enclosing function) are called *non-local* returns. This sort of
+construct usually occurs in loops, which inline functions often enclose:
 -->
 
 ``` kotlin
 fun hasZeros(ints: List<Int>): Boolean {
-  ints.forEach {
-    if (it == 0) return true // hasZeros から return する
-  }
-  return false
+    ints.forEach {
+        if (it == 0) return true // hasZeros から return する
+    }
+    return false
 }
 ```
 
@@ -239,13 +239,17 @@ fun hasZeros(ints: List<Int>): Boolean {
 ```
 -->
 
-インライン関数の中には、渡されたラムダを、関数本体から直接ではなく、ローカルオブジェクトやネストされた関数などの別の実行コンテキストからのパラメータとして呼び出すものがあります。このような場合には、ラムダの中の非局所制御フローは許可されません。それを示すために、ラムダパラメータを `crossinline` 修飾子でマークする必要があります：
+インライン関数の中には、パラメータとして渡されたラムダを、関数本体から直接ではなく、
+ローカルオブジェクトやネストされた関数などの別の実行コンテキストから呼び出すものがあります。
+このような場合には、ラムダの中の非局所制御フローは許可されません。
+インライン関数のパラメータのラムダが非局所リターンを使えないという事を示すために、
+ラムダパラメータを `crossinline` 修飾子でマークする必要があります：
 
 <!--original
 Note that some inline functions may call the lambdas passed to them as parameters not directly from the function body,
 but from another execution context, such as a local object or a nested function. In such cases, non-local control flow
-is also not allowed in the lambdas. To indicate that, the lambda parameter needs to be marked with
-the `crossinline` modifier:
+is also not allowed in the lambdas. To indicate that the lambda parameter of the inline function cannot use non-local
+returns, mark the lambda parameter with the `crossinline` modifier:
 -->
 
 ``` kotlin
@@ -270,10 +274,14 @@ inline fun f(crossinline body: () -> Unit) {
 
 -->
 
-`break` と `continue` はインライン化されたラムダではまだ利用できませんが、我々はそれらをサポートすることを計画しています。
+> `break` と `continue` はインライン化されたラムダではまだ利用できませんが、我々はそれらをサポートすることを計画しています。
+>
+{: .note}
 
 <!--original
-> `break` and `continue` are not yet available in inlined lambdas, but we are planning to support them too
+> `break` and `continue` are not yet available in inlined lambdas, but we are planning to support them, too.
+>
+{type="note"}
 -->
 
 ## reified型パラメータ
@@ -294,10 +302,10 @@ Sometimes we need to access a type passed to us as a parameter:
 fun <T> TreeNode.findParentOfType(clazz: Class<T>): T? {
     var p = parent
     while (p != null && !clazz.isInstance(p)) {
-        p = p?.parent
+        p = p.parent
     }
     @Suppress("UNCHECKED_CAST")
-    return p as T
+    return p as T?
 }
 ```
 
@@ -322,7 +330,7 @@ It’s all fine, but the call site is not very pretty:
 -->
 
 ``` kotlin
-myTree.findParentOfType(MyTreeNodeType::class.java)
+treeNode.findParentOfType(MyTreeNodeType::class.java)
 ```
 
 <!--original
@@ -331,14 +339,14 @@ myTree.findParentOfType(MyTreeNodeType::class.java)
 ```
 -->
 
-私たちが実際にしたいのはこの関数に型を渡すだけ、すなわち、このように呼び出すだけです：
+この関数に単に型を渡せる方が良い解決策でしょう。それなら、以下のように呼び出せます：
 
 <!--original
-What we actually want is simply pass a type to this function, i.e. call it like this:
+A better solution would be to simply pass a type to this function. You can call it as follows:
 -->
 
 ``` kotlin
-myTree.findParentOfType<MyTreeNodeType>()
+treeNode.findParentOfType<MyTreeNodeType>()
 ```
 
 <!--original
@@ -347,7 +355,8 @@ myTree.findParentOfType<MyTreeNodeType>()
 ```
 -->
 
-これを有効にするには、インライン関数が *reified型パラメータ* をサポートするので、私たちはこのように書くことができます：
+これを実現するために、インライン関数は *reified型パラメータ* をサポートしています。
+そのおかげで、私たちは以下のように書くことができます：
 
 <!--original
 To enable this, inline functions support *reified type parameters*, so we can write something like this:
@@ -357,9 +366,9 @@ To enable this, inline functions support *reified type parameters*, so we can wr
 inline fun <reified T> TreeNode.findParentOfType(): T? {
     var p = parent
     while (p != null && p !is T) {
-        p = p?.parent
+        p = p.parent
     }
-    return p as T
+    return p as T?
 }
 ```
 
@@ -375,15 +384,19 @@ inline fun <reified T> TreeNode.findParentOfType(): T? {
 ```
 -->
 
-私たちは `reified` 修飾子で型パラメータを修飾しました。これで、関数内でアクセス可能になり、これは通常のクラスと同じように機能します。関数はインライン化されているので、リフレクションは必要ありません。 `!is` や `as` のような通常の演算子が動作するようになります。また、前述したようなやりかたで呼び出すことができます：`myTree.findParentOfType<MyTreeNodeType>()`
+上のコードでは `reified` 修飾子で型パラメータを修飾しています。
+これで、関数内で型がアクセス可能になり、これは通常のクラスとまるで同じであるかのように機能します。
+関数はインライン化されているので、リフレクションは必要ありません。
+`!is` や `as` のような通常の演算子が動作するようになります。
+また、前述したようなやりかたで呼び出すことができます：`myTree.findParentOfType<MyTreeNodeType>()`
 
 <!--original
-We qualified the type parameter with the `reified` modifier, now it’s accessible inside the function,
-almost as if it were a normal class. Since the function is inlined, no reflection is needed, normal operators like `!is`
-and `as` are working now. Also, we can call it as mentioned above: `myTree.findParentOfType<MyTreeNodeType>()`.
+The code above qualifies the type parameter with the `reified` modifier to make it accessible inside the function,
+almost as if it were a normal class. Since the function is inlined, no reflection is needed and normal operators like `!is`
+and `as` are now available for you to use. Also, you can call the function as shown above: `myTree.findParentOfType<MyTreeNodeType>()`.
 -->
 
-リフレクションは多くの場合に必要とされないかもしれませんが、reified型パラメータで型パラメータを使用することができます：
+リフレクションは多くの場合に必要とされないかもしれませんが、reified型パラメータではリフレクションを使う事も出来ます：
 
 <!--original
 Though reflection may not be needed in many cases, we can still use it with a reified type parameter:
@@ -393,7 +406,7 @@ Though reflection may not be needed in many cases, we can still use it with a re
 inline fun <reified T> membersOf() = T::class.members
 
 fun main(s: Array<String>) {
-  println(membersOf<StringBuilder>().joinToString("\n"))
+    println(membersOf<StringBuilder>().joinToString("\n"))
 }
 ```
 
@@ -407,7 +420,8 @@ fun main(s: Array<String>) {
 ```
 -->
 
-通常の関数（`inline`としてマークされていない）は具体化パラメータをもつことはできません。実行時表現を持たない型（例えば、reifiedされていない型パラメータや `Nothing` のような架空の型）は、reified 型のパラメータの引数として使用できません。
+通常の関数（`inline`としてマークされていない）はreifiedパラメータをもつことはできません。
+実行時表現を持たない型（例えば、reifiedされていない型パラメータや `Nothing` のような架空の型）は、reified 型のパラメータの引数として使用できません。
 
 <!--original
 Normal functions (not marked as inline) can not have reified parameters.
@@ -415,8 +429,44 @@ A type that does not have a run-time representation (e.g. a non-reified type par
 can not be used as an argument for a reified type parameter.
 -->
 
-低レベルの説明については、[仕様書](https://github.com/JetBrains/kotlin/blob/master/spec-docs/reified-type-parameters.md)を参照してください。
+## インラインプロパティ
 
-<!--original
-For a low-level description, see the [spec document](https://github.com/JetBrains/kotlin/blob/master/spec-docs/reified-type-parameters.md).
--->
+`inline`の修飾子はプロパティのアクセサにも、
+[バッキングフィールド](properties.md#バッキングフィールド)を持たないプロパティであればつける事が出来ます。
+プロパティの個々のアクセサにアノテート出来ます。
+
+```kotlin
+val foo: Foo
+    inline get() = Foo()
+
+var bar: Bar
+    get() = ...
+    inline set(v) { ... }
+```
+
+プロパティ全体をアノテートする事も出来ます。その場合は両方とも`inline`になります：
+
+```kotlin
+inline var bar: Bar
+    get() = ...
+    set(v) { ... }
+```
+
+呼び出し側では、インラインのアクセサは通常のインライン関数と同様にインライン化されます。
+
+## パブリックなAPIでのインライン関数の制限
+
+インライン関数が`public`か`protected`で、しかも`private`や`internal`の宣言の一部で無い場合は、
+[モジュール](visibility-modifiers.md#モジュール)のパブリックAPIとみなされます。
+それは他のモジュールから呼ばれ得るし、
+つまりは他のモジュールの呼び出し側でインライン化されます。
+
+これは、モジュールがインライン関数として宣言しているものの中身を変更した時に呼び出し側を再コンパイルしない場合にバイナリ非互換になるリスクがあります。
+
+モジュールが*非*パブリックAPIを変更した時にそのようなリスクを引き起こすのを避ける為に、
+パブリックなAPIのインライン関数では、非パブリックなAPIとして宣言されたものを使う事は許されていません。
+つまり、`private`や`internal`宣言されているものをそうした関数の本体で使う事は出来ません。
+
+`internal`宣言に`@PublishedApi`アノテーションをつけると、パブリックなAPIのインライン関数で使う事が出来るようになります。
+`internal`なインライン関数に`@PublishedApi`マークをつけると、
+その本体もパブリックであるかのようにチェックされるようになります。

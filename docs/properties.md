@@ -202,7 +202,9 @@ var setterWithAnnotation: Any? = null
 ```
 -->
 
-### バッキングフィールド (Backing Fields)
+### バッキングフィールド
+
+(訳注： Backing Fields)
 
 <!--original
 ### Backing Fields

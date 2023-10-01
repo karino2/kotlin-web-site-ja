@@ -2458,8 +2458,7 @@ a:hover {
 }
 
 .page-content ul {
-  margin-bottom: 15px;
-  margin-left: 30px;
+  padding-left: 0px;
 }
 
 .page-content ul > li {
@@ -2472,11 +2471,14 @@ a:hover {
 }
 
 .page-content ul > li:before {
+  content: "•";
   position: absolute;
-  margin-top: -1px;
-  margin-left: -20px;
-  color: #666;
-  content: '\2014';
+  top: 0;
+  display: block;
+  line-height: inherit;
+  color: inherit;
+  left: 0;
+  text-align: left;
 }
 
 .page-content ul ul,
@@ -2485,8 +2487,7 @@ a:hover {
 }
 
 .page-content ol {
-  margin-bottom: 15px;
-  margin-left: 30px;
+  padding-left: 24px;
 }
 
 .page-content ol > li {
@@ -2811,6 +2812,17 @@ a:hover {
 
 .page-content ol {
   line-height: 24px;
+}
+
+.page-content ol > li {
+  padding-left: 12px;
+  position: relative;
+}
+
+.page-content ul > li {
+  padding-left: 22px;
+  position: relative;
+  list-style-type: none;  
 }
 
 .page-content p {

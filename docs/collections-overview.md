@@ -4,93 +4,106 @@ title: "コレクション概要"
 ---
 # コレクション概要
 
-The Kotlin Standard Library provides a comprehensive set of tools for managing _collections_ – groups of a variable number 
-of items (possibly zero) that are significant to the problem being solved and are commonly operated on.
+Kotlinの標準ライブラリは *コレクション* を管理する為の十分な仕組みを提供しています。
+コレクションとは、要素数が可変（0の場合もある）の要素のグループで、
+解決したい問題に重要で良く使われるものです。
 
-Collections are a common concept for most programming languages, so if you're familiar with, for example, Java or Python 
-collections, you can skip this introduction and proceed to the detailed sections. 
+コレクションはほとんどのプログラム言語において共通の概念なので、
+もしJavaとかPythonといった他の言語のコレクションに良く慣れ親しんでいるのなら、
+このイントロダクションはスキップして先に続く各詳細に関してのセクションに進んでしまって良いでしょう。
 
-A collection usually contains a number of objects (this number may also be zero) of the same type. Objects in a collection
-are called _elements_ or _items_. For example, all the students in a department form a collection that can be used to
-calculate their average age. 
+コレクションは通常、同じ型のたくさんのオブジェクト（0個の場合もあるけれど）を保持します。
+コレクションの中のオブジェクトは*要素*とか*アイテム*と呼ばれます。
+例えば、学部の生徒全員、などはコレクションを形成し、
+そのコレクションを使って平均の年齢を計算したり出来ます。
 
-The following collection types are relevant for Kotlin:
+Kotlinでは、以下のコレクションの型が関連しています：
 
-* _List_ is an ordered collection with access to elements by indices – integer numbers that reflect their position. 
-Elements can occur more than once in a list. An example of a list is a telephone number: it's a group of digits, their
-order is important, and they can repeat. 
-* _Set_ is a collection of unique elements. It reflects the mathematical abstraction of set: a group of objects without 
-repetitions. Generally, the order of set elements has no significance. For example, the numbers on lottery tickets form a
-set: they are unique, and their order is not important.
-* _Map_ (or _dictionary_) is a set of key-value pairs. Keys are unique, and each of them maps to exactly one value. The
- values can be duplicates. Maps are useful for storing logical connections between objects, for example, an employee's ID 
- and their position.
+* **リスト** 順番のある要素のコレクションで要素にインデックスでアクセスする - インデックスとはその位置を表す整数値
+リストには同じ要素が複数回現れ得る。リストの例としては電話番号などが考えられる。電話番号は数字のグループで、順番が大切で、同じ番号が出てくる場合がある。
+* **セット** ユニークな要素のコレクション。数学の集合（セット）と対応した概念。同じオブジェクトが繰り返し出てくる事が無い、オブジェクトのグループ。
+一般的に、セットの要素の順番は重要では無い。例えば（訳注：10枚組とかの）宝くじの番号などはセットを形成する。
+それらの番号はユニークで、（くじの）順番は重要では無い。
+* **マップ** (または **辞書** ) キーと値のペアの集まり。キーはユニークで、各キーはちょうど一つの値に対応(map)している。
+値は重複していても良い。マップはオブジェクト間の論理的なつながりを格納するのに便利。
+例えば社員IDとその役職など。
 
-Kotlin lets you manipulate collections independently of the exact type of objects stored in them. In other words, you add 
-a `String` to a list of `String`s the same way as you would do with `Int`s or a user-defined class.
-So, the Kotlin Standard Library offers generic interfaces, classes, and functions for creating, populating, and managing 
-collections of any type.
+Kotlinではコレクションの操作を、格納されているオブジェクトの型によらず同一のやり方で行えます。
+言い換えると、`String`を`String`のリストに追加するのと同じように、`Int`を`Int`のリストに追加出来るし、
+`Int`をユーザー定義のクラスに置き換えても同様です。
+つまり、Kotlinの標準ライブラリはコレクションを作成、生成、管理するのに、
+ジェネリックなインターフェース、クラス、関数を提供していると言えます。
 
-The collection interfaces and related functions are located in the `kotlin.collections` package. Let's get an overview 
-of its contents.
+コレクションのインターフェースや関連する関数などは
+`kotlin.collections`パッケージに置かれています。
 
-## Collection types
+その中身の概要を見ていきましょう。
 
-The Kotlin Standard Library provides implementations for basic collection types: sets, lists, and maps.
-A pair of interfaces represent each collection type: 
+> 配列はコレクションの型ではありません。詳細は[配列](arrays.md)を見てください。
+>
+{: .note}
 
-* A _read-only_ interface that provides operations for accessing collection elements.
-* A _mutable_ interface that extends the corresponding read-only interface with write operations: adding, removing, and 
-updating its elements.
+## コレクションの種類
 
-Note that altering a mutable collection doesn't require it to be a [`var`](basic-syntax.md#variables): write operations
-modify the same mutable collection object, so the reference doesn't change.
-Although, if you try to reassign a `val` collection, you'll get a compilation error.
+Kotlinの標準ライブラリは基本的な種類のコレクションの実装を提供します： セット、リスト、マップです。
+1ペアのインターフェースが各種類のコレクションを表します：
 
-```kotlin
+* **読み取り専用**インターフェース：コレクションの要素へのアクセスを提供する
+* **ミュータブル**インターフェース：**読み取り専用**のインターフェースを継承してさらに書き込みオペレーションを追加する： 要素の追加、削除、更新など
+
+ミュータブルなコレクションの中身を変更するために、[`var`](basic-syntax.md#変数)である必要は無い事には注意が必要です。
+書き込みオペレーションは同じミュータブルなコレクションのオブジェクトを変更するだけなので、
+リファレンスは変わりません。
+`val`のコレクションに再代入しようとすればコンパイルエラーにはなりますが。
+
+
+{% capture mutable-val %}
 fun main() {
 //sampleStart
     val numbers = mutableListOf("one", "two", "three", "four")
-    numbers.add("five")   // this is OK
+    numbers.add("five")   // これはOK
     println(numbers)
-    //numbers = mutableListOf("six", "seven")      // compilation error
+    //numbers = mutableListOf("six", "seven")      // コンパイルエラー
 //sampleEnd
 
 }
-```
-{kotlin-runnable="true" kotlin-min-compiler-version="1.3"}
+{% endcapture %}
+{% include kotlin_quote.html body=mutable-val %}
 
-The read-only collection types are [covariant](generics.md#variance).
-This means that, if a `Rectangle` class inherits from `Shape`, you can use a `List<Rectangle>` anywhere the `List<Shape>` 
-is required.
-In other words, the collection types have the same subtyping relationship as the element types. Maps are covariant on 
-the value type, but not on the key type.
+読み取り専用コレクションは[共変](generics.md#分散)です。
+それの意味する所は、`Shape`を継承した`Rectangle`クラスがあれば、
+`List<Shape>`を要求するすべての場所で`List<Rectanble>`が使える、という事です。
+言い換えると、コレクションの型は要素の型と同じ型継承関係となる、という事です。
+マップは値の型に対して共変ですが、キーの型についてはそうではありません。
 
-In turn, mutable collections aren't covariant; otherwise, this would lead to runtime failures. If `MutableList<Rectangle>` 
-was a subtype of `MutableList<Shape>`, you could insert other `Shape` inheritors (for example, `Circle`) into it, thus 
-violating its `Rectangle` type argument.
+一方、ミュータブルなコレクションは共変ではありません： もしそうなら、実行時失敗を起こしてしまいますから。
+もし`MutableList<Rectangle>`が`MutableList<Shape>`のサブタイプなら、
+そのほかの`Shape`（例えば`Circle`とか）を挿入出来てしまい、
+`Rectangle`という型引数に違反する事になってしまいます。
 
-Below is a diagram of the Kotlin collection interfaces:
 
-![Collection interfaces hierarchy](collections-diagram.png){width="500"}
+以下はKotlinのコレクションのインターフェースのダイアグラムです：
 
-Let's walk through the interfaces and their implementations. To learn about `Collection`, read the section below. 
-To learn about `List`, `Set`, and `Map`, you can either read the corresponding sections or watch a video 
-by Sebastian Aigner, Kotlin Developer Advocate:
+<img src="images/collections-diagram.png" alt="Collection interfaces hierarchy" width="500">
 
-<video href="F8jj7e-_jFA" title="Kotlin Collections Overview"/>
+インターフェースとその実装をウォークスルーしていきましょう。
+`Collection`について学ぶなら、以下のセクションを読んで見てください。
+`List`、`Set`、`Map`について学ぶなら、それぞれのセクションを読むか、Kotlin Developer AdvocateのSebastian Aignerの以下の動画を見ると良いでしょう：
+
+<iframe width="560" height="315" src="https://www.youtube.com/embed/F8jj7e-_jFA?si=o41RgVf6l7ivGuym" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
 
 ### Collection
 
-[`Collection<T>`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-collection/index.html) is the root of 
-the collection hierarchy. This interface represents the common behavior of a read-only collection: retrieving size, 
-checking item membership, and so on.
-`Collection` inherits from the `Iterable<T>` interface that defines the operations for iterating elements. You can use 
-`Collection` as a parameter of a function that applies to different collection types. For more specific cases, use 
-the `Collection`'s inheritors: [`List`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html)
- and [`Set`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-set/index.html).
-
-```kotlin
+[`Collection<T>`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-collection/index.html)はコレクションの継承階層のルートに位置します。
+このインターフェースは読み取り専用コレクションに共通な振る舞いを表します：サイズの取得、特定の要素が入っているかのチェック、などなどです。
+`Collection`は`Iterable<T>`を継承しています。`Iterable<T>`は要素のイテレーションのオペレーションを定義するインターフェースです。
+異なる種類のコレクションを同時に引き受けるようなパラメータの型として`Collection`型を使う事が出来ます。
+より具体的な場合なら、
+`Collection`の継承先を使うと良いでしょう：
+[`List`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html)
+ と [`Set`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-set/index.html)です。
+ 
+ {% capture collection-type %}
 fun printAll(strings: Collection<String>) {
     for(s in strings) print("$s ")
     println()
@@ -103,13 +116,13 @@ fun main() {
     val stringSet = setOf("one", "two", "three")
     printAll(stringSet)
 }
-```
-{kotlin-runnable="true" kotlin-min-compiler-version="1.3"}
+{% endcapture %}
+{% include kotlin_quote.html body=collection-type %}
 
-[`MutableCollection<T>`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-mutable-collection/index.html) is 
-a `Collection` with write operations, such as `add` and `remove`.
+[`MutableCollection<T>`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-mutable-collection/index.html)
+は、`Collection`に書き込みオペレーションを追加したものです：書き込みというのは`add`とか`remove`などです。
 
-```kotlin
+{% capture mutable-collection %}
 fun List<String>.getShortWordsTo(shortWords: MutableList<String>, maxLength: Int) {
     this.filterTo(shortWords) { it.length <= maxLength }
     // throwing away the articles
@@ -123,34 +136,34 @@ fun main() {
     words.getShortWordsTo(shortWords, 3)
     println(shortWords)
 }
-```
-{kotlin-runnable="true" kotlin-min-compiler-version="1.3"}
+{% endcapture %}
+{% include kotlin_quote.html body=mutable-collection %}
 
 ### List
 
-[`List<T>`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html) stores elements in a
-specified order and provides indexed access to them. Indices start from zero – the index of the first element – and go
-to `lastIndex` which is the `(list.size - 1)`. 
+[`List<T>`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html)は要素を指定された順番に格納して、
+その要素へのインデックスによるアクセスを提供します。
+インデックスは0から始まり（0は最初の要素を指します）、`lastIndex`までにわたります。`lastIndex`は`(list.size-1)`です。
 
-```kotlin
+{% capture list-sample %}
 fun main() {
 //sampleStart
     val numbers = listOf("one", "two", "three", "four")
-    println("Number of elements: ${numbers.size}")
-    println("Third element: ${numbers.get(2)}")
-    println("Fourth element: ${numbers[3]}")
-    println("Index of element \"two\" ${numbers.indexOf("two")}")
+    println("要素の数: ${numbers.size}")
+    println("3番目の要素: ${numbers.get(2)}")
+    println("4番目の要素: ${numbers[3]}")
+    println("要素 \"two\" のインデックス ${numbers.indexOf("two")}")
 //sampleEnd
 }
-```
-{kotlin-runnable="true" kotlin-min-compiler-version="1.3"}
+{% endcapture %}
+{% include kotlin_quote.html body=list-sample %}
 
-List elements (including nulls) can duplicate: a list can contain any number of equal objects or occurrences of a 
-single object.
-Two lists are considered equal if they have the same sizes and [structurally equal](equality.md#structural-equality) 
-elements at the same positions. 
+リストの要素は（nullも含め）、重複しえます。
+リストは等しいオブジェクトをいくらでも保持する事が出来るし、
+一つのオブジェクトが何度も現れても問題ありません。
+二つのリストは、サイズが同じで各位置にある要素が[structurally equal](equality.md#structural-equality)ならイコールだとみなされます。
 
-```kotlin
+{% capture list-equal %}
 data class Person(var name: String, var age: Int)
 
 fun main() {
@@ -163,13 +176,13 @@ fun main() {
     println(people == people2)
 //sampleEnd
 }
-```
-{kotlin-runnable="true" kotlin-min-compiler-version="1.3"}
+{% endcapture %}
+{% include kotlin_quote.html body=list-equal %}
 
-[`MutableList<T>`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-mutable-list/index.html) is a `List` 
-with list-specific write operations, for example, to add or remove an element at a specific position.
+[`MutableList<T>`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-mutable-list/index.html)は`List`に、
+さらにリスト固有の書き込みオペレーション、例えば特定の位置に要素を足したり特定の位置の要素を削除したり、といったものを追加したものです。
 
-```kotlin
+{% capture mutable-list %}
 fun main() {
 //sampleStart
     val numbers = mutableListOf(1, 2, 3, 4)
@@ -180,101 +193,106 @@ fun main() {
     println(numbers)
 //sampleEnd
 }
-```
-{kotlin-runnable="true" kotlin-min-compiler-version="1.3"}
+{% endcapture %}
+{% include kotlin_quote.html body=mutable-list %}
 
-As you see, in some aspects lists are very similar to arrays.
-However, there is one important difference:  an array's size is defined upon initialization and is never changed; 
-in turn, a list doesn't have a predefined size; a list's size can be changed as a result of write operations: adding, 
-updating, or removing elements.
+見ての通り、リストは幾つかの点でとても配列に似ています。
+しかし、一つ重要な違いがあります： 配列のサイズは初期化の時点で決まり、決して変わりません。
+一方、リストは最初に決められたサイズはありません。
+リストのサイズは書き込みオペレーション、つまり要素を追加したり更新したり削除したりする事に伴って変わっていきます。
 
-In Kotlin, the default implementation of `MutableList` is [`ArrayList`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-array-list/index.html) 
-which you can think of as a resizable array.
+
+Kotlinでは、`MutableList`のデフォルトの実装は[`ArrayList`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-array-list/index.html)で、
+これはサイズ変更可能な配列のようなものとみなせるでしょう。
 
 ### Set
 
-[`Set<T>`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-set/index.html) stores unique elements;
-their order is generally undefined. `null` elements are unique as well: a `Set` can contain only one `null`. 
-Two sets are equal if they have the same size, and for each element of a set there is an equal element in the other set. 
+[`Set<T>`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-set/index.html)はユニークな要素を格納します。
+順番は一般的には定義されません。`null`要素もユニークです：
+`Set`はたかだか一つしか`null`を含む事が出来ません。
+二つのセットは、サイズが等しく、片方のセットの各要素が、それと等しい要素をもう一方のセットに持つならイコールだとみなされます。
 
-```kotlin
+{% capture set-sample %}
 fun main() {
 //sampleStart
     val numbers = setOf(1, 2, 3, 4)
-    println("Number of elements: ${numbers.size}")
-    if (numbers.contains(1)) println("1 is in the set")
+    println("要素の数: ${numbers.size}")
+    if (numbers.contains(1)) println("1はセットに含まれている")
 
     val numbersBackwards = setOf(4, 3, 2, 1)
-    println("The sets are equal: ${numbers == numbersBackwards}")
+    println("これらのセットは等しい: ${numbers == numbersBackwards}")
 //sampleEnd
 }
-```
-{kotlin-runnable="true" kotlin-min-compiler-version="1.3"}
+{% endcapture %}
+{% include kotlin_quote.html body=set-sample %}
 
-[`MutableSet`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-mutable-set/index.html) is a `Set` with 
-write operations from `MutableCollection`.
+[`MutableSet`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-mutable-set/index.html)は`Set`に`MutableCollection`の書き込みオペレーションを加えたものです。
 
-The default implementation of `MutableSet` – [`LinkedHashSet`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-linked-hash-set/index.html) – 
-preserves the order of elements insertion.
-Hence, the functions that rely on the order, such as `first()` or `last()`, return predictable results on such sets.
+`MutableSet`のデフォルトの実装は[`LinkedHashSet`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-linked-hash-set/index.html)です。
+これは要素の挿入の順番を保存します。
+だから順番に依存するような関数、`first()` とか `last()`も、
+予測可能な結果を返します。
 
-```kotlin
+{% capture linked-hash-aset %}
 fun main() {
 //sampleStart
-    val numbers = setOf(1, 2, 3, 4)  // LinkedHashSet is the default implementation
+    val numbers = setOf(1, 2, 3, 4)  // LinkedHashSetがデフォルトの実装
     val numbersBackwards = setOf(4, 3, 2, 1)
     
     println(numbers.first() == numbersBackwards.first())
     println(numbers.first() == numbersBackwards.last())
 //sampleEnd
 }
-```
-{kotlin-runnable="true" kotlin-min-compiler-version="1.3"}
+{% endcapture %}
+{% include kotlin_quote.html body=linked-hash-aset %}
 
-An alternative implementation – [`HashSet`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-hash-set/index.html) – 
-says nothing about the elements order, so calling such functions on it returns unpredictable results. However, `HashSet` 
-requires less memory to store the same number of elements.
+それとは代替的な実装としては、[`HashSet`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-hash-set/index.html)があります。
+こちらは要素の順番には何も保証していません。
+このコレクションに対してさきほどのような関数を呼んでも、
+結果は予測不能です。
+しかしながら`HashSet`の方が同じ数の要素を格納するのに少ないメモリで済みます。
 
 ### Map
 
-[`Map<K, V>`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-map/index.html) is not an inheritor of 
-the `Collection` interface; however, it's a Kotlin collection type as well.
-A `Map` stores _key-value_ pairs (or _entries_); keys are unique, but different keys can be paired with equal values. 
-The `Map` interface provides specific functions, such as access to value by key, searching keys and values, and so on.  
+[`Map<K, V>`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-map/index.html)は`Collection`を継承していません。
+しかしこれもKotlinのコレクションの一種です。
+`Map`は**キーと値**のペア（**エントリ**とも言う）を格納します。
+キーはユニークですが、異なるキーが同じ値を指しても構いません。
+`Map`インターフェースは`Map`固有の関数、例えばキーによる値へのアクセスやキーの検索や値の検索など、を提供します。
 
-```kotlin
+{% capture map-example %}
 fun main() {
 //sampleStart
     val numbersMap = mapOf("key1" to 1, "key2" to 2, "key3" to 3, "key4" to 1)
     
-    println("All keys: ${numbersMap.keys}")
-    println("All values: ${numbersMap.values}")
-    if ("key2" in numbersMap) println("Value by key \"key2\": ${numbersMap["key2"]}")    
-    if (1 in numbersMap.values) println("The value 1 is in the map")
-    if (numbersMap.containsValue(1)) println("The value 1 is in the map") // same as previous
+    println("全部のキー: ${numbersMap.keys}")
+    println("全部の値: ${numbersMap.values}")
+    if ("key2" in numbersMap) println("\"key2\"の値は: ${numbersMap["key2"]}")    
+    if (1 in numbersMap.values) println("値 1 はマップに有り")
+    if (numbersMap.containsValue(1)) println("値 1 はマップに有り") // 前と同様
 //sampleEnd
 }
-```
-{kotlin-runnable="true" kotlin-min-compiler-version="1.3"}
+{% endcapture %}
+{% include kotlin_quote.html body=map-example %}
 
-Two maps containing the equal pairs are equal regardless of the pair order.
+同じペアからなるマップは、順番がどうであれイコールと見なされます。
 
-```kotlin
+{% capture map-equal %}
 fun main() {
 //sampleStart
     val numbersMap = mapOf("key1" to 1, "key2" to 2, "key3" to 3, "key4" to 1)    
     val anotherMap = mapOf("key2" to 2, "key1" to 1, "key4" to 1, "key3" to 3)
     
-    println("The maps are equal: ${numbersMap == anotherMap}")
+    println("マップは等しい: ${numbersMap == anotherMap}")
 //sampleEnd
 }
-```
-{kotlin-runnable="true" kotlin-min-compiler-version="1.3"}
+{% endcapture %}
+{% include kotlin_quote.html body=map-equal %}
 
-[`MutableMap`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-mutable-map/index.html) is a `Map` with 
-map write operations, for example, you can add a new key-value pair or update the value associated with the given key.
+[`MutableMap`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-mutable-map/index.html)は`Map`にマップの書き込みオペレーションを加えたものです。
+書き込みオペレーションは新しい キーと値のペアを追加したり、あるキーに関連付けされた値を更新したり、などです。
 
-```kotlin
+{% capture mutable-map %}
 fun main() {
 //sampleStart
     val numbersMap = mutableMapOf("one" to 1, "two" to 2)
@@ -284,10 +302,9 @@ fun main() {
     println(numbersMap)
 //sampleEnd
 }
-```
-{kotlin-runnable="true" kotlin-min-compiler-version="1.3"}
+{% endcapture %}
+{% include kotlin_quote.html body=mutable-map %}
 
-The default implementation of `MutableMap` – [`LinkedHashMap`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-linked-hash-map/index.html) – 
-preserves the order of elements insertion when iterating the map.
-In turn, an alternative implementation – [`HashMap`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-hash-map/index.html) – 
-says nothing about the elements order.
+`MutableMap`のデフォルトの実装は[`LinkedHashMap`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-linked-hash-map/index.html)です。
+これはマップをイテレートする時に挿入した順番を保ちます。
+一方、その代替的な実装である [`HashMap`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-hash-map/index.html)は要素の順番について何も規定していません。

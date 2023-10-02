@@ -13,3 +13,7 @@ title: "ホーム"
 - [ツアー](kotlin-tour-welcome.md) Kotlinの基礎を短時間で試してみたい人向けのツアー
 - [基本的な構文](basic-syntax.md) Kotlinの文法の概要、リファレンスを読む最初の一歩はこちら
 
+## 原文
+
+  - [原文リファレンスホーム](https://kotlinlang.org/docs/home.html)
+  - [原文のソース](https://github.com/JetBrains/kotlin-web-site/)

@@ -7,230 +7,237 @@ title: "Nullセーフティ"
 
 ## Nullable型と非nullable型
 
-Kotlin's type system is aimed at eliminating the danger of null references, also known as [The Billion Dollar Mistake](https://en.wikipedia.org/wiki/Null_pointer#History).
+Kotlinの型システムはnull参照を排除するように作られています。
+null参照は[10億ドルの過ち](https://en.wikipedia.org/wiki/Null_pointer#History)としても知られています。
 
-One of the most common pitfalls in many programming languages, including Java, is that accessing a member of a null
-reference will result in a null reference exception. In Java this would be the equivalent of a `NullPointerException`,
-or an _NPE_ for short.
+多くのプログラム言語（Javaも含む）においてもっとも一般的な落とし穴の一つは、
+nullリファレンスにアクセスして、null参照の例外になってしまうというものです。
+Javaではこれは`NullPointerException`と言われていて、略して**NPE**とも呼ばれています。（訳注：日本語だとぬるぽ、と言われているが、少しくだけ過ぎと思うのでこの文書ではNPEと呼ぶ事にする）
 
-The only possible causes of an NPE in Kotlin are:
+KotlinにおけるNPEが起こりうる原因というのは以下しかありません：
 
-* An explicit call to `throw NullPointerException()`.
-* Usage of the `!!` operator that is described below.
-* Data inconsistency with regard to initialization, such as when:
-  * An uninitialized `this` available in a constructor is passed and used somewhere (a "leaking `this`").
-  * A [superclass constructor calls an open member](inheritance.md#derived-class-initialization-order) whose implementation
-  in the derived class uses an uninitialized state.
-* Java interoperation:
-  * Attempts to access a member of a `null` reference of a [platform type](java-interop.md#null-safety-and-platform-types);
-  * Nullability issues with generic types being used for Java interoperation. For example, a piece of Java code might add
-  `null` into a Kotlin `MutableList<String>`, therefore requiring a `MutableList<String?>` for working with it.
-  * Other issues caused by external Java code.
+* `throw NullPointerException()`というコードの明示的な呼び出し
+* 以下で述べる`!!`の使用
+* 初期化に対するデータの不整合、例えば：
+  * コンストラクタで使う事が出来る未初期化の`this`を他に渡して他の場所で使ってしまう（`this`リーク）
+  * [基底クラスのコンストラクタがopenのメンバを呼び出してしまい](inheritance.md#派生クラスの初期化の順番)、派生クラスのそのメンバが未初期化の状態を使ってしまう場合
+* Javaとの相互運用：
+  * [platform type](java-interop.md#null-safety-and-platform-types)の`null`参照のメンバにアクセスしようとする場合
+  * ジェネリック型をJavaと相互運用する時のnullabilityの問題。例えばKotlinの`MutableList<String>`にJavaの側で`null`を追加してしまうなど。この場合は`MutableList<String?>`とする必要がある。
+  * 外部のJavaのコードによって引き起こされるその他の問題
 
-In Kotlin, the type system distinguishes between references that can hold `null` (nullable references) and those that
-cannot (non-nullable references).
-For example, a regular variable of type `String` cannot hold `null`:
+Kotliでは型システムが`null`を保持出来る参照（nullableな参照）と、保持出来ない参照（非nullable参照）を区別します。
+例えば、通常の`String`型の変数は`null`を保持出来ません：
 
-```kotlin
+{% capture default-non-nullable %}
 fun main() {
 //sampleStart
-    var a: String = "abc" // Regular initialization means non-nullable by default
-    a = null // compilation error
+    var a: String = "abc" // 通常の初期化はデフォルトの非nullableを意味する
+    a = null // コンパイルエラー
 //sampleEnd
 }
-```
-{kotlin-runnable="true" validate="false"}
+{% endcapture %}
+{% include kotlin_quote.html body=default-non-nullable %}
 
-To allow nulls, you can declare a variable as a nullable string by writing `String?`:
+nullを許容する為には、変数を`String?`と書いてnullableなStringとして宣言しなくてはいけません：
 
-```kotlin
+{% capture explicit-nullable %}
 fun main() {
 //sampleStart
-    var b: String? = "abc" // can be set to null
-    b = null // ok
+    var b: String? = "abc" // nullをセット可能
+    b = null // おっけー
     print(b)
 //sampleEnd
 }
-```
-{kotlin-runnable="true"}
+{% endcapture %}
+{% include kotlin_quote.html body=explicit-nullable %}
 
-Now, if you call a method or access a property on `a`, it's guaranteed not to cause an NPE, so you can safely say:
+ここで、もし`a`のメソッドを呼んだりプロパティにアクセスしても、NPEを起こさない事は保証されています。
+だから以下のように安全に書く事が出来ます：
 
 ```kotlin
 val l = a.length
 ```
 
-But if you want to access the same property on `b`, that would not be safe, and the compiler reports an error:
+しかしもし`b`のプロパティにアクセスしようと思えば、それは安全では無い事がありえる。
+だからコンパイラはエラーを報告してくれます：
 
 ```kotlin
-val l = b.length // error: variable 'b' can be null
+val l = b.length // エラー: 変数 'b' はnullかもしれない
 ```
 
-But you still need to access that property, right? There are a few ways to do so.
+けれど、bのプロパティにアクセスする必要もありますよね？それには幾つかの方法があります。
 
-## Checking for `null` in conditions
+## 条件の所で`null`をチェックする
 
-First, you can explicitly check whether `b` is `null`, and handle the two options separately:
+まず最初の手段としては、`b`が`null`かどうかを明示的にチェックして、二つの可能性を別々に処理する事です：
 
 ```kotlin
 val l = if (b != null) b.length else -1
 ```
 
-The compiler tracks the information about the check you performed, and allows the call to `length` inside the `if`.
-More complex conditions are supported as well:
+コンパイラはあなたが実行したチェックを追跡して、`if`の中の`length`呼び出しを許可します。
+より複雑な条件もサポートされています：
 
-```kotlin
+{% capture complex-null-check %}
 fun main() {
 //sampleStart
     val b: String? = "Kotlin"
     if (b != null && b.length > 0) {
-        print("String of length ${b.length}")
+        print("長さ ${b.length} のString")
     } else {
-        print("Empty string")
+        print("空文字列")
     }
 //sampleEnd
 }
-```
-{kotlin-runnable="true"}
+{% endcapture %}
+{% include kotlin_quote.html body=complex-null-check %}
 
-Note that this only works where `b` is immutable (meaning it is a local variable that is not modified between the check and its
-usage or it is a member `val` that has a backing field and is not overridable), because otherwise it could be the case
-that `b` changes to `null` after the check.
+この手段が使えるのは`b`がイミュータブル（つまりローカル変数でチェックと使う所の間で変更していないか、`val`のメンバでバッキングフィールドがあるものでoverride可能で無いもの）の時だけです。
+なぜならそうでないと、`b`がチェックの後に`null`に変更される可能性があるからです。
 
-## Safe calls
+## セーフコール （安全な呼び出し）
 
-Your second option for accessing a property on a nullable variable is using the safe call operator `?.`:
+二つ目の選択肢としては、セーフコール演算子 `?.`を使ってnullableな変数のプロパティなどにアクセスする、というものです：
 
-```kotlin
+{% capture safe-call %}
 fun main() {
 //sampleStart
     val a = "Kotlin"
     val b: String? = null
     println(b?.length)
-    println(a?.length) // Unnecessary safe call
+    println(a?.length) // 不要なセーフコール
 //sampleEnd
 }
-```
-{kotlin-runnable="true"}
+{% endcapture %}
+{% include kotlin_quote.html body=safe-call %}
 
-This returns `b.length` if `b` is not null, and `null` otherwise. The type of this expression is `Int?`.
+これは`b`がnullで無ければ`b.length`を返し、そうでなければ`null`を返します。
+この式の型は`Int?`となります。
 
-Safe calls are useful in chains. For example, Bob is an employee who may be assigned to a department (or not). That department
-may in turn have another employee as a department head. To obtain the name of Bob's department head (if there is one),
-you write the following:
+セーフコールは連鎖して使うのに便利です。例えば、Bobは部署に配属されているかもしれない（し、されてないかもしれない）会社員で、
+部署には部署長がいるかもしれない、というような時を考えます。
+Bobの部署の部署長の名前を（もし居れば）得ようと思えば、以下のように書けます：
 
 ```kotlin
 bob?.department?.head?.name
 ```
 
-Such a chain returns `null` if any of the properties in it is `null`.
+このような連鎖的な呼び出しは、どれかのプロパティが`null`だったら全体としても`null`を返します。
 
-To perform a certain operation only for non-null values, you can use the safe call operator together with
-[`let`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/let.html):
+何らかの処理を非nullの値にだけ行いたい場合は、[`let`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/let.html)とセーフコール演算子を組み合わせて使う事が出来ます：
 
-```kotlin
+{% capture safe-let %}
 fun main() {
 //sampleStart
     val listWithNulls: List<String?> = listOf("Kotlin", null)
     for (item in listWithNulls) {
-         item?.let { println(it) } // prints Kotlin and ignores null
+         item?.let { println(it) } // nullは無視してKotlinは出力
     }
 //sampleEnd
 }
-```
-{kotlin-runnable="true"}
+{% endcapture %}
+{% include kotlin_quote.html body=safe-let %}
 
-A safe call can also be placed on the left side of an assignment. Then, if one of the receivers in the safe calls chain
-is `null`, the assignment is skipped and the expression on the right is not evaluated at all:
+セーフコールは代入の左辺に使う事も出来ます。
+その場合、セーフコールのレシーバが一つでも`null`だったらば、その代入はスキップされて、右辺は全く評価されません：
+
 
 ```kotlin
-// If either `person` or `person.department` is null, the function is not called:
+// `person` か `person.department` が nullだったら関数は呼ばれない:
 person?.department?.head = managersPool.getManager()
 ```
 
-## Nullable receiver
+## Nullableレシーバ
 
-Extension functions can be defined on a [nullable receiver](extensions.md#nullable-receiver).
-This way you can specify behaviour for null values without the need to use null-checking logic at each call-site. 
+拡張関数は[nullableレシーバ](extensions.md#nullableレシーバ)に定義する事が出来ます。
+こうすることで、null値の振る舞いを指示することが出来て、呼び出す都度nullかどうかをチェックする必要が無くなります。
 
-For example, the [`toString()`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/to-string.html) function is defined on a nullable receiver. It returns the String "null" (as opposed to a `null` value). This can be helpful in certain situations, for example, logging:
+例えば、[`toString()`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/to-string.html)はnullableレシーバに対して定義されています。
+これはnull値に対しては"null"というStringを返します（`null`の値では無く）。
+これはロギングとかのシチュエーションで便利です。
+
 
 ```kotlin
 val person: Person? = null
-logger.debug(person.toString()) // Logs "null", does not throw an exception
+logger.debug(person.toString()) // "null"とログに吐かれる。例外は投げられない
 ```
 
-If you want your `toString()` invocation to return a nullable string, use the [safe-call operator `?.`](#safe-calls):
+もし`toString()`を呼んでnullableなStringが結果として欲しければ、[セーフコール演算子 `?.`](#セーフコール)を使えばよろしい：
 
 ```kotlin
 var timestamp: Instant? = null
-val isoTimestamp = timestamp?.toString() // Returns a String? object which is `null`
+val isoTimestamp = timestamp?.toString() // String?オブジェクトを返す、この場合は`null`
 if (isoTimestamp == null) {
-   // Handle the case where timestamp was `null`
+   // timestampが`null`の場合の処理
 }
 ```
 
-## Elvis operator
+## Elvis演算子
 
-When you have a nullable reference, `b`, you can say "if `b` is not `null`, use it, otherwise use some non-null value":
+あるnullableな参照、例えば`b`があるとして、
+「もし`b`が`null`で無ければその値を使い、そうで無ければ何らかの非nullの値を使いたい」というような場合、以下のように書く事も出来ますが：
+
 
 ```kotlin
 val l: Int = if (b != null) b.length else -1
 ```
 
-Instead of writing the complete `if` expression, you can also express this with the Elvis operator `?:`:
+このように完全な`if`式を書く変わりに、Elvis演算子`?:`を使うという方法もあります：
 
 ```kotlin
 val l = b?.length ?: -1
 ```
 
-If the expression to the left of `?:` is not `null`, the Elvis operator returns it, otherwise it returns the expression
-to the right.
-Note that the expression on the right-hand side is evaluated only if the left-hand side is `null`.
+もし`?:`の左側の式が`null`で無ければ、Elvis演算子はその値をそのまま返します。そうでなければ右側の値を返します。
+右側の式は左側の式が`null`の時だけ評価される事に注意してください。
 
-Since `throw` and `return` are expressions in Kotlin, they can also be used on
-the right-hand side of the Elvis operator. This can be handy, for example, when checking function arguments:
+`throw`や`return`もKotlinでは式なので、
+Elvis演算子の右側に使う事が出来ます。
+
+これは関数の引数をチェックする時などに便利です。
 
 ```kotlin
 fun foo(node: Node): String? {
     val parent = node.getParent() ?: return null
-    val name = node.getName() ?: throw IllegalArgumentException("name expected")
+    val name = node.getName() ?: throw IllegalArgumentException("nameがあるのを想定しています")
     // ...
 }
 ```
 
-## The `!!` operator
+## `!!`演算子
 
-The third option is for NPE-lovers: the not-null assertion operator (`!!`) converts any value to a non-nullable
-type and throws an exception if the value is `null`. You can write `b!!`, and this will return a non-null value of `b`
-(for example, a `String` in our example) or throw an NPE if `b` is `null`:
+NPE好きには三番目の選択肢があります： nullでないと断言する演算子(not-null assersion operator)である `!!` です。
+これはどのような値でも非nullableに変換して、値が`null`だったら例外を投げる、というものです。
+`b!!`と書けば、`b`が`null`でなければその値（我々の例では`String`の値）を、もし`null`ならNPEを投げます。
 
 ```kotlin
 val l = b!!.length
 ```
 
-Thus, if you want an NPE, you can have it, but you have to ask for it explicitly and it won't appear out of the blue.
+つまり、もしNPEを望むなら、そう振る舞わせる事は出来ます。
+ですがそうしたいなら明示的にそう頼む必要があって、何も無い青空から突然降って湧いたりはしません。
 
-## Safe casts
+## セーフキャスト
 
-Regular casts may result in a `ClassCastException` if the object is not of the target type.
-Another option is to use safe casts that return `null` if the attempt was not successful:
+通常のキャストは、オブジェクトが指定した型で無ければ、`ClassCastException`になります。
+それ以外の選択肢として、キャストの試みが失敗したら`null`を返すセーフキャストというものがあります：
 
 ```kotlin
 val aInt: Int? = a as? Int
 ```
 
-## Collections of a nullable type
+## Nullable型のコレクション
 
-If you have a collection of elements of a nullable type and want to filter non-nullable elements, you can do so by using
-`filterNotNull`:
+Nullable型の要素のコレクションがあった時に、nullでない値だけでフィルターして非nullableのコレクションを得たい時は、
+`filterNotNull`を使う事で行なえます：
 
 ```kotlin
 val nullableList: List<Int?> = listOf(1, 2, null, 4)
 val intList: List<Int> = nullableList.filterNotNull()
 ```
 
-## What's next?
+## 次は何を読むべき？
 
-* Learn how to [handle nullability in Java and Kotlin](java-to-kotlin-nullability-guide.md).
-* Learn about generic types that are [definitely non-nullable](generics.md#definitely-non-nullable-types).
+* [JavaとKotlinでnullabilityをどう処理するか](java-to-kotlin-nullability-guide.md)を学ぶ
+* [definitely non-nullable型](generics.md#definitely-non-nullable型)なジェネリクス型について学ぶ

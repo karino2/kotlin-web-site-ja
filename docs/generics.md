@@ -773,7 +773,9 @@ fun <T> cloneWhenGreater(list: List<T>, threshold: T): List<T>
 ```
 -->
 
-## Definitely non-nullable型 (確実にnullableじゃない型)
+## Definitely non-nullable型
+
+(訳注：確実にnullableじゃない型)
 
 Javaのジェネリック型とインターオペラブルにする為に、
 Kotlinはジェネリック型パラメータを**definitely non-nullable(確実にnullableじゃない)**として

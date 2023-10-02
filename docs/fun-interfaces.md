@@ -75,7 +75,7 @@ fun main() {
 
 （訳注：良く知らない機能なので原題を残しておく： Migration from an interface with constructor function to a functional interface）
 
-1.6.20から、Kotlinは「[呼び出し可能リファレンス](reflection.md#callable-references)から関数的インターフェースのコンストラクタへ」、という機能をサポートしている。
+1.6.20から、Kotlinは「[呼び出し可能リファレンス](reflection.md#callable-references)から関数的インターフェースを作るコンストラクタ」、という機能をサポートしている。
 （訳注：callable references to functional interface constructors という名前の機能らしい）
 
 これはコンストラクタ関数付きのインターフェースから関数的インターフェースへのソース互換を保ったままのマイグレーション方法を提供する。
@@ -95,7 +95,7 @@ interface Printer {
 fun Printer(block: () -> Unit): Printer = object : Printer { override fun print() = block() }
 ```
 
-「呼び出し可能リファレンスから関数的インターフェースのコンストラクタへ」がenableだと、
+「呼び出し可能リファレンスから関数的インターフェースを作るコンストラクタ」がenableだと、
 このコードは単なる関数的インターフェースの宣言に置き換える事が出来る：
 
 <!-- 

@@ -116,7 +116,7 @@ reference:
             isFolder: true
             items:
               - url: /docs/type-safe-builders.html
-                title: Typeセーフビルダー
+                title: タイプセーフビルダー
               - url: /docs/using-builders-with-builder-inference.html
                 title: ビルダーの型推論を伴うビルダーの使用
       - url: /docs/null-safety.html

@@ -597,7 +597,7 @@ val sum = fun Int.(other: Int): Int = this + other
 -->
 
 ラムダ式は、レシーバの型を文脈から推測することができる場合、レシーバ付き関数リテラルとして使用することができます。
-それらの使用法の最も重要な例の一つは、[Typeセーフビルダー](type-safe-builders.md)です。
+それらの使用法の最も重要な例の一つは、[タイプセーフビルダー](type-safe-builders.md)です。
 
 <!--original
 Lambda expressions can be used as function literals with receiver when the receiver type can be inferred from context.

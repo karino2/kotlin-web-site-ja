@@ -1,8 +1,8 @@
 ---
 layout: reference
-title: "Typeセーフビルダー"
+title: "タイプセーフビルダー"
 ---
-# Typeセーフビルダー
+# タイプセーフビルダー
 
 By using well-named functions as builders in combination with [function literals with receiver](lambdas.md#function-literals-with-receiver) 
 it is possible to create type-safe, statically-typed builders in Kotlin.

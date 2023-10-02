@@ -1,5 +1,5 @@
 # Jekyll Settings
-title: "kotlin Programming Language"
+title: "kotlin 日本語リファレンス"
 markdown: kramdown
 kramdown:
   syntax_highlighter: rouge

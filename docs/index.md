@@ -15,5 +15,4 @@ title: "ホーム"
 
 ## 原文
 
-  - [原文リファレンスホーム](https://kotlinlang.org/docs/home.html)
   - [原文のソース](https://github.com/JetBrains/kotlin-web-site/)

@@ -1,88 +1,90 @@
 ---
 layout: reference
-title: "Destructuring Declarations"
+title: "分解宣言 （destructuring declaration）"
 ---
-# Destructuring Declarations
+# 分解宣言 （destructuring declaration）
 
-Sometimes it is convenient to *destructure* an object into a number of variables, for example:
+時々、オブジェクトを複数の変数に*分解(destructure)*すると便利な事があります。
+例えば：
 
 ```kotlin
 val (name, age) = person 
 ```
 
-This syntax is called a *destructuring declaration*. A destructuring declaration creates multiple variables at once.
-You have declared two new variables: `name` and `age`, and can use them independently:
+このシンタックスは*分解宣言（destructuring declaration）*と呼ばれています。
+分解宣言は複数の変数を一度に作ります。
+二つの新しい変数、 `name` と `age` を宣言していて、それぞれ独立に使う事が出来ます。
 
  ```kotlin
 println(name)
 println(age)
 ```
 
-A destructuring declaration is compiled down to the following code:
+分解宣言は以下のコードにコンパイルされます：
 
 ```kotlin
 val name = person.component1()
 val age = person.component2()
 ```
 
-The `component1()` and `component2()` functions are another example of the *principle of conventions* widely used in Kotlin 
-(see operators like `+` and `*`, `for`-loops as an example). 
-Anything can be on the right-hand side of a destructuring declaration, as long as the required number of component 
-functions can be called on it. And, of course, there can be `component3()` and `component4()` and so on.
+`component1()` と `component2()` はKotlin言語全体で広く見られる、*コンベンション原則（principle of conventions）*の一例です。
+(`+`や`*`といったオペレータ、`for`ループなどを見よ)。
+必要とされるcomponent関数を呼ぶ事が出来る対象ならなんでも分解宣言の右辺に来る事が出来ます。
+なお、もちろん`component3()`とか`component4()`などもあります。
 
-> The `componentN()` functions need to be marked with the `operator` keyword to allow using them in a destructuring 
->declaration.
+
+> 分解宣言で使う為には、`componentN()`関数は`operator`キーワードでマークする必要があります。
 >
-{type="note"}
+{: .note}
 
-Destructuring declarations also work in `for`-loops:
+分解宣言は`for`ループでも機能します：
 
 ```kotlin
 for ((a, b) in collection) { ... }
 ```
 
-Variables `a` and `b` get the values returned by `component1()` and `component2()` called on elements of the collection. 
+変数`a`と`b`は、collectionの要素に対して`component1()`と`component2()`を呼び出した結果が入る事になります。
 
-## Example: returning two values from a function
- 
-Assume that you need to return two things from a function - for example, a result object and a status of some sort.
-A compact way of doing this in Kotlin is to declare a [data class](data-classes.md) and return its instance:
+## 例： 関数から値を二つ返す
+
+関数から二つの値を返したい場合を考えてみます ー 例えば結果のオブジェクトと何らかのステータスとか。
+Kotlinでこれを行うコンパクトな方法としては、[データクラス](data-classes.md)を宣言してそのインスタンスを返す、というものです：
 
 ```kotlin
 data class Result(val result: Int, val status: Status)
 fun function(...): Result {
-    // computations
+    // なにか計算
     
     return Result(result, status)
 }
 
-// Now, to use this function:
+// この関数をこんな風に使う:
 val (result, status) = function(...)
 ```
 
-Since data classes automatically declare `componentN()` functions, destructuring declarations work here.
+データクラスは自動的に`componentN()`関数を生成してくれるので、分解宣言が使えます。
 
-> You could also use the standard class `Pair` and have `function()` return `Pair<Int, Status>`, 
-> but it's often better to have your data named properly.
+> 標準のクラス`Pair`を使って`function()`から`Pair<Int, Status>`をreturnするという事も出来ますが、
+> データにちゃんと名前をつける方が多くの場合はベターでしょう
 >
-{type="note"}
+{: .note}
 
-## Example: destructuring declarations and maps
+## 例： 分解宣言とマップ
 
-Probably the nicest way to traverse a map is this:
+マップを一番良い感じに巡回する方法としては、たぶん以下みたいなものでしょう：
 
 ```kotlin
 for ((key, value) in map) {
-   // do something with the key and the value
+   // keyとvalueを使ってなにかをする
 }
 ```
 
-To make this work, you should 
+このように出来るためには、以下の二つを満たしている必要があります：
 
-* Present the map as a sequence of values by providing an `iterator()` function.
-* Present each of the elements as a pair by providing functions `component1()` and `component2()`.
-  
-And indeed, the standard library provides such extensions:
+* `iterator()`関数を提供する事で、mapを値の列として見せる
+* 個々の要素が、`component1()` と `component2()` を提供する事でペアとして見せる
+
+そしてまさに、標準ライブラリはこのような拡張を提供しています：
 
 ```kotlin
 operator fun <K, V> Map<K, V>.iterator(): Iterator<Map.Entry<K, V>> = entrySet().iterator()
@@ -90,45 +92,47 @@ operator fun <K, V> Map.Entry<K, V>.component1() = getKey()
 operator fun <K, V> Map.Entry<K, V>.component2() = getValue()
 ```
 
-So you can freely use destructuring declarations in `for`-loops with maps (as well as collections of data class instances or similar).
+だから、`for`ループとマップを使う時は自由に分解宣言が使えます（データクラスのインスタンスのコレクションなどと似たような感じで）。
 
-## Underscore for unused variables
+## 使わない変数にはアンダースコア
 
-If you don't need a variable in the destructuring declaration, you can place an underscore instead of its name:
+分解宣言の中に不要な変数があったら、変数名の代わりにアンダースコアを置く事が出来ます：
 
 ```kotlin
 val (_, status) = getResult()
 ```
 
-The `componentN()` operator functions are not called for the components that are skipped in this way.
+このようにしてスキップされた要素には、`componentN()`オペレータ関数は呼ばれません。
 
-## Destructuring in lambdas
 
-You can use the destructuring declarations syntax for lambda parameters.
-If a lambda has a parameter of the `Pair` type (or `Map.Entry`, or any other type that has the appropriate `componentN` 
-functions), you can introduce several new parameters instead of one by putting them in parentheses:   
+## ラムダでのdestructuring
+
+ラムダのパラメータに分解宣言のシンタックスを使う事が出来ます。
+ラムダのパラメータが`Pair`型（または`Map.Entry`とかとにかく適切な`componentN`関数を持つものならなんでも）の時、
+それに対応した一つのパラメータとせずにカッコでくくって複数のパラメータにする事が出来ます：
 
 ```kotlin
 map.mapValues { entry -> "${entry.value}!" }
 map.mapValues { (key, value) -> "$value!" }
 ```
 
-Note the difference between declaring two parameters and declaring a destructuring pair instead of a parameter:  
+二つのパラメータを宣言するのと、一つのパラメータの代わりに分解宣言でペアを宣言する事の違いに注目してください：
 
 ```kotlin
-{ a -> ... } // one parameter
-{ a, b -> ... } // two parameters
-{ (a, b) -> ... } // a destructured pair
-{ (a, b), c -> ... } // a destructured pair and another parameter
+{ a -> ... } // 1 パラメータ
+{ a, b -> ... } // 2 パラメータ
+{ (a, b) -> ... } // 分解されたペア
+{ (a, b), c -> ... } // 分解されたペアともうひとつのパラメータ
 ```
 
-If a component of the destructured parameter is unused, you can replace it with the underscore to avoid inventing its name:
+分解宣言のパラメータの一部を使わない時は、
+アンダースコアを使ってわざわざ変数の名前を編み出す手間を省く事が出来ます：
 
 ```kotlin
 map.mapValues { (_, value) -> "$value!" }
 ```
 
-You can specify the type for the whole destructured parameter or for a specific component separately:
+分割されるパラメータ全体に型をつける事も、個々の構成要素に別々に型をつける事も出来ます：
 
 ```kotlin
 map.mapValues { (_, value): Map.Entry<Int, String> -> "$value!" }

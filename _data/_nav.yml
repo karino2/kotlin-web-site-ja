@@ -132,7 +132,7 @@ reference:
       - url: /docs/annotations.html
         title: Annotations
       - url: /docs/destructuring-declarations.html
-        title: Destructuring Declarations
+        title: 分解宣言
       - url: /docs/reflection.html
         title: リフレクション
   - title: プラットフォーム

@@ -190,13 +190,13 @@ val olderJack = jack.copy(age = 2)
 ```
 -->
 
-## データクラスと分割宣言 (Destructuring Declarations)
+## データクラスと分解宣言 (Destructuring Declarations)
 
 <!--original
 ## Data Classes and Destructuring Declarations
 -->
 
-データクラスのために生成された _コンポーネント関数_ は、[分割宣言(destructuring declaration)](destructuring-declarations.md)で使用できます。
+データクラスのために生成された _コンポーネント関数_ は、[分解宣言(destructuring declaration)](destructuring-declarations.md)で使用できます。
 
 <!--original
 _Component functions_ generated for data classes make it possible to use them in [destructuring declarations](destructuring-declarations.md):

@@ -1,13 +1,14 @@
 ---
 layout: reference
-title: "関数型インターフェース（SAM）"
+title: "関数的インターフェース（SAM）"
 ---
-# 関数型インターフェース（SAM）
+# 関数的インターフェース（SAM）
 
-An interface with only one abstract method is called a _functional interface_, or a _Single Abstract
-Method (SAM) interface_. The functional interface can have several non-abstract members but only one abstract member.
+抽象メソッド一つだけを持つインターフェースを **関数的インターフェース（functional interface）**、
+または **Single Abstract Method（SAM）インターフェース**（訳注：単一抽象メソッド）と呼ばれます。
+関数的インターフェースは複数の非抽象メンバを持つ事も出来ますが、抽象メンバは一つだけです。
 
-To declare a functional interface in Kotlin, use the `fun` modifier.
+Kotlinで関数的インターフェースを定義するには、`fun`修飾子を使います。
 
 ```kotlin
 fun interface KRunnable {
@@ -15,16 +16,19 @@ fun interface KRunnable {
 }
 ```
 
-## SAM conversions
+## SAMコンバージョン
 
-For functional interfaces, you can use SAM conversions that help make your code more concise and readable by using
-[lambda expressions](lambdas.md#lambda-expressions-and-anonymous-functions).
+関数的インターフェースに対しては、
+SAMコンバージョンというものを使って、
+[ラムダ式](lambdas.md#ラムダ式と無名関数)を使ってコードを読みやすく簡潔に書く事が出来ます。
 
-Instead of creating a class that implements a functional interface manually, you can use a lambda expression.
-With a SAM conversion, Kotlin can convert any lambda expression whose signature matches
-the signature of the interface's single method into the code, which dynamically instantiates the interface implementation.
+関数的インターフェースを実装したクラスを手作業で作る代わりに、
+ラムダ式を使う事が出来ます。
+SAMコンバージョンを用いると、Kotlinはインターフェースの単一のメソッドのシグニチャとマッチするラムダ式を、
+動的にインターフェース実装をしたインスタンスとして生成するコードに変換出来ます。
 
-For example, consider the following Kotlin functional interface:
+
+例として、以下のようなKotlinの関数的インターフェースを考えましょう：
 
 ```kotlin
 fun interface IntPredicate {
@@ -32,10 +36,10 @@ fun interface IntPredicate {
 }
 ```
 
-If you don't use a SAM conversion, you will need to write code like this:
+SAMコンバージョンを使わなければ、以下のようなコードを書かなくてはいけない所です：
 
 ```kotlin
-// Creating an instance of a class
+// クラスのインスタンスを作成
 val isEven = object : IntPredicate {
    override fun accept(i: Int): Boolean {
        return i % 2 == 0
@@ -43,16 +47,16 @@ val isEven = object : IntPredicate {
 }
 ```
 
-By leveraging Kotlin's SAM conversion, you can write the following equivalent code instead:
+KotlinのSAMコンバージョンの力を使えば、同等の以下のようなコードを書く事が出来ます：
 
 ```kotlin
-// Creating an instance using lambda
+// ラムダを使ってインスタンスを作成
 val isEven = IntPredicate { it % 2 == 0 }
 ```
 
-A short lambda expression replaces all the unnecessary code.
+短いラムダ式が不要なすべてのコードを置き換えてしまいました。
 
-```kotlin
+{% capture sam-conversion-lambda %}
 fun interface IntPredicate {
    fun accept(i: Int): Boolean
 }
@@ -60,18 +64,28 @@ fun interface IntPredicate {
 val isEven = IntPredicate { it % 2 == 0 }
 
 fun main() {
-   println("Is 7 even? - ${isEven.accept(7)}")
+   println("7 は偶数？ - ${isEven.accept(7)}")
 }
-```
-{kotlin-runnable="true" kotlin-min-compiler-version="1.4"}
+{% endcapture %}
+{% include kotlin_quote.html body=sam-conversion-lambda %}
 
-You can also use [SAM conversions for Java interfaces](java-interop.md#sam-conversions).
+[Javaのインターフェースに対するSAMコンバージョン](java-interop.md#sam-conversions)というのもあります。
 
-## Migration from an interface with constructor function to a functional interface
+## コンストラクタ関数付きインターフェース、から関数的インターフェースへのマイグレーション
 
-Starting from 1.6.20, Kotlin supports [callable references](reflection.md#callable-references) to functional interface constructors, which
+（訳注：良く知らない機能なので原題を残しておく： Migration from an interface with constructor function to a functional interface）
+
+1.6.20から、Kotlinは「[呼び出し可能リファレンス](reflection.md#callable-references)から関数的インターフェースのコンストラクタへ」、という機能をサポートしている。
+（訳注：callable references to functional interface constructors という名前の機能らしい）
+
+これはコンストラクタ関数付きのインターフェースから関数的インターフェースへのソース互換を保ったままのマイグレーション方法を提供する。
+以下のコードを考えてみよう：
+
+<!-- Starting from 1.6.20, Kotlin supports [callable references](reflection.md#callable-references) to functional interface constructors, which
 adds a source-compatible way to migrate from an interface with a constructor function to a functional interface.
 Consider the following code:
+-->
+
 
 ```kotlin
 interface Printer { 
@@ -81,7 +95,12 @@ interface Printer {
 fun Printer(block: () -> Unit): Printer = object : Printer { override fun print() = block() }
 ```
 
+「呼び出し可能リファレンスから関数的インターフェースのコンストラクタへ」がenableだと、
+このコードは単なる関数的インターフェースの宣言に置き換える事が出来る：
+
+<!-- 
 With callable references to functional interface constructors enabled, this code can be replaced with just a functional interface declaration:
+-->
 
 ```kotlin
 fun interface Printer { 
@@ -89,23 +108,26 @@ fun interface Printer {
 }
 ```
 
-Its constructor will be created implicitly, and any code using the `::Printer` function reference will compile. For example:
+コンストラクタは暗黙で作られて、`::Printer`関数のリファレンスを使うどんなコードでもコンパイル出来るようになります。
+例えば：
 
 ```kotlin
 documentsStorage.addPrinter(::Printer)
 ```
 
-Preserve the binary compatibility by marking the legacy function `Printer` with the [`@Deprecated`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-deprecated/)
-annotation with `DeprecationLevel.HIDDEN`:
+バイナリ互換を保つためには、レガシーとなる`Printer`関数の方に
+[`@Deprecated`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-deprecated/)アノテーションを、
+`DeprecationLevel.HIDDEN`で付けます:
+
 
 ```kotlin
 @Deprecated(message = "Your message about the deprecation", level = DeprecationLevel.HIDDEN)
 fun Printer(...) {...}
 ```
 
-## Functional interfaces vs. type aliases
+## 関数的インターフェース vs. typeエイリアス
 
-You can also simply rewrite the above using a [type alias](type-aliases.md) for a functional type:
+先程のコードを関数の型に[typeエイリアス](type-aliases.md)を使って単純に以下のように書き直す事も出来ますが：
 
 ```kotlin
 typealias IntPredicate = (i: Int) -> Boolean
@@ -113,18 +135,22 @@ typealias IntPredicate = (i: Int) -> Boolean
 val isEven: IntPredicate = { it % 2 == 0 }
 
 fun main() {
-   println("Is 7 even? - ${isEven(7)}")
+   println("7は偶数？ - ${isEven(7)}")
 }
 ```
 
-However, functional interfaces and [type aliases](type-aliases.md) serve different purposes.
-Type aliases are just names for existing types – they don't create a new type, while functional interfaces do.
-You can provide extensions that are specific to a particular functional interface to be inapplicable for plain functions or their type aliases.
+しかしながら、関数的インターフェースと[typeエイリアス](type-aliases.md)は違う目的に使われるものです。
+Typeエイリアスは既存の型に対する単なる名前に過ぎず、新しい型を作る訳でｈありません。
+一方、関数的インターフェースは新しい型を作ります。
+特定の関数的インターフェースに拡張を提供する事が出来て、
+それらの拡張は単なる関数やそのエイリアスには適用出来ない、という風に出来ます。
 
-Type aliases can have only one member, while functional interfaces can have multiple non-abstract members and one abstract member.
-Functional interfaces can also implement and extend other interfaces.
+Typeエイリアスはメンバを一つしか持てませんが、
+関数的インターフェースは非abstractのメンバを複数持つ事が出来ます（abstractのメンバが一つあれば）。
+関数的インターフェースは他のインターフェースを実装したりextendしたり出来ます。
 
-Functional interfaces are more flexible and provide more capabilities than type aliases, but they can be more costly both syntactically and at runtime because they can require conversions to a specific interface.
-When you choose which one to use in your code, consider your needs:
-* If your API needs to accept a function (any function) with some specific parameter and return types – use a simple functional type or define a type alias to give a shorter name to the corresponding functional type.
-* If your API accepts a more complex entity than a function – for example, it has non-trivial contracts and/or operations on it that can't be expressed in a functional type's signature – declare a separate functional interface for it.
+関数的インターフェースはtypeエイリアスと比べて、より柔軟でより多くの機能を提供します。しかし、実行コストもシンタックス的にもよりコストが掛かりもします。
+なぜなら特定のインターフェースへの変換を必要とするからです。
+あなたのコードでどちらを使ったらいいかを選ぶ時には、以下の必要性について考えてみましょう：
+* もしあなたのAPIがある特定のパラメータと戻りの型の関数ならなんでも受け付ける、というものなら、単純な関数の型かそのtype aliasを使って短い名前を与えたものを使いましょう。
+* もしあなたのAPIが単なる関数よりも複雑な何かを受け取るというものなら ー 例えば、関数の型のシグニチャで表現出来ないような、非自明のコントラクトやオペレーションを持っているなど ー その場合は別個の関数的インターフェースをそれ専用に定義しましょう。

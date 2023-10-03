@@ -165,7 +165,7 @@ reference:
           - title: イテレータ
             url: /docs/iterators.html
           - url: /docs/ranges.html
-            title: Rangesとprogression
+            title: 範囲と数列
           - title: オペレーション概要
             url: /docs/collection-operations.html
           - title: 変形

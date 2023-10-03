@@ -166,6 +166,12 @@ reference:
             url: /docs/collection-ordering.html
           - url: /docs/ranges.html
             title: Rangesとprogression
+          - title: オペレーション概要
+            url: /docs/collection-operations.html
+          - title: 変形
+            url: /docs/collection-transformations.html
+          - title: フィルター
+            url: /docs/collection-filtering.html
       - url: /docs/opt-in-requirements.html
         title: オプトインの要求
   - title: Tools

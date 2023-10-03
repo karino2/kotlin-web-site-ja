@@ -160,6 +160,8 @@ reference:
         items:
           - title: 概要
             url: /docs/collections-overview.html
+          - title: コレクションを作る
+            url: /docs/constructing-collections.html
           - title: 要素の順番
             url: /docs/collection-ordering.html
           - url: /docs/ranges.html

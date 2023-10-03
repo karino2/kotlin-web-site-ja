@@ -164,8 +164,6 @@ reference:
             url: /docs/constructing-collections.html
           - title: イテレータ
             url: /docs/iterators.html
-          - title: 要素の順番
-            url: /docs/collection-ordering.html
           - url: /docs/ranges.html
             title: Rangesとprogression
           - title: オペレーション概要
@@ -174,6 +172,8 @@ reference:
             url: /docs/collection-transformations.html
           - title: フィルター
             url: /docs/collection-filtering.html
+          - title: 要素の順番
+            url: /docs/collection-ordering.html
       - url: /docs/opt-in-requirements.html
         title: オプトインの要求
   - title: Tools

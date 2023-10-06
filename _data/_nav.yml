@@ -166,6 +166,8 @@ reference:
             url: /docs/iterators.html
           - url: /docs/ranges.html
             title: 範囲と数列
+          - url: /docs/sequences.html
+            title: シーケンス
           - title: オペレーション概要
             url: /docs/collection-operations.html
           - title: 変形

@@ -1,22 +1,24 @@
 ---
 layout: reference
-title: "Operator overloading"
+title: "演算子のオーバーロード（Operator overloading）"
 ---
-# Operator overloading
+# 演算子のオーバーロード（Operator overloading）
 
-Kotlin allows you to provide custom implementations for the predefined set of operators on types. These operators have
-predefined symbolic representation (like `+` or `*`) and precedence. To implement an operator, provide a [member function](functions.md#member-functions)
-or an [extension function](extensions.md) with a specific name for the corresponding type. This type becomes the left-hand side type
-for binary operations and the argument type for the unary ones.
+（訳注：オーバーロードは多重定義などとも訳される。同じシンボルに対して複数の関数の実装が対応する機能）
 
-To overload an operator, mark the corresponding function with the `operator` modifier:
+Kotlinではあらかじめ定義された演算子たちに対し、型ごとにカスタムな実装を提供することが出来ます。
+これらの演算子にはシンボルの表現（`+`とか`*`）と、演算子の優先順位があらかじめ決まっています。
+演算子を実装するには、対応する型の[メンバ関数](functions.md#メンバ関数)か[拡張関数](extensions.md)で特定の名前のものを用意する必要があります。
+これらの型は2項演算子なら左側の型となり、単項演算子ならその対象とする引数の型となります。
+
+演算子をオーバーロードするには、対応する関数に`operator`修飾子でマークする必要があります：
 
 ```kotlin
 interface IndexedContainer {
     operator fun get(index: Int)
 }
 ```
-When [overriding](inheritance.md#overriding-methods) your operator overloads, you can omit `operator`:
+オーバーロードしたい演算子を[オーバーライド](inheritance.md#メソッドのオーバーライド)するケースでは、`operator`は省略することが出来ます：
 
 ```kotlin
 class OrdersList: IndexedContainer {
@@ -24,32 +26,32 @@ class OrdersList: IndexedContainer {
 }
 ```
 
-## Unary operations
+## 単項演算子
 
-### Unary prefix operators
+（訳注：unary operator）
 
-| Expression | Translated to |
+### 単項の前置演算子
+
+| 式 | 変換結果 |
 |------------|---------------|
 | `+a` | `a.unaryPlus()` |
 | `-a` | `a.unaryMinus()` |
 | `!a` | `a.not()` |
 
-This table says that when the compiler processes, for example, an expression `+a`, it performs the following steps:
+このテーブルが示すことは、コンパイラが式を、例えば`+a`という式を処理すると、以下のステップを実行する、ということだ：
 
-* Determines the type of `a`, let it be `T`.
-* Looks up a function `unaryPlus()` with the `operator` modifier and no parameters for the receiver `T`, that means a member 
-function or an extension function.
-* If the function is absent or ambiguous, it is a compilation error.
-* If the function is present and its return type is `R`, the expression `+a` has type `R`.
+* `a`の型を決定する。ここでは`T`と呼ぶことにする
+* `operator`修飾子がついていて引数が無い`unaryPlus()`という関数をレシーバ`T`の関数として探す、つまり`T`のメンバ関数か拡張関数から探す
+* もし関数が存在しないか曖昧だったら、コンパイルエラーになる
+* もし関数が存在してその関数の戻りの型が`R`だったら、式`+a`は型`R`を持つ
 
-> These operations, as well as all the others, are optimized for [basic types](basic-types.md) and do not introduce 
-> overhead of function calls for them.
+> これらの演算子やそのほかの同類のものたちは、[基本型](basic-types.md)については最適化がなされて関数呼び出しのオーバーヘッドは発生しません。
 >
-{type="note"}
+{: .note}
 
-As an example, here's how you can overload the unary minus operator:
+例として、単項演算子をどんな風にオーバーロード出来るかを以下に示す：
 
-```kotlin
+{% capture unary-overload %}
 data class Point(val x: Int, val y: Int)
 
 operator fun Point.unaryMinus() = Point(-x, -y)
@@ -57,45 +59,48 @@ operator fun Point.unaryMinus() = Point(-x, -y)
 val point = Point(10, 20)
 
 fun main() {
-   println(-point)  // prints "Point(x=-10, y=-20)"
+   println(-point)  // "Point(x=-10, y=-20)" と出力
 }
-```
-{kotlin-runnable="true"}
+{% endcapture %}
+{% include kotlin_quote.html body=unary-overload %}
 
-### Increments and decrements
+### インクリメントとデクリメント
 
-| Expression | Translated to |
+| 式 | 変換結果 |
 |------------|---------------|
-| `a++` | `a.inc()` + see below |
-| `a--` | `a.dec()` + see below |
+| `a++` | `a.inc()` + 以下を参照 |
+| `a--` | `a.dec()` + 以下を参照 |
 
-The `inc()` and `dec()` functions must return a value, which will be assigned to the variable on which the
-`++` or `--` operation was used. They shouldn't mutate the object on which the `inc` or `dec` was invoked.
+`inc()`と`dec()`関数は、値を返さなくてはなりません。
+この返された値が`++`や`--`が使われた対象の変数に代入されます。
+これらの演算子は対象となるオブジェクトを変更してはいけません。
 
-The compiler performs the following steps for resolution of an operator in the *postfix* form, for example `a++`:
+これらの**後置**の形式の演算子、例えば`a++`、にコンパイラが遭遇した時の解決手順は、以下の通りです：
 
-* Determines the type of `a`, let it be `T`.
-* Looks up a function `inc()` with the `operator` modifier and no parameters, applicable to the receiver of type `T`.
-* Checks that the return type of the function is a subtype of `T`.
+* `a`の型を決定する。ここでは`T`とします。
+* レシーバの型`T`に適用出来て、`operator`修飾子がついて、引数が無い関数で`inc()`という名前のものを探す。
+* 見つけた関数の返す型が`T`のサブタイプであることを確認する。
 
-The effect of computing the expression is:
+この式を計算するとどうなるかと言えば：
 
-* Store the initial value of `a` to a temporary storage `a0`.
-* Assign the result of `a0.inc()` to `a`.
-* Return `a0` as the result of the expression.
+* `a`の最初の値を一時的な変数、`a0`に格納する
+* `a0.inc()`の結果を`a`に代入する
+* `a0`を式の評価結果として返す
 
-For `a--` the steps are completely analogous.
+`a--`についても、これらのステップは同様です。
 
-For the *prefix* forms `++a` and `--a` resolution works the same way, and the effect is:
+**前置**の形式の場合、つまり`++a`や`--a`の場合、解決の手順は後置の形式と同様ですが、計算の結果が異なります：
 
-* Assign the result of `a.inc()` to `a`.
-* Return the new value of `a` as a result of the expression.
+* `a.inc()`の結果を`a`に代入
+* `a`の新しくなった値をこの式の結果として返す
 
-## Binary operations
+## 二項演算子
 
-### Arithmetic operators 
+(訳注：Binary operations)
 
-| Expression | Translated to |
+### 算術演算子
+
+| 式 | 変換結果 |
 | -----------|-------------- |
 | `a + b` | `a.plus(b)` |
 | `a - b` | `a.minus(b)` |
@@ -105,9 +110,9 @@ For the *prefix* forms `++a` and `--a` resolution works the same way, and the ef
 | `a..b ` | `a.rangeTo(b)` |
 | `a..<b ` | `a.rangeUntil(b)` |
 
-For the operations in this table, the compiler just resolves the expression in the *Translated to* column.
+このテーブルにある演算に関しては、コンパイラは式を **変換結果** の列に単に解決するだけです。
 
-Below is an example `Counter` class that starts at a given value and can be incremented using the overloaded `+` operator:
+以下は`Counter`クラスが指定された値から始まってオーバーロードされた`+`演算子でインクリメントされていく例です：
 
 ```kotlin
 data class Counter(val dayIndex: Int) {
@@ -117,18 +122,18 @@ data class Counter(val dayIndex: Int) {
 }
 ```
 
-### in operator
+### in演算子
 
-| Expression | Translated to |
+| 式 | 変換結果 |
 | -----------|-------------- |
 | `a in b` | `b.contains(a)` |
 | `a !in b` | `!b.contains(a)` |
 
-For `in` and `!in` the procedure is the same, but the order of arguments is reversed.
+`in`と`!in`もだいたい（訳注：算術演算と）同様ですが、引数の順番は逆になります。
 
-### Indexed access operator
+### インデックスアクセス演算子
 
-| Expression | Translated to |
+| 式 | 変換結果 |
 | -------|-------------- |
 | `a[i]`  | `a.get(i)` |
 | `a[i, j]`  | `a.get(i, j)` |
@@ -137,22 +142,24 @@ For `in` and `!in` the procedure is the same, but the order of arguments is reve
 | `a[i, j] = b` | `a.set(i, j, b)` |
 | `a[i_1, ...,  i_n] = b` | `a.set(i_1, ..., i_n, b)` |
 
-Square brackets are translated to calls to `get` and `set` with appropriate numbers of arguments.
+角括弧（訳注： `[]`のこと）は`get`と`set`関数のうち適切な引数のものの呼び出しに変換されます。
 
 ### invoke演算子
 
-| Expression | Translated to |
+| 式 | 変換結果 |
 |--------|---------------|
 | `a()`  | `a.invoke()` |
 | `a(i)`  | `a.invoke(i)` |
 | `a(i, j)`  | `a.invoke(i, j)` |
 | `a(i_1, ...,  i_n)`  | `a.invoke(i_1, ...,  i_n)` |
 
-Parentheses are translated to calls to `invoke` with appropriate number of arguments.
+カッコは適切な引数の`invoke`の呼び出しに変換されます。
 
-### Augmented assignments
+### 拡張代入
 
-| Expression | Translated to |
+(訳注： Augmented assignments)
+
+| 式 | 変換結果 |
 |------------|---------------|
 | `a += b` | `a.plusAssign(b)` |
 | `a -= b` | `a.minusAssign(b)` |
@@ -160,51 +167,54 @@ Parentheses are translated to calls to `invoke` with appropriate number of argum
 | `a /= b` | `a.divAssign(b)` |
 | `a %= b` | `a.remAssign(b)` |
 
-For the assignment operations, for example `a += b`, the compiler performs the following steps:
+これらの代入演算子、例えば`a += b`は、コンパイラは以下の手順を実行する：
 
-* If the function from the right column is available:
-  * If the corresponding binary function (that means `plus()` for `plusAssign()`) is available too, `a` is a mutable variable, and the return type of `plus` is a subtype of the type of `a`, report an error (ambiguity).
-  * Make sure its return type is `Unit`, and report an error otherwise.
-  * Generate code for `a.plusAssign(b)`.
-* Otherwise, try to generate code for `a = a + b` (this includes a type check: the type of `a + b` must be a subtype of `a`).
+* もし右の列の関数があれば：
+  * 対応する二項演算関数(`plusAssign()`の場合なら`plus()`がある、という意味)も存在して、`a`がミュータブルな変数で、`plus`の戻りの型が`a`のサブタイプなら、エラーを報告（曖昧）
+  * 戻りの型が`Unit`なのを確認し、違ったらエラーを報告
+  * `a.plusAssign(b)`というコードを生成
+* 上記のケース以外なら`a = a + b`というコードの生成を試みる（これは`a + b`が`a`のサブタイプであることを確認する型チェックも含む）
 
-> Assignments are *NOT* expressions in Kotlin.
+> Kotlinでは、代入は式では**ありません**
 >
-{type="note"}
+{: .note}
 
-### Equality and inequality operators
+### EqualityとInequality演算子
 
-| Expression | Translated to |
+| 式 | 変換結果 |
 |------------|---------------|
 | `a == b` | `a?.equals(b) ?: (b === null)` |
 | `a != b` | `!(a?.equals(b) ?: (b === null))` |
 
-These operators only work with the function [`equals(other: Any?): Boolean`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/equals.html), 
-which can be overridden to provide custom equality check implementation. Any other function with the same name (like `equals(other: Foo)`) will not be called.
+これらの演算子は[`equals(other: Any?): Boolean`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/equals.html)に対してのみ機能し、
+これはカスタムなイコール判定の実装のためにオーバーライド出来ます。
+同じ名前のどんな別の関数も呼ばれることはありません (例えば `equals(other: Foo)`などは呼ばれない)。
 
-> `===` and `!==` (identity checks) are not overloadable, so no conventions exist for them.
+> `===` と `!==` (アイデンティティチェック)はオーバーロード出来ないので、この手の変換も存在しません。
 >
-{type="note"}
+{: .note}
 
-The `==` operation is special: it is translated to a complex expression that screens for `null`'s.
-`null == null` is always true, and `x == null` for a non-null `x` is always false and won't invoke `x.equals()`.
+`==`オペレーションは特別です。`==`は`null`をスクリーニングする複雑な式に変換されます。
+`null == null`はいつもtrueで、nullでない`x`に対しての`x == null`はいつもfalseで`x.equals()`は呼び出されません。
 
-### Comparison operators
+### 比較演算子
 
-| Expression | Translated to |
+| 式 | 変換結果 |
 |--------|---------------|
 | `a > b`  | `a.compareTo(b) > 0` |
 | `a < b`  | `a.compareTo(b) < 0` |
 | `a >= b` | `a.compareTo(b) >= 0` |
 | `a <= b` | `a.compareTo(b) <= 0` |
 
-All comparisons are translated into calls to `compareTo`, that is required to return `Int`.
+すべての比較演算子は`compareaTo`の呼び出しに変換され、`compareTo`は`Int`を返します。
 
-### Property delegation operators
+### プロパティの委譲演算子
 
-`provideDelegate`, `getValue` and `setValue` operator functions are described
-in [Delegated properties](delegated-properties.md).
+`provideDelegate`、 `getValue`、 `setValue`演算子の関数については、
+[委譲プロパティ](delegated-properties.md)に解説があります。
 
-## Infix calls for named functions
+## 名前あり関数の中置呼び出し
 
-You can simulate custom infix operations by using [infix function calls](functions.md#infix-notation).
+（訳注： infix call）
+
+[中置関数呼び出し](functions.md#中置記法)の仕組みを使うことで、カスタムな中置演算のようなことが出来ます。

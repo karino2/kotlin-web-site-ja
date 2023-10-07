@@ -40,7 +40,7 @@ fun main() {
 {% endcapture %}
 {% include kotlin_quote.html body=kotlin-tour-basic-types-arithmetic %}
 
-> `+=`, `-=`, `*=`, `/=`, `%=` は、拡張代入演算子と呼ばれるものです。もっと詳しく知りたければ、[拡張代入](operator-overloading.md#augmented-assignments)を参照してください。
+> `+=`, `-=`, `*=`, `/=`, `%=` は、拡張代入演算子と呼ばれるものです。もっと詳しく知りたければ、[拡張代入](operator-overloading.md#拡張代入)を参照してください。
 > 
 {: .tip }
 

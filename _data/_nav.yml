@@ -111,7 +111,7 @@ reference:
           - url: /docs/inline-functions.html
             title: インライン関数
           - url: /docs/operator-overloading.html
-            title: Operator overloading
+            title: 演算子のオーバーロード
           - title: ビルダー関連
             isFolder: true
             items:

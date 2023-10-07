@@ -30,7 +30,7 @@ Kotlinはアイテムをグルーピングするのに以下のコレクショ�
 リストは要素を追加された順番に保持します。重複した要素も追加出来ます。
 
 読み取り専用リスト　([`List`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/))を作るには、
-`[listOf()](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/list-of.html)` 関数を使います。
+[`listOf()`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/list-of.html) 関数を使います。
 
 mutableなリスト([`MutableList`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-mutable-list.html))を作るには,
 [`mutableListOf()`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/mutable-list-of.html)関数を使います。

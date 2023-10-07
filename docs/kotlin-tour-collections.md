@@ -65,7 +65,7 @@ fun main() {
 > 
 {: .tip}
 
-Listは順番があるコレクションなので、要素にアクセスする時にはそのインデックスを用いた[インデックスアクセスのオペレータ](operator-overloading.md#indexed-access-operator) `[]`を使います:
+Listは順番があるコレクションなので、要素にアクセスする時にはそのインデックスを用いた[インデックスアクセスの演算子](operator-overloading.md#インデックスアクセス演算子) `[]`を使います:
 
 {% capture kotlin-tour-list-access %}
 fun main() { 

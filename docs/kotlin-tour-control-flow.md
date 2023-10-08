@@ -221,7 +221,7 @@ fun main() {
 * whileループを続ける条件となる条件式を、カッコ `()` の中に宣言する
 * 実行したいアクションを、中括弧 `{}` の中に置く
 
-> 以下の例では [インクリメント演算子](operator-overloading.md#increments-and-decrements) `++` を、
+> 以下の例では [インクリメント演算子](operator-overloading.md#インクリメントとデクリメント) `++` を、
 > `cakesEaten`変数の値をインクリメントするのに使っています。
 >
 {: .note}

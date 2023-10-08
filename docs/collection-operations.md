@@ -4,120 +4,125 @@ title: "コレクションのオペレーション概要"
 ---
 # コレクションのオペレーション概要
 
+Kotlinの標準ライブラリはコレクションに対する幅広いオペレーションを実行するための様々な関数を提供しています。
+これらの中には単なる要素の取得や追加などの基本的なものから、より複雑な検索、ソート、フィルタ、変形などまで様々なものがあります。
 
-The Kotlin standard library offers a broad variety of functions for performing operations on collections. This includes
-simple operations, such as getting or adding elements, as well as more complex ones including search, sorting, filtering,
-transformations, and so on.  
+## 拡張関数とメンバ関数
 
-## Extension and member functions
+標準ライブラリでは、コレクションのオペレーションは２つの形態で定義されています：コレクションのインターフェースに[メンバ関数](classes.md#クラスメンバ)として、
+あるいは[拡張関数(extension function)](extensions.md#拡張関数)として。
 
-Collection operations are declared in the standard library in two ways: [member functions](classes.md#class-members) of
-collection interfaces and [extension functions](extensions.md#extension-functions). 
+メンバ関数はコレクションの型にとって必須のオペレーションを定義します。
+例えば、 [`Collection`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-collection/index.html)は自身が空かどうかをチェックする為に [`isEmpty()`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-collection/is-empty.html)関数があり、
+[`List`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html)には要素にアクセスする為に
+[`get()`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/get.html)がある、などです。
 
-Member functions define operations that are essential for a collection type. For example, [`Collection`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-collection/index.html)
-contains the function [`isEmpty()`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-collection/is-empty.html)
-for checking its emptiness; [`List`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html) contains
-[`get()`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/get.html) for index access to elements,
-and so on.
+あなたがコレクションのインターフェースの独自の実装を作りたい、と思ったら、そのメンバ関数を実装する必要があります。
+新規の実装を簡単にする為に、標準ライブラリのスケルトン的な実装を使用する事が出来ます：
+[`AbstractCollection`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-abstract-collection/index.html)、
+[`AbstractList`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-abstract-list/index.html)、
+[`AbstractSet`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-abstract-set/index.html)、
+[`AbstractMap`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-abstract-map/index.html)と、
+そのmutableバージョンです。
 
-When you create your own implementations of collection interfaces, you must implement their member functions.
-To make the creation of new implementations easier, use the skeletal implementations of collection interfaces from the
-standard library: [`AbstractCollection`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-abstract-collection/index.html), 
-[`AbstractList`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-abstract-list/index.html),
-[`AbstractSet`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-abstract-set/index.html),
-[`AbstractMap`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-abstract-map/index.html), and their
-mutable counterparts.
+必須でないそれ以外のオペレーションは拡張関数として宣言されています。
+これらには、フィルタ、変形、並べかえ、そのほかのコレクションの処理関数などが該当します。
 
-Other collection operations are declared as extension functions. These are filtering, transformation, ordering, and other
-collection processing functions. 
+## 共通のオペレーション
 
-## Common operations
+共通のオペレーションは、[読み取り専用とミュータブルなコレクション](collections-overview.md#コレクションの種類)の両方で使う事が出来ます。
+共通のオペレーションは以下のグループに分ける事が出来ます：
 
-Common operations are available for both [read-only and mutable collections](collections-overview.md#collection-types).
-Common operations fall into these groups:
+* [変形（Transformations）](collection-transformations.md)
+* [フィルタ（Filtering）](collection-filtering.md)
+* [`plus` と `minus` オペレータ](collection-plus-minus.md)
+* [グルーピング](collection-grouping.md)
+* [部分コレクションの取り出し](collection-parts.md)
+* [一つの要素の取り出し](collection-elements.md)
+* [並べ替え](collection-ordering.md)
+* [集約オペレーション（Aggregate operations）](collection-aggregate.md)
 
-* [Transformations](collection-transformations.md)
-* [Filtering](collection-filtering.md)
-* [`plus` and `minus` operators](collection-plus-minus.md)
-* [Grouping](collection-grouping.md)
-* [Retrieving collection parts](collection-parts.md)
-* [Retrieving single elements](collection-elements.md)
-* [Ordering](collection-ordering.md)
-* [Aggregate operations](collection-aggregate.md)
+これらのページに書かれているオペレーションは、どれも元となるコレクションには影響を与えません。
+例えば、フィルタオペレーションは、フィルタの述語（predicate）に位置する要素を含む**新しいコレクション**を作り出します。
+そのようにして得られた結果は変数に格納したり、その他の用途、例えば別の関数に渡したり出来ます。
 
-Operations described on these pages return their results without affecting the original collection. For example, a filtering
-operation produces a _new collection_ that contains all the elements matching the filtering predicate.
-Results of such operations should be either stored in variables, or used in some other way, for example, passed in other
-functions.
 
-```kotlin
+{% capture collection-operation-1 %}
 
 fun main() {
 //sampleStart
     val numbers = listOf("one", "two", "three", "four")  
-    numbers.filter { it.length > 3 }  // nothing happens with `numbers`, result is lost
-    println("numbers are still $numbers")
-    val longerThan3 = numbers.filter { it.length > 3 } // result is stored in `longerThan3`
-    println("numbers longer than 3 chars are $longerThan3")
+    numbers.filter { it.length > 3 }  // `numbers`には何の影響も無い。結果は捨てられる。
+    println("numbers は依然として $numbers")
+    val longerThan3 = numbers.filter { it.length > 3 } // 結果は`longerThan3`に格納される
+    println("3文字より長い numbers は $longerThan3")
 //sampleEnd
 }
-```
-{kotlin-runnable="true" kotlin-min-compiler-version="1.3"}
+{% endcapture %}
+{% include kotlin_quote.html body=collection-operation-1 %}
 
-For certain collection operations, there is an option to specify the _destination_ object.
-Destination is a mutable collection to which the function appends its resulting items instead of returning them in a new object.
-For performing operations with destinations, there are separate functions with the `To` postfix in their names, for example,
-[`filterTo()`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/filter-to.html) instead of [`filter()`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/filter.html) 
-or [`associateTo()`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/associate-to.html) instead of [`associate()`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/associate.html).
-These functions take the destination collection as an additional parameter.
+幾つかのコレクションのオペレーションには、**行き先（destination）**オブジェクトを指定するものもあります。
+行き先オブジェクトは、ミュータブルなコレクションで、これを取るオペレーションはオペレーションの結果を新規のコレクションとして返すのでは無く、この行き先オブジェクトに追加していきます。
+行き先つきのオペレーションは、それを行う`To`が末尾についた関数を使う事になります。
+例えば、[`filter()`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/filter.html) の代わりに
+[`filterTo()`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/filter-to.html) を使ったり、
+[`associate()`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/associate.html)の代わりに[`associateTo()`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/associate-to.html)を使う、
+といった具合に。
+これらの`To`が末尾につく関数は、行き先となるコレクションを追加のパラメータとして引数に取ります。
 
-```kotlin
+{% capture destination-sample %}
 
 fun main() {
 //sampleStart
     val numbers = listOf("one", "two", "three", "four")
-    val filterResults = mutableListOf<String>()  //destination object
+    val filterResults = mutableListOf<String>()  // 行き先オブジェクト
     numbers.filterTo(filterResults) { it.length > 3 }
     numbers.filterIndexedTo(filterResults) { index, _ -> index == 0 }
-    println(filterResults) // contains results of both operations
+    println(filterResults) // 両方のオペレーションの結果を含んでいる
 //sampleEnd
 }
 
-```
-{kotlin-runnable="true" kotlin-min-compiler-version="1.3"}
+{% endcapture %}
+{% include kotlin_quote.html body=destination-sample %}
 
-For convenience, these functions return the destination collection back, so you can create it right in the corresponding
-argument of the function call:
+利便性のために、これらの関数は行き先オブジェクトを返します。
+これを活用すれば、関数呼び出しをする時の行き先オブジェクトに対応する引数の所で新規の行き先オブジェクトを作る、なんて事が出来ます：
 
-```kotlin
+
+{% capture destination-return %}
 
 fun main() {
     val numbers = listOf("one", "two", "three", "four")
 //sampleStart
-    // filter numbers right into a new hash set, 
-    // thus eliminating duplicates in the result
+    // numbersをフィルタして新しく作ったハッシュセットに入れる。
+    // こうしてresultに入る要素（長さ）の重複を除去している
+    // （訳注：numbersの単語のlengthのセットを作ってresultとしている）
     val result = numbers.mapTo(HashSet()) { it.length }
-    println("distinct item lengths are $result")
+    println("重複を除いた長さたちは： $result")
 //sampleEnd
 }
-```
-{kotlin-runnable="true" kotlin-min-compiler-version="1.3"}
+{% endcapture %}
+{% include kotlin_quote.html body=destination-return %}
 
-Functions with destination are available for filtering, association, grouping, flattening, and other operations. For the
-complete list of destination operations see the [Kotlin collections reference](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/index.html).
+行き先指定つきの関数で用意されてるものとしては、フィルタ、関連付け（association）、グルーピング、フィルタリングなどがあります。
+行き先指定つきの全オペレーションを知りたければ、[Kotlinコレクションリファレンス](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/index.html)を参照ください。
 
-## Write operations
+## 書き込みオペレーション
 
-For mutable collections, there are also _write operations_ that change the collection state. Such operations include
-adding, removing, and updating elements. Write operations are listed in the [Write operations](collection-write.md) and
-corresponding sections of [List-specific operations](list-operations.md#list-write-operations) and [Map specific operations](map-operations.md#map-write-operations).
+ミュータブルなコレクションには、ここまで述べてきたものに加えて**書き込みオペレーション（write operations）**があり、
+これはコレクションの状態を変更します。
+そのようなオペレーションには、要素の追加、削除、更新などが含まれます。
+書き込みオペレーションは[書き込みオペレーション](collection-write.md)のページと、
+[List特有のオペレーション](list-operations.md#リストの書き込みオペレーション) と [マップ特有のオペレーション](map-operations.md#マップの書き込みオペレーション)のそれ系のセクションに書かれています。
 
-For certain operations, there are pairs of functions for performing the same operation: one applies the operation in-place
-and the other returns the result as a separate collection. For example, [`sort()`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/sort.html)
-sorts a mutable collection in-place, so its state changes; [`sorted()`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/sorted.html)
-creates a new collection that contains the same elements in the sorted order.
+ある種のオペレーションに関しては、同じオペレーションを行うペアの関数があります：
+一つはオペレーションをそのコレクション自身に（in-placeで）行うものと、
+もう一つは別個の新しいコレクションとして結果を返すものの２つです。
+例えば、[`sort()`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/sort.html)はミュータブルなコレクションをin-placeでソートし、つまりはそのコレクション自身の状態を変更するのに対し、
+[`sorted()`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/sorted.html)は同じ要素をソートした順番に収めた新しいコレクションを作ります。
 
-```kotlin
+
+{% capture sort-sorted %}
 
 fun main() {
 //sampleStart
@@ -128,5 +133,5 @@ fun main() {
     println(numbers == sortedNumbers)  // true
 //sampleEnd
 }
-```
-{kotlin-runnable="true" kotlin-min-compiler-version="1.3"}
+{% endcapture %}
+{% include kotlin_quote.html body=sort-sorted %}

@@ -132,7 +132,7 @@ fun main() {
 
 列挙型はすべて[Comparable](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-comparable/index.html)インターフェースをデフォルトで実装しています。
 列挙型で定義される列挙型定数は自然な順番（natual order）で定義されます。
-より詳細な情報は[要素の順番](collection-ordering.md)を参照ください。
+より詳細な情報は[並べ替え](collection-ordering.md)を参照ください。
 
 ## 列挙型定数を使用した作業
 

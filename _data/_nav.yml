@@ -174,7 +174,7 @@ reference:
             url: /docs/collection-transformations.html
           - title: フィルター
             url: /docs/collection-filtering.html
-          - title: 要素の順番
+          - title: 並べ替え
             url: /docs/collection-ordering.html
       - url: /docs/opt-in-requirements.html
         title: オプトインの要求

@@ -1,8 +1,8 @@
 ---
 layout: reference
-title: "要素の順番"
+title: "並べ替え"
 ---
-# 要素の順番
+# 並べ替え
 
 The order of elements is an important aspect of certain collection types.
 For example, two lists of the same elements are not equal if their elements are ordered differently. 

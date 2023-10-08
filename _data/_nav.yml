@@ -176,6 +176,14 @@ reference:
             url: /docs/collection-filtering.html
           - title: 並べ替え
             url: /docs/collection-ordering.html
+          - title: 書き込みオペレーション
+            url: /docs/collection-write.html
+          - title: リスト特有のオペレーション
+            url: /docs/list-operations.html
+          - title: セット特有のオペレーション
+            url: /docs/set-operations.html
+          - title: マップ特有のオペレーション
+            url: /docs/map-operations.html
       - url: /docs/opt-in-requirements.html
         title: オプトインの要求
   - title: Tools

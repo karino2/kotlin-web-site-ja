@@ -50,6 +50,27 @@ If in doubt default to the Java Coding Conventions such as:
 * public functions should have documentation such that it appears in Kotlin Doc
 -->
 
+### 関数の名前
+
+関数、プロパティ、ローカル変数の名前は小文字で始まり、キャメルケース(camel case)を使ってアンダースコアは無しです：
+（訳注：キャメルケースとはラクダのようなでこぼこした大文字小文字から来ていて、単語の区切りだけ大文字、それ以外は小文字とするルール）
+
+
+```kotlin
+fun processDeclarations() { /*...*/ }
+var declarationCount = 1
+```
+
+規則の例外： クラスのインスタンスを作るファクトリーメソッドは返す抽象型と同じ名前にしても構いません：
+
+```kotlin
+interface Foo { /*...*/ }
+
+class FooImpl : Foo { /*...*/ }
+
+fun Foo(): Foo { return FooImpl() }
+```
+
 ## コロン
 
 <!--original

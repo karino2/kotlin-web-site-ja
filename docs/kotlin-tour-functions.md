@@ -56,7 +56,7 @@ fun main() {
 {% endcapture %}
 {% include kotlin_quote.html body=kotlin-tour-simple-function %}
 
-> [コーディング規約](coding-conventions.md#function-names)では、関数の名前は小文字で始めて 
+> [コーディング規約](coding-conventions.md#関数の名前)では、関数の名前は小文字で始めて 
 > アンダースコア無しのcamel caseを推奨しています（訳注：小文字始まりのcamel caseとはkotlinTourSampleなどのように単語の区切りを大文字で表すコンベンション）
 > 
 {: .note}

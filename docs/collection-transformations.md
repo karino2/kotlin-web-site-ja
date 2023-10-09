@@ -1,23 +1,24 @@
 ---
 layout: reference
-title: "コレクションの変形オペレーション（transformation operation）"
+title: "コレクションのトランスフォームオペレーション"
 ---
-# コレクションの変形オペレーション（transformation operation）
+# コレクションのトランスフォームオペレーション（transformation operation）
 
-The Kotlin standard library provides a set of extension functions for collection _transformations_.
-These functions build new collections from existing ones based on the transformation rules provided.
-In this page, we'll give an overview of the available collection transformation functions.
+Kotlinの標準ライブラリは、コレクションの **トランスフォーム（変形）** のための拡張関数を幾つか提供しています。
+これらの関数は、既存のコレクションから指定されたルールに従い変形した新しいコレクションを作り出します。
+このページでは、提供されているコレクションの変形関数の概要を提示します。
 
 ## Map
 
-The _mapping_ transformation creates a collection from the results of a function on the elements of another collection.
-The basic mapping function is [`map()`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/map.html).
-It applies the given lambda function to each subsequent element and returns the list of the lambda results.
-The order of results is the same as the original order of elements. 
-To apply a transformation that additionally uses the element index as an argument, use [`mapIndexed()`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/map-indexed.html).  
+（訳注：コレクションのマップとは別なので注意）
 
-```kotlin
+**マッピング**トランスフォームはあるコレクションの要素に対して関数を適用した結果をもとに新しいコレクションを作り出すものです。
+基本的なマッピング関数としては、[`map()`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/map.html)が挙げられます。
+これは渡されたラムダ関数を個々の要素に適用して、その結果のリストを返します。
+結果の順番は元の要素の順番と同じです。
+要素の他に要素のインデックスも使う変形を行いたければ、[`mapIndexed()`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/map-indexed.html)を使います。
 
+{% capture trans-map %}
 fun main() {
 //sampleStart
     val numbers = setOf(1, 2, 3)
@@ -25,16 +26,15 @@ fun main() {
     println(numbers.mapIndexed { idx, value -> value * idx })
 //sampleEnd
 }
-```
-{kotlin-runnable="true" kotlin-min-compiler-version="1.3"}
+{% endcapture %}
+{% include kotlin_quote.html body=trans-map %}
 
-If the transformation produces `null` on certain elements, you can filter out the `null`s from the result collection by
-calling the [`mapNotNull()`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/map-not-null.html) function
-instead of `map()`, or [`mapIndexedNotNull()`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/map-indexed-not-null.html)
-instead of `mapIndexed()`.
+もし変形がある種の要素に対して`null`を生成する場合、`map()`関数の代わりに[`mapNotNull()`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/map-not-null.html)関数を使う事で、
+`null`を結果のコレクションから除外する事が出来ます。
+`mapIndexed()`の代わりにも同様に[`mapIndexedNotNull()`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/map-indexed-not-null.html)があります。
 
-```kotlin
 
+{% capture trans-map-notnull %}
 fun main() {
 //sampleStart
     val numbers = setOf(1, 2, 3)
@@ -42,15 +42,17 @@ fun main() {
     println(numbers.mapIndexedNotNull { idx, value -> if (idx == 0) null else value * idx })
 //sampleEnd
 }
-```
-{kotlin-runnable="true" kotlin-min-compiler-version="1.3"}
+{% endcapture %}
+{% include kotlin_quote.html body=trans-map-notnull %}
 
-When transforming maps, you have two options: transform keys leaving values unchanged and vice versa.
-To apply a given transformation to keys, use [`mapKeys()`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/map-keys.html);
-in turn, [`mapValues()`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/map-values.html) transforms values.
-Both functions use the transformations that take a map entry as an argument, so you can operate both its key and value.
+（コレクションの）マップをトランスフォームする場合は、２つの選択肢があります：
+値を変更せずにキーだけをトランスフォームするか、逆にキーを変更せずに値だけをトランスフォームするかです。
+キーをトランスフォームしたい場合は [`mapKeys()`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/map-keys.html)を使います。
+値をトランスフォームしたい場合は[`mapValues()`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/map-values.html)を使います。
+どちらの関数もトランスフォーム関数にはマップのエントリが引数としてやってくるので、キーと値の両方を使って変換を行う事が出来ます。
 
-```kotlin
+
+{% capture trans-map-map %}
 
 fun main() {
 //sampleStart
@@ -59,25 +61,24 @@ fun main() {
     println(numbersMap.mapValues { it.value + it.key.length })
 //sampleEnd
 }
-```
-{kotlin-runnable="true" kotlin-min-compiler-version="1.3"}
+{% endcapture %}
+{% include kotlin_quote.html body=trans-map-map %}
 
 ## Zip
 
-_Zipping_ transformation is building pairs from elements with the same positions in both collections.
-In the Kotlin standard library, this is done by the [`zip()`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/zip.html)
-extension function.
+**zip**トランスフォーメーションは２つのコレクションの同じ位置にある要素から、それらのペアを持ったコレクションを作り出します。
+Kotlinの標準ライブラリでは、これは[`zip()`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/zip.html)拡張関数で行う事が出来ます。
 
-When called on a collection or an array with another collection (or array) as an argument, `zip()` returns the `List` of 
-`Pair` objects. The elements of the receiver collection are the first elements in these pairs.
+コレクションか配列に対してコレクション（か配列）を引数として指定すると、
+`zip()`は`Pair`オブジェクトの`List`を返します。（訳注：わかりにくいので後の例を見ると良い）
+レシーバのコレクションの要素が、各ペアの最初の方の要素となります。
 
-If the collections have different sizes, the result of the `zip()` is the smaller size; the last elements of the larger
-collection are not included in the result.
+２つのコレクションのサイズが異なる場合、`zip()`の結果は小さい方のサイズとして生成されます。
+長い方の残りの要素は結果には含まれません。
 
-`zip()` can also be called in the infix form `a zip b`.
+`zip()`関数は中置型（infix）で`a zip b`の形式で使う事も出来ます。
 
-```kotlin
-
+{% capture zip-example %}
 fun main() {
 //sampleStart
     val colors = listOf("red", "brown", "grey")
@@ -88,14 +89,14 @@ fun main() {
     println(colors.zip(twoAnimals))
 //sampleEnd
 }
-```
-{kotlin-runnable="true" kotlin-min-compiler-version="1.3"}
+{% endcapture %}
+{% include kotlin_quote.html body=zip-example %}
 
-You can also call `zip()` with a transformation function that takes two parameters: the receiver element and the argument
-element. In this case, the result `List` contains the return values of the transformation function called on pairs of the
-receiver and the argument elements with the same positions.
+`zip()`に２つのパラメータを持つトランスフォーメーション関数をさらに渡す事も出来ます：
+２つのパラメータはレシーバの要素と引数の要素です。
+この場合、結果の`List`は、それぞれ同じ位置のレシーバの要素と引数の要素のペアに対して呼ばれた変形関数の結果から作られる`List`となります。
 
-```kotlin
+{% capture trans-zip-trans %}
 
 fun main() {
 //sampleStart
@@ -105,18 +106,18 @@ fun main() {
     println(colors.zip(animals) { color, animal -> "The ${animal.replaceFirstChar { it.uppercase() }} is $color"})
 //sampleEnd
 }
-```
-{kotlin-runnable="true" kotlin-min-compiler-version="1.3"}
+{% endcapture %}
+{% include kotlin_quote.html body=trans-zip-trans %}
 
-When you have a `List` of `Pair`s, you can do the reverse transformation – _unzipping_ – that builds two lists from these
-pairs:
+`Pair`の`List`がある場合に、逆の変換、**unzip**する事が出来ます。
+つまり、ペアのリストから、２つのバラしたリストを作る訳です：
 
-* The first list contains the first elements of each `Pair` in the original list. 
-* The second list contains the second elements.
+* 最初のリストは各`Pair`の１つ目の要素からなるリスト
+* 二番目のリストはペアの２つ目の要素からなるリスト
 
-To unzip a list of pairs, call [`unzip()`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/unzip.html).
+ペアのリストをunzipするためには、[`unzip()`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/unzip.html)関数を呼びます：
 
-```kotlin
+{% capture unzip-example %}
 
 fun main() {
 //sampleStart
@@ -124,19 +125,20 @@ fun main() {
     println(numberPairs.unzip())
 //sampleEnd
 }
-```
-{kotlin-runnable="true" kotlin-min-compiler-version="1.3"}
+{% endcapture %}
+{% include kotlin_quote.html body=unzip-example %}
 
 ## Associate
 
-_Association_ transformations allow building maps from the collection elements and certain values associated with them.
-In different association types, the elements can be either keys or values in the association map.
+**Association（連想、関連付け）**トランスフォーメーションはコレクションの要素から、それに関連づけした値を持つマップを作る。
+associationの種類によって、要素は結果のマップのキーの方にも値の方にもなります。
 
-The basic association function [`associateWith()`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/associate-with.html)
-creates a `Map` in which the elements of the original collection are keys, and values are produced from them by the given
-transformation function. If two elements are equal, only the last one remains in the map.
+基本的なassociation関数、 [`associateWith()`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/associate-with.html)は、
+元のコレクションの要素がキーで、提供されるトランスフォーム関数で生成される結果が値となる`Map`を作りだします。
+２つの等しい要素がある場合は、後に来た方だけが結果のマップに残ります。
 
-```kotlin
+
+{% capture associate-example %}
 
 fun main() {
 //sampleStart
@@ -144,16 +146,17 @@ fun main() {
     println(numbers.associateWith { it.length })
 //sampleEnd
 }
-```
-{kotlin-runnable="true" kotlin-min-compiler-version="1.3"}
+{% endcapture %}
+{% include kotlin_quote.html body=associate-example %}
 
-For building maps with collection elements as values, there is the function [`associateBy()`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/associate-by.html).
-It takes a function that returns a key based on an element's value. If two elements' keys are equal, only the last one remains
-in the map.
+コレクションの要素を結果のマップの値の方にするものとしては、
+ [`associateBy()`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/associate-by.html)関数があります。
+`associateBy()`は引数に、要素の値を元にキーを返す関数を取ります。
+もし２つの要素に対応するキーの値が等しい場合は、後に来た方だけが結果のマップに残ります。
 
-`associateBy()` can also be called with a value transformation function.
+`associateBy()`はvalueの方を変換する関数（valueTransform）をつけて呼ぶ事も出来ます。
 
-```kotlin
+{% capture value-transform %}
 
 fun main() {
 //sampleStart
@@ -163,18 +166,19 @@ fun main() {
     println(numbers.associateBy(keySelector = { it.first().uppercaseChar() }, valueTransform = { it.length }))
 //sampleEnd
 }
-```
-{kotlin-runnable="true" kotlin-min-compiler-version="1.3"}
+{% endcapture %}
+{% include kotlin_quote.html body=value-transform %}
 
-Another way to build maps in which both keys and values are somehow produced from collection elements is the function [`associate()`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/associate.html). 
-It takes a lambda function that returns a `Pair`: the key and the value of the corresponding map entry.
+キーと値の両方を渡された関数が生成するようなマップの生成方法としては、
+[`associate()`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/associate.html)関数があります。
+`associate()`は`Pair`を返す関数を引数に取ります。このペアがキーと値として結果のマップのエントリになります。
 
-Note that `associate()` produces short-living `Pair` objects which may affect the performance.
-Thus, `associate()` should be used when the performance isn't critical or it's more preferable than other options.
+`associate()`は短寿命の`Pair`オブジェクトを生成するので、パフォーマンスに影響があるかもしれない事に注意しましょう。
+だから`associate()`の使用はパフォーマンスが問題にならないか、他の選択肢よりこちらの方が良い場合に限って使うようにしましょう。
 
-An example of the latter is when a key and the corresponding value are produced from an element together. 
+後者の例としては、元の要素からキーと値の両方が一緒に作り出されるような場合です。
 
-```kotlin
+{% capture assoc-ex %}
 
 fun main() {
 data class FullName (val firstName: String, val lastName: String)
@@ -191,21 +195,20 @@ fun parseFullName(fullName: String): FullName {
     println(names.associate { name -> parseFullName(name).let { it.lastName to it.firstName } })  
 //sampleEnd
 }
-```
-{kotlin-runnable="true" kotlin-min-compiler-version="1.3"}
+{% endcapture %}
+{% include kotlin_quote.html body=assoc-ex %}
 
-Here we call a transform function on an element first, and then build a pair from the properties of that function's result.
+ここでは要素に変形をする関数をまず適用して、その結果のプロパティからペアを作っています。
 
 ## Flatten
 
-If you operate nested collections, you may find the standard library functions that provide flat access to nested collection
-elements useful.
+ネストしたコレクションを操作している時には、ネストしたコレクションの要素に対するフラットなアクセスを提供する標準ライブラリを便利に使える事があるでしょう。
 
-The first function is [`flatten()`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/flatten.html).
-You can call it on a collection of collections, for example, a `List` of `Set`s.
-The function returns a single `List` of all the elements of the nested collections.
+そのような関数の最初のものは、[`flatten()`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/flatten.html)です。
+この関数はコレクションのコレクション、例えば`Set`の`List`などに呼ぶ事が出来ます。
+この関数は、ネストしたコレクションに含まれた全要素を含む単独の`List`を返します。
 
-```kotlin
+{% capture flatten-example %}
 
 fun main() {
 //sampleStart
@@ -213,15 +216,17 @@ fun main() {
     println(numberSets.flatten())
 //sampleEnd
 }
-```
-{kotlin-runnable="true" kotlin-min-compiler-version="1.3"}
+{% endcapture %}
+{% include kotlin_quote.html body=flatten-example %}
 
-Another function – [`flatMap()`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/flat-map.html) provides
-a flexible way to process nested collections. It takes a function that maps a collection element to another collection.
-As a result, `flatMap()` returns a single list of its return values on all the elements.
-So, `flatMap()` behaves as a subsequent call of `map()` (with a collection as a mapping result) and `flatten()`.
+他の関数としては[`flatMap()`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/flat-map.html)があります。
+これはネストしたコレクションを処理する柔軟な方法を提供します。
+`flatMap()`はコレクション要素を別のコレクションに変換する関数を引数に取ります。
+結果としては`flatMap()`は単一のリストで、その要素は返された全要素を含むものとなります。
+つまり`flatMap()`は`map()`関数（コレクションをコレクションに変換する）を実行したあとに、その結果に`flatten()`を適用する、
+というように続けて２つを呼び出したかのように振る舞います。
 
-```kotlin
+{% capture flatmap-ex %}
 
 data class StringContainer(val values: List<String>)
 
@@ -236,22 +241,23 @@ fun main() {
 //sampleEnd
 }
 
-```
-{kotlin-runnable="true" kotlin-min-compiler-version="1.3"}
+{% endcapture %}
+{% include kotlin_quote.html body=flatmap-ex %}
 
-## String representation
+## 文字列表現
 
-If you need to retrieve the collection content in a readable format, use functions that transform the collections to
-strings: [`joinToString()`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/join-to-string.html) and
-[`joinTo()`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/join-to.html).
+もしコレクションの内容を人間に読めるようなフォーマットで取り出したいと思うなら、
+コレクションを文字列に変形するような関数を使うのが良いでしょう：
+[`joinToString()`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/join-to-string.html) と
+[`joinTo()`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/join-to.html)の出番です。
 
-`joinToString()` builds a single `String` from the collection elements based on the provided arguments.
-`joinTo()` does the same but appends the result to the given [`Appendable`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.text/-appendable/index.html) object.
+`joinToString()`は渡された引数を元にコレクションの要素達から一つの`String`を組み立てます。
+`joinTo()`は同じ事を、渡された[`Appendable`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.text/-appendable/index.html)オブジェクトに結果を追加してく事で行います。
 
-When called with the default arguments, the functions return the result similar to calling `toString()` on the collection:
-a `String` of elements' string representations separated by commas with spaces. 
+デフォルトの引数で呼ぶと、この関数はコレクションの`toString()`を呼んだのと似たような結果を返します：
+要素の文字列表現をカンマとスペースで区切った`String`です。
 
-```kotlin
+{% capture join-to-string-sample %}
 
 fun main() {
 //sampleStart
@@ -260,19 +266,19 @@ fun main() {
     println(numbers)         
     println(numbers.joinToString())
     
-    val listString = StringBuffer("The list of numbers: ")
+    val listString = StringBuffer("数字のリスト: ")
     numbers.joinTo(listString)
     println(listString)
 //sampleEnd
 }
-```
-{kotlin-runnable="true" kotlin-min-compiler-version="1.3"}
+{% endcapture %}
+{% include kotlin_quote.html body=join-to-string-sample %}
 
-To build a custom string representation, you can specify its parameters in function arguments `separator`, `prefix`, and
-`postfix`. The resulting string will start with the `prefix` and end with the `postfix`. The `separator` will come after
-each element except the last.
+カスタムな文字列表現を作りたければ、関数の引数で`separator`, `prefix`, `postfix`を指定する事が出来ます。
+結果の文字列は`prefix`で始まり、`postfix`で終わります。
+`separator`は最後の要素を除いた各要素のあとに来ます。
 
-```kotlin
+{% capture join-to-string-custom1 %}
 
 fun main() {
 //sampleStart
@@ -280,14 +286,15 @@ fun main() {
     println(numbers.joinToString(separator = " | ", prefix = "start: ", postfix = ": end"))
 //sampleEnd
 }
-```
-{kotlin-runnable="true" kotlin-min-compiler-version="1.3"}
+{% endcapture %}
+{% include kotlin_quote.html body=join-to-string-custom %}
 
-For bigger collections, you may want to specify the `limit` – a number of elements that will be included into result.
-If the collection size exceeds the `limit`, all the other elements will be replaced with a single value of the `truncated`
-argument.
+より大きなコレクションに対しては、`limit`を指定したいと思うかもしれません。
+これは、結果に含める総数の上限です。
+もしコレクションのサイズが`limit`を超えたら、それ以後のすべての要素の代わりに`truncated`引数で指定された値一つに置き換わる事になります。
 
-```kotlin
+
+{% capture join-to-string-limit %}
 
 fun main() {
 //sampleStart
@@ -295,18 +302,19 @@ fun main() {
     println(numbers.joinToString(limit = 10, truncated = "<...>"))
 //sampleEnd
 }
-```
-{kotlin-runnable="true" kotlin-min-compiler-version="1.3"}
+{% endcapture %}
+{% include kotlin_quote.html body=join-to-string-limit %}
 
-Finally, to customize the representation of elements themselves, provide the `transform` function. 
+最後に、要素自身の表現をカスタマイズしたければ、
+`transform`関数を渡す事が出来ます。
 
-```kotlin
+{% capture join-to-string-trans %}
 
 fun main() {
 //sampleStart
     val numbers = listOf("one", "two", "three", "four")
-    println(numbers.joinToString { "Element: ${it.uppercase()}"})
+    println(numbers.joinToString { "要素: ${it.uppercase()}"})
 //sampleEnd
 }
-```
-{kotlin-runnable="true" kotlin-min-compiler-version="1.3"}
+{% endcapture %}
+{% include kotlin_quote.html body=join-to-string-trans %}

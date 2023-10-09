@@ -189,7 +189,7 @@ fun main() {
 {% endcapture %}
 {% include kotlin_quote.html body=list-filter %}
 
-[map](collection-transformations.md#map)は変形した結果からなるリストを作り出す：
+[map](collection-transformations.md#map)はトランスフォーム（変形）した結果からなるリストを作り出す：
 
 {% capture list-map %}
 fun main() {

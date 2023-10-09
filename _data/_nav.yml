@@ -170,7 +170,7 @@ reference:
             title: シーケンス
           - title: オペレーション概要
             url: /docs/collection-operations.html
-          - title: 変形
+          - title: トランスフォーム
             url: /docs/collection-transformations.html
           - title: フィルター
             url: /docs/collection-filtering.html

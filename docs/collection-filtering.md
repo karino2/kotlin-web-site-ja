@@ -1,24 +1,24 @@
 ---
 layout: reference
-title: "コレクションをフィルタリングする"
+title: "コレクションをフィルタ処理する"
 ---
-# コレクションをフィルタリングする
+# コレクションをフィルタ処理する
 
-Filtering is one of the most popular tasks in collection processing.
-In Kotlin, filtering conditions are defined by _predicates_ – lambda functions that take a collection element and return
-a boolean value: `true` means that the given element matches the predicate, `false` means the opposite.
+フィルタ処理はコレクションの処理のうちもっとも良くあるタスクの一つです。
+Kotlinでは、フィルタ条件は　**述語（predicate）** で定義します ー 要素を引数に取りBoolean値を返すラムダ関数の事です：
+`true`は渡された要素が条件にマッチする事を意味し、`false`はその反対を意味します。
 
-The standard library contains a group of extension functions that let you filter collections in a single call.
-These functions leave the original collection unchanged, so they are available for both [mutable and read-only](collections-overview.md#collection-types)
-collections. To operate the filtering result, you should assign it to a variable or chain the functions after filtering.
+標準ライブラリは呼び出し一つでコレクションをフィルタ処理する拡張関数をいろいろ用意しています。
+これらの関数は元のコレクションは変更しません。つまり、これらの関数は[ミュータブルと読み取り専用](collections-overview.md#コレクションの種類)のどちらにも使う事が出来ます。
+フィルタ処理した結果に何か操作をしたければ、結果を変数に格納するかフィルタ処理のあとにさらに関数をチェインするかする必要があります。
 
-## Filter by predicate
+## 述語でフィルタ
 
-The basic filtering function is [`filter()`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/filter.html).
-When called with a predicate, `filter()` returns the collection elements that match it.
-For both `List` and `Set`, the resulting collection is a `List`, for `Map` it's a `Map` as well.
+基本的なフィルタ処理関数は[`filter()`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/filter.html)です。
+述語とともに呼ばれると、`filter()`は述語にマッチした要素だけを返します。
+`List`と`Set`に対しては結果のコレクションは`List`になり、`Map`の場合は結果も`Map`になります。
 
-```kotlin
+{% capture filter-ex1 %}
 fun main() {
 //sampleStart
     val numbers = listOf("one", "two", "three", "four")  
@@ -30,17 +30,17 @@ fun main() {
     println(filteredMap)
 //sampleEnd
 }
-```
-{kotlin-runnable="true" kotlin-min-compiler-version="1.3"}
+{% endcapture %}
+{% include kotlin_quote.html body=filter-ex1 %}
 
-The predicates in `filter()` can only check the values of the elements.
-If you want to use element positions in the filter, use [`filterIndexed()`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/filter-indexed.html).
-It takes a predicate with two arguments: the index and the value of an element. 
+`filter()`の述語は要素の値だけをチェックします。
+もしフィルタ処理で要素の位置も使いたければ、[`filterIndexed()`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/filter-indexed.html)を使いましょう。
+この関数は述語として２つの引数を取る関数を取ります。その２つの引数とはインデックスと要素の値です。
 
-To filter collections by negative conditions, use [`filterNot()`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/filter-not.html).
-It returns a list of elements for which the predicate yields `false`.
+コレクションを否定の条件でフィルタ処理したければ、[`filterNot()`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/filter-not.html)を使いましょう。
+これは述語が`false`を返した要素のリストを返します。
 
-```kotlin
+{% capture filter-not-ex1 %}
 fun main() {
 //sampleStart
     val numbers = listOf("one", "two", "three", "four")
@@ -52,16 +52,16 @@ fun main() {
     println(filteredNot)
 //sampleEnd
 }
-```
-{kotlin-runnable="true" kotlin-min-compiler-version="1.3"}
+{% endcapture %}
+{% include kotlin_quote.html body=filter-not-ex1 %}
 
-There are also functions that narrow the element type by filtering elements of a given type:
+型を与える事でコレクション内の要素をその型に属するものだけに絞る関数もあります：
 
-* [`filterIsInstance()`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/filter-is-instance.html) returns
-    collection elements of a given type. Being called on a `List<Any>`, `filterIsInstance<T>()` returns a `List<T>`, thus
-    allowing you to call functions of the  `T` type on its items.
 
-    ```kotlin
+* [`filterIsInstance()`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/filter-is-instance.html)は与えられた型と同じ型の要素を返します。
+    `List<Any>`に対して呼び出す場合、 `filterIsInstance<T>()`は`List<T>`を返します。つまりその要素に対して`T`型にある関数を呼び出す事が出来るようになります。
+
+    {% capture filter-is-instance-ex1 %}
     fun main() {
     //sampleStart
         val numbers = listOf(null, 1, "two", 3.0, "four")
@@ -71,33 +71,32 @@ There are also functions that narrow the element type by filtering elements of a
         }
     //sampleEnd
     }
-    ```
-    {kotlin-runnable="true" kotlin-min-compiler-version="1.3"}
+    {% endcapture %}
+    {% include kotlin_quote.html body=filter-is-instance-ex1 %}
 
-* [`filterNotNull()`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/filter-not-null.html) returns all
-    non-nullable elements. Being called on a `List<T?>`, `filterNotNull()` returns a `List<T: Any>`, thus allowing you to treat
-    the elements as non-nullable objects.
+* [`filterNotNull()`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/filter-not-null.html) はnullでない要素をすべて返す。
+    `List<T?>`に対して呼び出すと、`filterNotNull()`は`List<T: Any>`を返す。かくして要素をnullでないものとして扱う事が出来るようになる。
 
-    ```kotlin
+    {% capture filter-not-null-ex1 %}
     fun main() {
     //sampleStart
         val numbers = listOf(null, "one", "two", null)
         numbers.filterNotNull().forEach {
-            println(it.length)   // length is unavailable for nullable Strings
+            println(it.length)   // lengthはnullableなStringには使えない
         }
     //sampleEnd
     }
-    ```
-    {kotlin-runnable="true" kotlin-min-compiler-version="1.3"}
+    {% endcapture %}
+    {% include kotlin_quote.html body=filter-not-null-ex1 %}
 
-## Partition
+## Partition（分割）
 
-Another filtering function – [`partition()`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/partition.html)
-– filters a collection by a predicate and keeps the elements that don't match it in a separate list.
-So, you have a `Pair` of `List`s as a return value: the first list containing elements that match the predicate and the
-second one containing everything else from the original collection.
+さらに別のフィルタ関数として、[`partition()`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/partition.html)があります。
+これは、述語にマッチする要素を集めたコレクションを作ると同時に、マッチしなかった要素を別のリストに作ります。
+つまり、戻りの値として`List`の`Pair`が返ってくる訳です：最初のリストは述語にマッチした方の要素が含まれていて、
+２つ目のリストはそれ以外の要素がすべて入ります。
 
-```kotlin
+{% capture partition-ex1 %}
 fun main() {
 //sampleStart
     val numbers = listOf("one", "two", "three", "four")
@@ -107,19 +106,19 @@ fun main() {
     println(rest)
 //sampleEnd
 }
-```
-{kotlin-runnable="true" kotlin-min-compiler-version="1.3"}
+{% endcapture %}
+{% include kotlin_quote.html body=partition-ex1 %}
 
-## Test predicates
+## 述語のテスト
 
-Finally, there are functions that simply test a predicate against collection elements:
+最後に、コレクションの要素たちに単に述語をテストしていく関数というのがあります：
 
-* [`any()`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/any.html) returns `true` if at least one element matches the given predicate.
-* [`none()`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/none.html) returns `true` if none of the elements match the given predicate.
-* [`all()`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/all.html) returns `true` if all elements match the given predicate.
-    Note that `all()` returns `true` when called with any valid predicate on an empty collection. Such behavior is known in logic as _[vacuous truth](https://en.wikipedia.org/wiki/Vacuous_truth)_.
+* [`any()`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/any.html) は少なくとも１つ述語にマッチしたら `true` を返す。
+* [`none()`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/none.html) 述語に一つもマッチしなければ `true` を返す。
+* [`all()`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/all.html) 述語が全ての要素にマッチしたら `true` を返す。
+    空のコレクションに述語を渡すと、`all()` は `true` を返す事に注意しましょう。そのような振る舞いは論理学では **[vacuous truth](https://en.wikipedia.org/wiki/Vacuous_truth)** と呼ばれています。
 
-```kotlin
+{% capture vacuoous-truth %}
 fun main() {
 //sampleStart
     val numbers = listOf("one", "two", "three", "four")
@@ -131,13 +130,13 @@ fun main() {
     println(emptyList<Int>().all { it > 5 })   // vacuous truth
 //sampleEnd
 }
-```
-{kotlin-runnable="true" kotlin-min-compiler-version="1.3"}
+{% endcapture %}
+{% include kotlin_quote.html body=vacuoous-truth %}
 
-`any()` and `none()` can also be used without a predicate: in this case they just check the collection emptiness.
-`any()` returns `true` if there are elements and `false` if there aren't; `none()` does the opposite.
+`any()` と `none()` は述語無しで使う事も出来ます：この場合はコレクションが空かどうかを単にチェックします。
+`any()` は要素があれば `true` を返し、そうでなければ `false` を返す。`none()` はその反対を行います。
 
-```kotlin
+{% capture non-predict %}
 fun main() {
 //sampleStart
     val numbers = listOf("one", "two", "three", "four")
@@ -150,5 +149,5 @@ fun main() {
     println(empty.none())
 //sampleEnd
 }
-```
-{kotlin-runnable="true" kotlin-min-compiler-version="1.3"}
+{% endcapture %}
+{% include kotlin_quote.html body=non-predict %}

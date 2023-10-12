@@ -180,6 +180,8 @@ reference:
             url: /docs/collection-grouping.html
           - title: 並べ替え
             url: /docs/collection-ordering.html
+          - title: 集約オペレーション
+            url: /docs/collection-aggregate.html
           - title: 書き込みオペレーション
             url: /docs/collection-write.html
           - title: リスト特有のオペレーション

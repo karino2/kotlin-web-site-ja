@@ -4,16 +4,16 @@ title: "プラスとマイナス演算子"
 ---
 # プラスとマイナス演算子
 
-In Kotlin, [`plus`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/plus.html) (`+`) and [`minus`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/minus.html)
-(`-`) operators are defined for collections.
-They take a collection as the first operand; the second operand can be either an element or another collection.
-The return value is a new read-only collection:
+Kotlinでは、コレクションに[`plus`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/plus.html) (`+`) と [`minus`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/minus.html)
+(`-`)演算子が定義されています。
+それらは最初のオペランドにはコレクションをとり、二番目のオペランドには要素か別のコレクションのどちらかを取ります。
+返される値は新しく作られる読み取り専用のコレクションです：
 
-* The result of `plus` contains the elements from the original collection _and_ from the second operand.
-* The result of `minus` contains the elements of the original collection _except_ the elements from the second operand.
-   If it's an element, `minus` removes its _first_ occurrence; if it's a collection, _all_ occurrences of its elements are removed.
+* `plus`の結果は、元のコレクションに二番目のオペランドを**加えた**もの
+* `minus`の結果は、元のコレクションから二つ目のオペランドを**除いた**もの。
+   もし２つ目のオペランドが要素の時は、`minus`は最初の一致した要素を取り除く。二番目のオペランドがコレクションの場合は、**すべての**一致した要素を取り除きます。
 
-```kotlin
+{% capture col-plus-minus %}
 
 fun main() {
 //sampleStart
@@ -25,12 +25,13 @@ fun main() {
     println(minusList)
 //sampleEnd
 }
-```
-{kotlin-runnable="true" kotlin-min-compiler-version="1.3"}
+{% endcapture %}
+{% include kotlin_quote.html body=col-plus-minus %}
 
-For the details on `plus` and `minus` operators for maps, see [Map specific operations](map-operations.md).
-The [augmented assignment operators](operator-overloading.md#augmented-assignments) [`plusAssign`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/plus-assign.html)
-(`+=`) and [`minusAssign`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/minus-assign.html) (`-=`) are
-also defined for collections. However, for read-only collections, they actually use the `plus` or `minus` operators and
-try to assign the result to the same variable. Thus, they are available only on `var` read-only collections.
-For mutable collections, they modify the collection if it's a `val`. For more details see [Collection write operations](collection-write.md).
+マップの`plus`と`minus`の詳細については、[マップ特有のオペレーション](map-operations.md)を参照ください。
+[拡張代入演算子](operator-overloading.md#拡張代入) [`plusAssign`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/plus-assign.html)
+(`+=`) と [`minusAssign`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/minus-assign.html) (`-=`) もコレクションに実装されています。
+しかし、読み取り専用コレクションに対してはこれらは実際には`plus`や`minus`演算子を使って、結果を同じ変数に再代入しようとします。
+つまり、それらの演算子は`var`の読み取り専用コレクションにしか使えません。
+ミュータブルなコレクションの場合、もし`val`だったらばコレクションを直接変更します。
+より詳しくは[コレクションの書き込みオペレーション](collection-write.md)を参照ください。

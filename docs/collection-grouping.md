@@ -4,17 +4,18 @@ title: "グルーピング"
 ---
 # グルーピング
 
-The Kotlin standard library provides extension functions for grouping collection elements.
-The basic function [`groupBy()`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/group-by.html) takes a
-lambda function and returns a `Map`. In this map, each key is the lambda result and the corresponding value is the `List`
-of elements on which this result is returned. This function can be used, for example, to group a list of `String`s by
-their first letter. 
+Kotlinの標準ライブラリは、コレクションの要素をグルーピングする拡張関数を提供しています。
+基本となる関数は[`groupBy()`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/group-by.html)関数で、
+これはラムダ関数を引数にとって、`Map`を返します。
+このマップには、ラムダの結果をキーとして、対応する値にはそのキーを返した要素が`List`で入ります。
+この関数は、例えば`String`のリストを、最初の文字でグルーピングするのに使えたりします。
 
-You can also call `groupBy()` with a second lambda argument – a value transformation function.
-In the result map of `groupBy()` with two lambdas, the keys produced by `keySelector` function are mapped to the results
-of the value transformation function instead of the original elements.
+また、`groupBy()`に二つ目のラムダ引数を足して呼び出す事も出来ます。二番目のラムダ式は値をトランスフォームする関数です。
+２つのラムダを引数に持つ`groupBy()`の結果のマップは、キーは`keySelector`関数で作られた値をキーとして、
+値の方はそれを作り出した要素たちの代わりに、それをさらにトランスフォーム関数で変換したものが値となります。
 
-```kotlin
+
+{% capture group-by-ex %}
 
 fun main() {
 //sampleStart
@@ -24,25 +25,25 @@ fun main() {
     println(numbers.groupBy(keySelector = { it.first() }, valueTransform = { it.uppercase() }))
 //sampleEnd
 }
-```
-{kotlin-runnable="true" kotlin-min-compiler-version="1.3"}
+{% endcapture %}
+{% include kotlin_quote.html body=group-by-ex %}
 
-If you want to group elements and then apply an operation to all groups at one time, use the function [`groupingBy()`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/grouping-by.html).
-It returns an instance of the [`Grouping`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-grouping/index.html)
-type. The `Grouping` instance lets you apply operations to all groups in a lazy manner: the groups are actually built
-right before the operation execution.
+要素をグループ化して、さらにオペレーションを全グループに実行したければ、
+[`groupingBy()`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/grouping-by.html)関数を使います。
+この関数は、[`Grouping`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-grouping/index.html)型のインスタンスを結果として返します。
+`Grouping`インスタンスはすべてのグループにオペレーションをlazyに適用する事が出来るものです。
+グループは実際にはオペレーションが実行され直前に生成されます。
 
-Namely, `Grouping` supports the following operations:
 
-* [`eachCount()`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/each-count.html) counts the elements in each group. 
-* [`fold()`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/fold.html) and [`reduce()`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/reduce.html)
-   perform [fold and reduce](collection-aggregate.md#fold-and-reduce) operations on each group as a separate collection
-   and return the results.
-* [`aggregate()`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/aggregate.html) applies a given operation
-   subsequently to all the elements in each group and returns the result.
-   This is the generic way to perform any operations on a `Grouping`. Use it to implement custom operations when fold or reduce are not enough.
+具体的には、`Grouping`は以下のオペレーションをサポートします：
 
-```kotlin
+* [`eachCount()`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/each-count.html)は各グループの要素数をカウントします。
+* [`fold()`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/fold.html) と [`reduce()`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/reduce.html)
+   は[foldとreduce](collection-aggregate.md#foldとreduce)オペレーションを、個々のグループを別々のコレクションとして実行して結果を返します。
+* [`aggregate()`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/aggregate.html)は渡されたオペレーションを各グループの全要素に対して順番に実行して結果を返します。
+   これは任意のオペレーションを`Grouping`にほどこす一般的なやり方となります。foldやreduceでは不十分なカスタムなオペレーションを実装したい時にｈ使いましょう。
+
+{% capture gropuing-by %}
 
 fun main() {
 //sampleStart
@@ -50,5 +51,5 @@ fun main() {
     println(numbers.groupingBy { it.first() }.eachCount())
 //sampleEnd
 }
-```
-{kotlin-runnable="true" kotlin-min-compiler-version="1.3"}
+{% endcapture %}
+{% include kotlin_quote.html body=gropuing-by %}

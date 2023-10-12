@@ -178,6 +178,10 @@ reference:
             url: /docs/collection-plus-minus.html
           - title: 要素のグルーピング
             url: /docs/collection-grouping.html
+          - title: コレクションの一部分を取り出す
+            url: /docs/collection-parts.html
+          - title: 要素を一つ取り出す
+            url: /docs/collection-elements.html
           - title: 並べ替え
             url: /docs/collection-ordering.html
           - title: 集約オペレーション

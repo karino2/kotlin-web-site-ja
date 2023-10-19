@@ -4,31 +4,34 @@ title: "要素を一つ取り出す"
 ---
 # 要素を一つ取り出す
 
-Kotlin collections provide a set of functions for retrieving single elements from collections.
-Functions described on this page apply to both lists and sets.
+Kotlinのコレクションは、コレクションから要素を一つ取り出すための一連の関数を提供します。
+このページに書かれている関数は、セットとリストの両方に使う事が出来ます。
 
-As the [definition of list](collections-overview.md) says, a list is an ordered collection.
-Hence, every element of a list has its position that you can use for referring.
-In addition to functions described on this page, lists offer a wider set of ways to retrieve and search for elements by indices.
-For more details, see [List-specific operations](list-operations.md).
+[リストの定義](collections-overview.md)で述べたように、
+リストは順番のあるコレクションです。
+つまり、各要素にはポジションがあり、それを使って要素を参照する事が出来ます。
+このページに書かれた関数たちに加えて、リストはインデックスによる、より広範な要素の取得や検索方法を提供します。
+より詳しくは、[リスト特有のオペレーション](list-operations.md)を参照ください。
 
-In turn, set is not an ordered collection by [definition](collections-overview.md).
-However, the Kotlin `Set` stores elements in certain orders.
-These can be the order of insertion (in `LinkedHashSet`), natural sorting order (in `SortedSet`), or another order.
-The order of a set of elements can also be unknown.
-In such cases, the elements are still ordered somehow, so the functions that rely on the element positions still return their results.
-However, such results are unpredictable to the caller unless they know the specific implementation of `Set` used.
+一方、セットは[定義により](collections-overview.md)、順番の無いコレクションです。
+しかしながら、Kotlinでは`Set`は要素をある順番で格納しています。
+これらの順番は挿入した順番だったり（`LinkedHashSet`の場合）、自然なソートの順番（natual sorted order）だったり（`SortedSet`の場合）、
+またそれ以外の場合も考えられます。
+セットの要素の順番が不明な場合もあります。
+そのような場合、要素はそれでも何らかの順番で並べられていて、
+要素の位置に依存するような関数は何かの結果を返す事は出来ます。
+ですが、そのような結果は`Set`の特定の実装を呼ぶ人が知っている場合を除いては予測不能となります。
 
-## Retrieve by position
+## 位置による取り出し
 
-For retrieving an element at a specific position, there is the function [`elementAt()`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/element-at.html).
-Call it with the integer number as an argument, and you'll receive the collection element at the given position.
-The first element has the position `0`, and the last one is `(size - 1)`.
+指定した位置にある要素を取り出すための、[`elementAt()`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/element-at.html)という関数があります。
+この関数を整数の引数で呼び出すと、渡した位置にある要素を受け取る事になります。
+最初の要素は位置`0`で、最後の要素の位置は`(size - 1)`です。
+
+`elementAt()`はインデックスアクセスを提供してないコレクションや、または静的にはその提供が分からないようなケースで便利です。
+`List`の場合は、[インデックスアクセス演算子](list-operations.md#インデックスによる要素の取り出し)(`get()` あるいは `[]`)を使う方がより慣用的(idiomatic)です。
  
-`elementAt()` is useful for collections that do not provide indexed access, or are not statically known to provide one.
-In case of `List`, it's more idiomatic to use [indexed access operator](list-operations.md#retrieve-elements-by-index) (`get()` or `[]`).
-
-```kotlin
+{% capture element-at-ex %}
 
 fun main() {
 //sampleStart
@@ -36,16 +39,16 @@ fun main() {
     println(numbers.elementAt(3))    
 
     val numbersSortedSet = sortedSetOf("one", "two", "three", "four")
-    println(numbersSortedSet.elementAt(0)) // elements are stored in the ascending order
+    println(numbersSortedSet.elementAt(0)) // 要素は昇順(ascending order)で格納されています
 //sampleEnd
 }
-```
-{kotlin-runnable="true" kotlin-min-compiler-version="1.3"}
+{% endcapture %}
+{% include kotlin_quote.html body=element-at-ex %}
 
-There are also useful aliases for retrieving the first and the last element of the collection: [`first()`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/first.html)
-and [`last()`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/last.html).
+コレクションの最初と最後の要素を取り出す便利なエイリアスもあります： [`first()`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/first.html)
+と [`last()`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/last.html)です。
 
-```kotlin
+{% capture first-last-ex %}
 
 fun main() {
 //sampleStart
@@ -54,35 +57,35 @@ fun main() {
     println(numbers.last())    
 //sampleEnd
 }
-```
-{kotlin-runnable="true" kotlin-min-compiler-version="1.3"}
+{% endcapture %}
+{% include kotlin_quote.html body=first-last-ex %}
 
-To avoid exceptions when retrieving element with non-existing positions, use safe variations of `elementAt()`:
+存在しない位置で要素を取り出してしまった時のexceptionを避けるためには、`elementAt()`のセーフな亜種を使ってください：
 
-* [`elementAtOrNull()`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/element-at-or-null.html) returns null when the specified position is out of the collection bounds.
-* [`elementAtOrElse()`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/element-at-or-else.html) additionally takes a lambda function that maps an `Int` argument to an instance of the collection element type.
-   When called with an out-of-bounds position, the `elementAtOrElse()` returns the result of the lambda on the given value.
+* [`elementAtOrNull()`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/element-at-or-null.html)はコレクションの範囲の外の位置を指定するとnullを返します。
+* [`elementAtOrElse()`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/element-at-or-else.html) は追加のラムダ関数をとります。そのラムダ関数　は`Int`の引数を要素の型にマップするものです。
+   範囲外の位置で呼ぶと、`elementAtOrElse()`は指定された値でのラムダの結果を返します。
 
-```kotlin
+{% capture element-at-or-else-ex %}
 
 fun main() {
 //sampleStart
     val numbers = listOf("one", "two", "three", "four", "five")
     println(numbers.elementAtOrNull(5))
-    println(numbers.elementAtOrElse(5) { index -> "The value for index $index is undefined"})
+    println(numbers.elementAtOrElse(5) { index -> "インデックス $index の値は未定義です"})
 //sampleEnd
 }
-```
-{kotlin-runnable="true" kotlin-min-compiler-version="1.3"}
+{% endcapture %}
+{% include kotlin_quote.html body=element-at-or-else-ex %}
 
-## Retrieve by condition
+## 条件による取り出し
 
-Functions [`first()`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/first.html) and [`last()`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/last.html)
-also let you search a collection for elements matching a given predicate. When you call `first()` with a predicate that
-tests a collection element, you'll receive the first element on which the predicate yields `true`.
-In turn, `last()` with a predicate returns the last element matching it. 
+[`first()`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/first.html) と [`last()`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/last.html)関数は、
+与えた条件にマッチする要素を探し出すのにも使えます。
+`first()`をコレクションの要素に対する述語（predicate）とともに呼び出すと、述語が最初に`true`を返した要素を返します。
+同様に、`last()`を述語つきで呼び出すと、最後に述語がマッチした要素を返します。
 
-```kotlin
+{% capture first-last-predicate %}
 
 fun main() {
 //sampleStart
@@ -91,15 +94,16 @@ fun main() {
     println(numbers.last { it.startsWith("f") })
 //sampleEnd
 }
-```
-{kotlin-runnable="true" kotlin-min-compiler-version="1.3"}
+{% endcapture %}
+{% include kotlin_quote.html body=first-last-predicate %}
 
-If no elements match the predicate, both functions throw exceptions.
-To avoid them, use [`firstOrNull()`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/first-or-null.html)
-and [`lastOrNull()`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/last-or-null.html) instead:
-they return `null` if no matching elements are found.
+どの要素も述語にマッチしない場合は、どちらの関数も例外を投げます。
+例外を避けたければ、[`firstOrNull()`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/first-or-null.html)
+と [`lastOrNull()`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/last-or-null.html) を代わりに使いましょう：
+これらの関数はマッチする要素が見つからなければどちらも`null`を返します。
 
-```kotlin
+
+{% capture first-or-null-ex %}
 
 fun main() {
 //sampleStart
@@ -107,15 +111,15 @@ fun main() {
     println(numbers.firstOrNull { it.length > 6 })
 //sampleEnd
 }
-```
-{kotlin-runnable="true" kotlin-min-compiler-version="1.3"}
+{% endcapture %}
+{% include kotlin_quote.html body=first-or-null-ex %}
 
-Use the aliases if their names suit your situation better:
+もし用途によりふさわしいと思うなら、以下のエイリアスを使いましょう：
 
-* [`find()`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/find.html) instead of `firstOrNull()`
-* [`findLast()`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/find-last.html) instead of `lastOrNull()`
+* [`find()`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/find.html) は `firstOrNull()` の代わりに使えます
+* [`findLast()`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/find-last.html) は `lastOrNull()` の代わりに使えます
 
-```kotlin
+{% capture find-last-ex %}
 
 fun main() {
 //sampleStart
@@ -124,39 +128,37 @@ fun main() {
     println(numbers.findLast { it % 2 == 0 })
 //sampleEnd
 }
-```
-{kotlin-runnable="true" kotlin-min-compiler-version="1.3"}
+{% endcapture %}
+{% include kotlin_quote.html body=find-last-ex %}
 
-## Retrieve with selector
+## セレクタによる取り出し
 
-If you need to map the collection before retrieving the element, there is a function [`firstNotNullOf()`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/first-not-null-of.html).
-It combines 2 actions:
-- Maps the collection with the selector function
-- Returns the first non-null value in the result
+要素を取り出す前にマップをする必要があるなら、 [`firstNotNullOf()`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/first-not-null-of.html)関数があります。
+これは２つのアクションを一気に行います：
+- コレクションをセレクタ関数でマップします
+- 結果の最初の非null値を返します
 
-`firstNotNullOf()` throws the `NoSuchElementException` if the resulting collection doesn't have a non-nullable element. 
-Use the counterpart [`firstNotNullOfOrNull()`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/first-not-null-of-or-null.html) 
-to return null in this case.
+`firstNotNullOf()`は、結果のコレクションに非nullの要素がなければ`NoSuchElementException`を投げます。
+その場合にnullを返して欲しければ、[`firstNotNullOfOrNull()`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/first-not-null-of-or-null.html) を使いましょう。
 
-```kotlin
+{% capture first-not-null-of %}
 fun main() {
 //sampleStart
     val list = listOf<Any>(0, "true", false)
-    // Converts each element to string and returns the first one that has required length
+    // 各要素を文字列に変換して所定の長さより大きい最初の要素を返す
     val longEnough = list.firstNotNullOf { item -> item.toString().takeIf { it.length >= 4 } }
     println(longEnough)
 //sampleEnd
 }
-```
-{kotlin-runnable="true" kotlin-min-compiler-version="1.5"}
+{% endcapture %}
+{% include kotlin_quote.html body=first-not-null-of %}
 
-## Random element
+## ランダムな要素
 
-If you need to retrieve an arbitrary element of a collection, call the [`random()`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/random.html) function.
-You can call it without arguments or with a [`Random`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.random/-random/index.html)
-object as a source of the randomness.
+コレクションの要素を何かてきとうに取り出したい場合は、[`random()`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/random.html)関数を使うと良いでしょう。
+引数無しで呼び出す事も出来ますし、ランダムさの元として[`Random`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.random/-random/index.html)オブジェクトを引数に呼び出す事も出来ます。
 
-```kotlin
+{% capture col-random %}
 
 fun main() {
 //sampleStart
@@ -164,21 +166,21 @@ fun main() {
     println(numbers.random())
 //sampleEnd
 }
-```
-{kotlin-runnable="true" kotlin-min-compiler-version="1.3"}
+{% endcapture %}
+{% include kotlin_quote.html body=col-random %}
 
-On empty collections, `random()` throws an exception. To receive `null` instead, use [`randomOrNull()`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/random-or-null.html)
+空のコレクションに対して`random()`を呼ぶと例外が投げられます。
+代わりに`null`を受け取りたければ、[`randomOrNull()`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/random-or-null.html)を使いましょう。
 
-## Check element existence
+## 要素が存在するかを確認する
 
-To check the presence of an element in a collection, use the [`contains()`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/contains.html) function.
-It returns `true` if there is a collection element that `equals()` the function argument.
-You can call `contains()` in the operator form with the `in` keyword.
+コレクションにある要素が存在するかどうかを確認したければ、[`contains()`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/contains.html)関数を使いましょう。
+この関数は、渡された引数と`equals()`な要素がコレクションにあれば`true`を返します。
+`in`キーワードを使ってオペレータの形で、`contains()`を呼び出す事も出来ます。
 
-To check the presence of multiple instances together at once, call [`containsAll()`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/contains-all.html)
-with a collection of these instances as an argument.
+複数のインスタンスが存在するかをまとめてチェックしたければ、[`containsAll()`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/contains-all.html)をそのチェックしたいインスタンスのコレクションを引数に呼び出せばよろしい。
 
-```kotlin
+{% capture contains-all-ex %}
 
 fun main() {
 //sampleStart
@@ -190,13 +192,13 @@ fun main() {
     println(numbers.containsAll(listOf("one", "zero")))
 //sampleEnd
 }
-```
-{kotlin-runnable="true" kotlin-min-compiler-version="1.3"}
+{% endcapture %}
+{% include kotlin_quote.html body=contains-all-ex %}
 
-Additionally, you can check if the collection contains any elements by calling [`isEmpty()`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/is-empty.html)
-or [`isNotEmpty()`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/is-not-empty.html). 
+さらに、要素のどれか一つを含んでいるかをチェックしたければ、
+[`isEmpty()`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/is-empty.html)か[`isNotEmpty()`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/is-not-empty.html)が使用出来ます。
 
-```kotlin
+{% capture is-not-empty-ex %}
 
 fun main() {
 //sampleStart
@@ -209,6 +211,6 @@ fun main() {
     println(empty.isNotEmpty())
 //sampleEnd
 }
-```
-{kotlin-runnable="true" kotlin-min-compiler-version="1.3"}
+{% endcapture %}
+{% include kotlin_quote.html body=is-not-empty-ex %}
 

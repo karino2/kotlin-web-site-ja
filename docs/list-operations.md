@@ -7,7 +7,7 @@ title: "リスト特有のオペレーション"
 [`List`](collections-overview.md#list) is the most popular type of built-in collection in Kotlin. Index access to the elements
 of lists provides a powerful set of operations for lists. 
 
-## Retrieve elements by index
+## インデックスによる要素の取り出し
 
 Lists support all common operations for element retrieval: `elementAt()`, `first()`, `last()`, and others listed in [Retrieve single elements](collection-elements.md).
 What is specific for lists is index access to the elements, so the simplest way to read an element is retrieving it by index.

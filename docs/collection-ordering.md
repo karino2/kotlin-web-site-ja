@@ -4,34 +4,36 @@ title: "並べ替え"
 ---
 # 並べ替え
 
-The order of elements is an important aspect of certain collection types.
-For example, two lists of the same elements are not equal if their elements are ordered differently. 
+要素の順番は、ある種のコレクションには重要な側面です。
+例えば、同じ要素を持つ２つのリストでも、要素の順番が異なればこれらのリストは等しいとはみなされません。
 
-In Kotlin, the orders of objects can be defined in several ways.
+Kotlinでは、オブジェクトの順番を定義する方法はいくつかあります。
 
-First, there is _natural_ order. It is defined for implementations of the [`Comparable`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-comparable/index.html)
-interface. Natural order is used for sorting them when no other order is specified.
+最初の方法としては、**自然(natural)**な順番があります。
+これは[`Comparable`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-comparable/index.html)インターフェースの実装により定義される順番です。
+自然な順番はその他の順番が指定されていない場合のソートで使われる順番です。
 
-Most built-in types are comparable:
+多くのビルトインの型は比較可能（comparable）です：
 
-* Numeric types use the traditional numerical order: `1` is greater than `0`; `-3.4f` is greater than `-5f`, and so on.
-* `Char` and `String` use the [lexicographical order](https://en.wikipedia.org/wiki/Lexicographical_order): `b` is greater
-   than `a`; `world` is greater than `hello`.
+* 数値型は伝統的な数値の順番を使います：`1`は`0`よりも大きく、`-3.4f`は`-5f`よりも大きい、などです。
+* `Char` と `String`は[辞書式順序](https://ja.wikipedia.org/wiki/%E8%BE%9E%E6%9B%B8%E5%BC%8F%E9%A0%86%E5%BA%8F)を使います：`b`は
+   `a`より大きく、`world`は`hello`より大きいです。
 
-To define a natural order for a user-defined type, make the type an implementer of `Comparable`.
-This requires implementing the `compareTo()` function. `compareTo()` must take another object of the same type as an argument
-and return an integer value showing which object is greater:
+ユーザー定義型に自然な順番を定義するためには、その型で`Comparable`インターフェースを実装する必要があります。
+これは`compareTo()`関数を実装する事を意味します。
+`compareTo()`は同じ型の別のオブジェクトを引数に取り、
+どちらのオブジェクトが大きいかを示すIntの値を返します：
 
-* Positive values show that the receiver object is greater.
-* Negative values show that it's less than the argument.
-* Zero shows that the objects are equal.
+* 正の値はレシーバオブジェクトの方が大きい事を示します。
+* 負の値はレシーバオブジェクトの方が小さい事を示します。
+* 0はオブジェクトが等しい事を示します。
 
-Below is a class for ordering versions that consist of the major and the minor part.
+以下はバージョンクラスの順番を、メジャーとマイナーのバージョン番号から決める例です。
 
-```kotlin
+{% capture compare-to-custom %}
 class Version(val major: Int, val minor: Int): Comparable<Version> {
     override fun compareTo(other: Version): Int = when {
-        this.major != other.major -> this.major compareTo other.major // compareTo() in the infix form 
+        this.major != other.major -> this.major compareTo other.major // compareTo()の中置形式 
         this.minor != other.minor -> this.minor compareTo other.minor
         else -> 0
     }
@@ -41,54 +43,58 @@ fun main() {
     println(Version(1, 2) > Version(1, 3))
     println(Version(2, 0) > Version(1, 5))
 }
-```
-{kotlin-runnable="true" kotlin-min-compiler-version="1.6"}
+{% endcapture %}
+{% include kotlin_quote.html body=compare-to-custom %}
 
-_Custom_ orders let you sort instances of any type in a way you like.
-Particularly, you can define an order for non-comparable objects or define an order other than natural for a comparable type.
-To define a custom order for a type, create a [`Comparator`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-comparator/index.html) for it.
-`Comparator` contains the `compare()` function: it takes two instances of a class and returns the integer result of the comparison between them.
-The result is interpreted in the same way as the result of a `compareTo()` as is described above. 
+**カスタムな**順番は、どんな型のインスタンスでもお好みなようにソートする事を可能にしてくれます。
+とりわけ、Comparableでは無いオブジェクトの順番を定義したり、Comparableな型の自然な順番以外の順番を定義したり出来ます。
+ある型のカスタムな順番を定義するためには、[`Comparator`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-comparator/index.html)を作ります。
+`Comparator`は`compare()`関数を持ちます：これは、指定されたクラスの２つのインスタンスを引数に取り、それらの比較結果を数値として返します。
+結果の数値は先に述べた`compareTo()`と同様に解釈されます。
 
-```kotlin
+
+{% capture custom-order %}
 fun main() {
 //sampleStart
     val lengthComparator = Comparator { str1: String, str2: String -> str1.length - str2.length }
     println(listOf("aaa", "bb", "c").sortedWith(lengthComparator))
 //sampleEnd
 }
-```
-{kotlin-runnable="true" kotlin-min-compiler-version="1.3"}
+{% endcapture %}
+{% include kotlin_quote.html body=custom-order %}
 
-Having the `lengthComparator`, you are able to arrange strings by their length instead of the default lexicographical order.
+`lengthComparator`を使えば、辞書順では無く長さで文字列を並べる事が出来ます。
 
-A shorter way to define a `Comparator` is the [`compareBy()`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.comparisons/compare-by.html)
-function from the standard library. `compareBy()` takes a lambda function that produces a `Comparable` value from an instance
-and defines the custom order as the natural order of the produced values.
+`Comparator`を定義するもっと短い方法としては、標準ライブラリの[`compareBy()`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.comparisons/compare-by.html)関数を使う方法があります。
+`compareBy()`は、インスタンスから`Comperable`な値を返すラムダ関数を引数に取り、
+その生成された値の自然な順番をカスタムな順番とします。
 
-With `compareBy()`, the length comparator from the example above looks like this:
+`compareBy()`を使えば、上記のlengthComparatorの例は以下のように書く事が出来ます：
 
-```kotlin
+{% capture compare-by-ex %}
 fun main() {
 //sampleStart    
     println(listOf("aaa", "bb", "c").sortedWith(compareBy { it.length }))
 //sampleEnd
 }
-```
-{kotlin-runnable="true" kotlin-min-compiler-version="1.3"}
+{% endcapture %}
+{% include kotlin_quote.html body=compare-by-ex %}
 
-The Kotlin collections package provides functions for sorting collections in natural, custom, and even random orders.
-On this page, we'll describe sorting functions that apply to [read-only](collections-overview.md#collection-types) collections.
-These functions return their result as a new collection containing the elements of the original collection in the requested order.
-To learn about functions for sorting [mutable](collections-overview.md#collection-types) collections in place, see the [List-specific operations](list-operations.md#sort).
+Kotlinのコレクションpackageは、自然な順番、カスタムな順番、ランダムな順番などに並べ替える関数を提供しています。
+このページでは、[読み取り専用](collections-overview.md#コレクションの種類)のコレクションをソートする関数を説明します。
+これらの関数は指定された順番に並べ替えたコレクションを新しく生成して返します。
+[ミュータブル](collections-overview.md#コレクションの種類)をインプレイスにソートする関数を知りたければ、
+[List特有のオペレーション](list-operations.md#ソート)を参照してください。
 
-## Natural order
+## 自然な順番
 
-The basic functions [`sorted()`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/sorted.html) and [`sortedDescending()`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/sorted-descending.html)
-return elements of a collection sorted into ascending and descending sequence according to their natural order.
-These functions apply to collections of `Comparable` elements.
+（訳注：Natural order）
 
-```kotlin
+基本となる関数、[`sorted()`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/sorted.html)と[`sortedDescending()`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/sorted-descending.html)は、
+コレクションの要素をその自然の順番で昇順、または降順に並べ替えたコレクションを生成して返します。
+これらの関数は`Comparable`な要素のコレクションに対して使う事が出来ます。
+
+{% capture sorted-natural %}
 fun main() {
 //sampleStart
     val numbers = listOf("one", "two", "three", "four")
@@ -97,47 +103,50 @@ fun main() {
     println("Sorted descending: ${numbers.sortedDescending()}")
 //sampleEnd
 }
-```
-{kotlin-runnable="true" kotlin-min-compiler-version="1.3"}
+{% endcapture %}
+{% include kotlin_quote.html body=sorted-natural %}
 
-## Custom orders
- 
-For sorting in custom orders or sorting non-comparable objects, there are the functions [`sortedBy()`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/sorted-by.html) and [`sortedByDescending()`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/sorted-by-descending.html).
-They take a selector function that maps collection elements to `Comparable` values and sort the collection in natural order of that values.
+## カスタムな順番
 
-```kotlin
+カスタムな順番でソートしたり、そもそもComperableで無いオブジェクトをソートしたい場合には、
+[`sortedBy()`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/sorted-by.html) と [`sortedByDescending()`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/sorted-by-descending.html)関数があります。
+これらは、コレクションの要素を`Comperable`な値にマップするセレクタ関数を引数に取り、その値の自然な順番でコレクションをソートします。
+
+{% capture sort-by-ex %}
 fun main() {
 //sampleStart
     val numbers = listOf("one", "two", "three", "four")
 
     val sortedNumbers = numbers.sortedBy { it.length }
-    println("Sorted by length ascending: $sortedNumbers")
+    println("長さの昇順でソート： $sortedNumbers")
     val sortedByLast = numbers.sortedByDescending { it.last() }
-    println("Sorted by the last letter descending: $sortedByLast")
+    println("最後の文字で降順にソート： $sortedByLast")
 //sampleEnd
 }
-```
-{kotlin-runnable="true" kotlin-min-compiler-version="1.3"}
+{% endcapture %}
+{% include kotlin_quote.html body=sort-by-ex %}
 
-To define a custom order for the collection sorting, you can provide your own `Comparator`.
-To do this, call the [`sortedWith()`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/sorted-with.html) function passing in your `Comparator`.
-With this function, sorting strings by their length looks like this:
+コレクションのソートに使う為にカスタムな順番を定義するために、独自の`Comparator`を渡す事も出来ます。
+そのためには、[`sortedWith()`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/sorted-with.html)関数を使い、
+独自に定義した`Comparator`をこれに渡します。
+この関数を使って文字列を長さでソートする例は以下のようになります：
 
-```kotlin
+{% capture sorted-with-ex %}
 fun main() {
 //sampleStart
     val numbers = listOf("one", "two", "three", "four")
     println("Sorted by length ascending: ${numbers.sortedWith(compareBy { it.length })}")
 //sampleEnd
 }
-```
-{kotlin-runnable="true" kotlin-min-compiler-version="1.3"}
+{% endcapture %}
+{% include kotlin_quote.html body=sorted-with-ex %}
 
-## Reverse order
+## 逆順
 
-You can retrieve the collection in the reversed order using the [`reversed()`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/reversed.html) function. 
+コレクションを逆順にしたものを取り出す事も出来ます。
+[`reversed()`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/reversed.html)関数を使います。
 
-```kotlin
+{% capture reversed-ex %}
 
 fun main() {
 //sampleStart
@@ -145,17 +154,17 @@ fun main() {
     println(numbers.reversed())
 //sampleEnd
 }
-```
-{kotlin-runnable="true" kotlin-min-compiler-version="1.3"}
+{% endcapture %}
+{% include kotlin_quote.html body=reversed-ex %}
 
-`reversed()` returns a new collection with the copies of the elements.
-So, if you change the original collection later, this won't affect the previously obtained results of `reversed()`.
+`reversed()`は要素のコピーを含む新規のコレクションを返します。
+だからあとになって元となるコレクションを変更しても、変更前に取得した`reversed()`の結果には影響を与えません。
+（訳注：要素のコピーと言っているが、要素はコピーでは無く同じオブジェクトへの参照だと思う。ここではコレクションが新規に作られると言いたいのだと思われる。）
 
-Another reversing function - [`asReversed()`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/as-reversed.html)
-- returns a reversed view of the same collection instance, so it may be more lightweight and preferable than `reversed()`
-if the original list is not going to change. 
+これとは別のリバースの関数、[`asReversed()`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/as-reversed.html)は同じコレクションインスタンスの、
+逆順のビューを返すので、元のコレクションが変更されない事が分かっているなら`reversed()`よりも軽量で望ましい場合があります。
 
-```kotlin
+{% capture as-reversed-ex %}
 fun main() {
 //sampleStart
     val numbers = listOf("one", "two", "three", "four")
@@ -163,12 +172,13 @@ fun main() {
     println(reversedNumbers)
 //sampleEnd
 }
-```
-{kotlin-runnable="true" kotlin-min-compiler-version="1.3"}
+{% endcapture %}
+{% include kotlin_quote.html body=as-reversed-ex %}
 
-If the original list is mutable, all its changes reflect in its reversed views and vice versa.
+オリジナルのリストがミュータブルなら、オリジナルのコレクションへの変更はリバースのビューにも影響を与えるし、リバースのビューへの変更もオリジナルのコレクションに影響を与えます。
+（訳注：説明には書いていないが、MutableListのasReversedはMutableListを返す）
 
-```kotlin
+{% capture as-reversed-mutable-ex %}
 fun main() {
 //sampleStart
     val numbers = mutableListOf("one", "two", "three", "four")
@@ -178,24 +188,24 @@ fun main() {
     println(reversedNumbers)
 //sampleEnd
 }
-```
-{kotlin-runnable="true" kotlin-min-compiler-version="1.3"}
+{% endcapture %}
+{% include kotlin_quote.html body=as-reversed-mutable-ex %}
 
-However, if the mutability of the list is unknown or the source is not a list at all, `reversed()` is more preferable
-since its result is a copy that won't change in the future.
+しかしながら、リストのミュータビリティが不明だったり、そもそも元となるコレクションがリストで無い場合などは、`reversed()`の方が結果がコピーになって勝手に変わる事が無い事が保証されるので、
+より望ましいと言えます。
 
-## Random order
+## ランダムな順番
 
-Finally, there is a function that returns a new `List` containing the collection elements in a random order - [`shuffled()`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/shuffled.html).
-You can call it without arguments or with a [`Random`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.random/-random/index.html) object.
+最後に、ランダムな順番の新たな`List`を返す関数があります ー [`shuffled()`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/shuffled.html)です。
+この関数は引数無しで呼び出す事も出来ますし、[`Random`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.random/-random/index.html)オブジェクトを引数に呼び出す事も出来ます。
 
-```kotlin
+{% capture shuffle-ex %}
 fun main() {
 //sampleStart
      val numbers = listOf("one", "two", "three", "four")
      println(numbers.shuffled())
 //sampleEnd
 }
-```
-{kotlin-runnable="true" kotlin-min-compiler-version="1.3"}
+{% endcapture %}
+{% include kotlin_quote.html body=shuffle-ex %}
 

@@ -265,7 +265,7 @@ fun main() {
 ```
 {kotlin-runnable="true" kotlin-min-compiler-version="1.3"}
 
-### Sort
+### ソート
 
 In [Collection Ordering](collection-ordering.md), we describe operations that retrieve collection elements in specific orders.
 For mutable lists, the standard library offers similar extension functions that perform the same ordering operations in place.

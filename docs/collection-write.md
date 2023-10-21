@@ -4,15 +4,16 @@ title: "コレクションの書き込みオペレーション"
 ---
 # コレクションの書き込みオペレーション
 
-[Mutable collections](collections-overview.md#collection-types) support operations for changing the collection contents, for example, adding or removing elements.
-On this page, we'll describe write operations available for all implementations of `MutableCollection`.
-For more specific operations available for `List` and `Map`, see [List-specific Operations](list-operations.md) and [Map Specific Operations](map-operations.md) respectively.
+[ミュータブルなコレクション](collections-overview.md#コレクションの種類)はコレクションの中身を変更するオペレーションをサポートしています、
+例えば要素の追加や削除などの事です。
+このページでは、`MutableCollection`のすべての実装で使用可能な書き込みオペレーションについて説明します。
+`List`や`Map`専用のオペレーションについては、[リスト特有のオペレーション](list-operations.md) と [マップ特有のオペレーション](map-operations.md)をそれぞれ参照ください。
 
-## Adding elements
+## 要素の追加
 
-To add a single element to a list or a set, use the [`add()`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-mutable-list/add.html) function. The specified object is appended to the end of the collection.
+リストやセットに要素を追加するには、[`add()`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-mutable-list/add.html)関数を使います。指定したオブジェクトはコレクションの最後に追加されます。
 
-```kotlin
+{% capture add-ex %}
 
 fun main() {
 //sampleStart
@@ -21,18 +22,18 @@ fun main() {
     println(numbers)
 //sampleEnd
 }
-```
-{kotlin-runnable="true" kotlin-min-compiler-version="1.3"}
+{% endcapture %}
+{% include kotlin_quote.html body=add-ex %}
 
-[`addAll()`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/add-all.html) adds every element of the argument object to a list or a set. The argument can be an `Iterable`, a `Sequence`, or an `Array`.
-The types of the receiver and the argument may be different, for example, you can add all items from a `Set` to a `List`.
+[`addAll()`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/add-all.html)は引数のオブジェクトの各要素をリストまたはセットに追加します。その引数は`Iterable`、`Sequence`、`Array`のどれかです。
+レシーバと引数の型は違っても構いません。例えば`Set`の要素をすべて`List`に追加する、という事が出来ます。
 
-When called on lists, `addAll()` adds new elements in the same order as they go in the argument.
-You can also call `addAll()` specifying an element position as the first argument.
-The first element of the argument collection will be inserted at this position.
-Other elements of the argument collection will follow it, shifting the receiver elements to the end. 
+リストに対して`addAll()`を呼ぶと、新しく追加される要素は、引数に入ってきたのと同じ順番で追加されます。
+`addAll()`に要素の場所を指定する引数を最初に追加して呼ぶ事も出来ます。
+引数のコレクションの最初の要素がこの位置に挿入されます。
+引数のコレクションのそれ以外の要素がこの後に続き、レシーバの要素は終端側にシフトします。
 
-```kotlin
+{% capture add-all-ex %}
 
 fun main() {
 //sampleStart
@@ -43,13 +44,15 @@ fun main() {
     println(numbers)
 //sampleEnd
 }
-```
-{kotlin-runnable="true" kotlin-min-compiler-version="1.3"}
+{% endcapture %}
+{% include kotlin_quote.html body=add-all-ex %}
 
-You can also add elements using the in-place version of the [`plus` operator](collection-plus-minus.md) - [`plusAssign`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/plus-assign.html) (`+=`)
- When applied to a mutable collection, `+=` appends the second operand (an element or another collection) to the end of the collection.
+インプレース版の [`plus` 演算子](collection-plus-minus.md) - [`plusAssign`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/plus-assign.html) (`+=`)
+を使う事で、も要素を追加する事が出来ます。
+ ミュータブルなコレクションに適用すると、`+=` は二番目のオペランド（要素か別のコレクションのどちらか）をコレクションのお尻に追加します。
 
-```kotlin
+
+{% capture plus-assign-ex %}
 
 fun main() {
 //sampleStart
@@ -60,37 +63,37 @@ fun main() {
     println(numbers)
 //sampleEnd
 }
-```
-{kotlin-runnable="true" kotlin-min-compiler-version="1.3"}
+{% endcapture %}
+{% include kotlin_quote.html body=plus-assign-ex %}
 
-## Removing elements
+## 要素の削除
 
-To remove an element from a mutable collection, use the [`remove()`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/remove.html) function.
-`remove()` accepts the element value and removes one occurrence of this value. 
+ミュータブルなコレクションから要素を削除するには、[`remove()`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/remove.html)関数を使います。
+`remove()`は要素の値を引数にとって、この値に一致する１つ目を削除します。
 
-```kotlin
+{% capture remove-ex %}
 
 fun main() {
 //sampleStart
     val numbers = mutableListOf(1, 2, 3, 4, 3)
-    numbers.remove(3)                    // removes the first `3`
+    numbers.remove(3)                    // 最初の`3`を削除
     println(numbers)
-    numbers.remove(5)                    // removes nothing
+    numbers.remove(5)                    // 何も削除しない
     println(numbers)
 //sampleEnd
 }
-```
-{kotlin-runnable="true" kotlin-min-compiler-version="1.3"}
+{% endcapture %}
+{% include kotlin_quote.html body=remove-ex %}
 
-For removing multiple elements at once, there are the following functions :
+複数の要素を一括で削除したければ、以下の関数があります：
 
-* [`removeAll()`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/remove-all.html) removes all elements that are present in the argument collection.
-   Alternatively, you can call it with a predicate as an argument; in this case the function removes all elements for which the predicate yields `true`.
-* [`retainAll()`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/retain-all.html) is the opposite of `removeAll()`: it removes all elements except the ones from the argument collection.
-   When used with a predicate, it leaves only elements that match it.
-* [`clear()`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-mutable-list/clear.html) removes all elements from a list and leaves it empty.
+* [`removeAll()`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/remove-all.html)は引数のコレクションに存在する要素をすべて削除します。
+   引数はコレクションの代わりに、述語を引数にする事も出来ます。この場合は、述語が`true`を返すすべての要素を削除します。
+* [`retainAll()`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/retain-all.html)は`removeAll()`のちょうど反対になります：引数のコレクションに存在する要素以外のすべてを削除します。
+   述語で呼ぶと、述語にマッチする要素だけを残します。
+* [`clear()`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-mutable-list/clear.html)はリストから全ての要素を削除して、空にします。
 
-```kotlin
+{% capture remove-ex %}
 
 fun main() {
 //sampleStart
@@ -106,17 +109,20 @@ fun main() {
     println(numbersSet)
 //sampleEnd
 }
-```
-{kotlin-runnable="true" kotlin-min-compiler-version="1.3"}
+{% endcapture %}
+{% include kotlin_quote.html body=remove-ex %}
 
-Another way to remove elements from a collection is with the [`minusAssign`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/minus-assign.html) (`-=`) operator – the in-place version of [`minus`](collection-plus-minus.md). 
-The second argument can be a single instance of the element type or another collection.
-With a single element on the right-hand side, `-=` removes the _first_ occurrence of it.
-In turn, if it's a collection, _all_ occurrences of its elements are removed.
-For example, if a list contains duplicate elements, they are removed at once.
-The second operand can contain elements that are not present in the collection. Such elements don't affect the operation execution.
+コレクションから要素を削除する別の方法としては、
+[`minusAssign`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/minus-assign.html) (`-=`) 演算子を使うというものがあります。
+これはインプレース版の[`minus`](collection-plus-minus.md)演算子です。 
+二番目の引数は要素の型と同じ型の単一のインスタンスでも良いですし、別のコレクションでも構いません。
+右辺に単一のインスタンスが来る場合、`-=` は**最初に**一致した要素を削除します。
+一方、コレクションが来る場合は、**すべての**一致する要素を削除します。
+例えば、リストが重複する要素を保持している場合、それらが一度に全部削除されます。
+二番目のオペランドはコレクションに無い要素が入っていても構いません。
+そのような要素はオペレーションの結果には影響を与えません。
 
-```kotlin
+{% capture minus-assign-ex %}
 
 fun main() {
 //sampleStart
@@ -124,16 +130,15 @@ fun main() {
     numbers -= "three"
     println(numbers)
     numbers -= listOf("four", "five")    
-    //numbers -= listOf("four")    // does the same as above
+    //numbers -= listOf("four")    // 上と同じ事をする
     println(numbers)    
 //sampleEnd
 }
-```
-{kotlin-runnable="true" kotlin-min-compiler-version="1.3"}
+{% endcapture %}
+{% include kotlin_quote.html body=minus-assign-ex %}
 
-## Updating elements
+## 要素の更新
 
-Lists and maps also provide operations for updating elements.
-They are described in [List-specific Operations](list-operations.md) and [Map Specific Operations](map-operations.md).
-For sets, updating doesn't make sense since it's actually removing an element and adding another one.
-
+リストとマップは要素の更新のオペレーションも提供しています。
+それらに関しては[リスト特有のオペレーション](list-operations.md) と [マップ特有のオペレーション](map-operations.md)に説明があります。
+セットに関しては、更新というのは成立しません、なぜならそれは単に要素を削除して別の要素を追加している事になってしまうからです。

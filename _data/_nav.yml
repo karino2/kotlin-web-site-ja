@@ -196,6 +196,8 @@ reference:
             url: /docs/map-operations.html
       - url: /docs/opt-in-requirements.html
         title: オプトインの要求
+      - url: /docs/scope-functions.html
+        title: スコープ関数
   - title: Tools
     description:
     items:

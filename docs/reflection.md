@@ -4,26 +4,26 @@ title: "リフレクション"
 ---
 # リフレクション
 
-_Reflection_ is a set of language and library features that allows you to introspect the structure of your program at runtime.
-Functions and properties are first-class citizens in Kotlin, and the ability to introspect them (for example, learning the name or
-the type of a property or function at runtime) is essential when using a functional or reactive style.
+`リフレクション`は実行時にあなたのプログラム自身の構造を調べる（introspect）ことを可能とする、言語機能とライブラリ機能をあわせたものです。
+関数やプロパティはKotlinにおいてはファーストクラスの市民であり、
+それらを調べる事が出来るのは（例えばプロパティや関数の名前や型を実行時に知る事など）、関数型のスタイルやリアクティブプログラムのスタイルを使う時には必須となります。
 
-> Kotlin/JS provides limited support for reflection features. [Learn more about reflection in Kotlin/JS](js-reflection.md).
+> Kotlin/JS はリフレクションの機能については限定的にしかサポートしていません。 より詳しくは[Kotlin/JSにおけるリフレクション](js-reflection.md)を参照のこと
 >
-{type="note"}
+{: .note}
 
-## JVM dependency
 
-On the JVM platform, the Kotlin compiler distribution includes the runtime component required for using the reflection features as a separate
-artifact, `kotlin-reflect.jar`. This is done to reduce the required size of the runtime
-library for applications that do not use reflection features.
+## JVMの時の依存ライブラリ
 
-To use reflection in a Gradle or Maven project, add the dependency on `kotlin-reflect`:
+JVMのプラットフォームでは、Kotlinコンパイラの配布にはリフレクションを使うのに必要な機能の実行時コンポーネントが、
+別のartifactとして含まれています。
+その名も`kotlin-reflect.jar`です。
+これは、リフレクションを使わないアプリの実行時のサイズを減らすためにこうなっています。
 
-* In Gradle:
 
-    <tabs group="build-script">
-    <tab title="Kotlin" group-key="kotlin">
+GradleやMaveのプロジェクトでリフレクションを使うには、`kotlin-reflect`へのdependencyを追加してください。
+
+* GradleでKotlinの場合:
 
     ```kotlin
     dependencies {
@@ -31,19 +31,15 @@ To use reflection in a Gradle or Maven project, add the dependency on `kotlin-re
     }
     ```
 
-    </tab>
-    <tab title="Groovy" group-key="groovy">
-    
+* GradleでGroovyの場合:
+
     ```groovy
     dependencies {
         implementation "org.jetbrains.kotlin:kotlin-reflect:%kotlinVersion%"
     }
     ```
 
-    </tab>
-    </tabs>
-
-* In Maven:
+* Mavenの場合:
     
     ```xml
     <dependencies>
@@ -54,26 +50,27 @@ To use reflection in a Gradle or Maven project, add the dependency on `kotlin-re
     </dependencies>
     ```
 
-If you don't use Gradle or Maven, make sure you have `kotlin-reflect.jar` in the classpath of your project.
-In other supported cases (IntelliJ IDEA projects that use the command-line compiler or Ant),
-it is added by default. In the command-line compiler and Ant, you can use the `-no-reflect` compiler option to exclude
-`kotlin-reflect.jar` from the classpath.
+もしGradleもMavenも使ってないなら、プロジェクトのclasspathに`kotlin-reflect.jar`が含まれている事を確かめてください。
+その他のサポートしているケース(IntelliJ IDEA プロジェクトでコマンドラインのコンパイラを使っていたりAntの場合)では、
+`kotlin-reflect.jar`はデフォルトで追加されます。
+コマンドラインのコンパイラやAntで`kotlin-reflect.jar`を除外したければ、
+`-no-reflect`コンパイラオプションを使用出来ます。
 
-## Class references
+## classのリファレンス
 
-The most basic reflection feature is getting the runtime reference to a Kotlin class. To obtain the reference to a
-statically known Kotlin class, you can use the _class literal_ syntax:
+リフレクションのもっとも基本的な機能としては、Kotlinクラスへの実行時リファレンスを取得する、というものが挙げられます。
+静的に分かっているKotlinのクラスのリファレンスを取得するためには、`classリテラル`のシンタックスを使う事が出来ます：
 
 ```kotlin
 val c = MyClass::class
 ```
 
-The reference is a [KClass](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.reflect/-k-class/index.html) type value.
+リファレンスは[KClass](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.reflect/-k-class/index.html)型の値となります。
 
->On JVM: a Kotlin class reference is not the same as a Java class reference. To obtain a Java class reference,
->use the `.java` property on a `KClass` instance.
+> JVMでは: Kotlinクラスのリファレンスは、Javaのクラスリファレンスと同じものではありません。Javaのクラスリファレンスを取得するには、
+> `KClass`のインスタンスの`.java`プロパティを使用してください。
 >
-{type="note"}
+{: .note}
 
 ### Bound class references
 
@@ -97,16 +94,17 @@ where `R` is the return value type. It is the property type for properties, and 
 
 ### 関数リファレンス
 
-When you have a named function declared as below, you can call it directly (`isOdd(5)`):
+名前の関数を以下のように宣言してあれば、直接それを呼ぶ事はもちろん出来ます (`isOdd(5)`)：
 
 ```kotlin
 fun isOdd(x: Int) = x % 2 != 0
 ```
 
-Alternatively, you can use the function as a function type value, that is, pass it
-to another function. To do so, use the `::` operator:
+それとは別に、関数を関数の型の値として使う事も出来ます。
+つまり、別の関数に渡したり出来るという事です。
+それをする為には`::`演算子を使います：
 
-```kotlin
+{% capture func-reference %}
 fun isOdd(x: Int) = x % 2 != 0
 
 fun main() {
@@ -115,10 +113,10 @@ fun main() {
     println(numbers.filter(::isOdd))
 //sampleEnd
 }
-```
-{kotlin-runnable="true" kotlin-min-compiler-version="1.3"}
+{% endcapture %}
+{% include kotlin_quote.html body=func-reference %}
 
-Here `::isOdd` is a value of function type `(Int) -> Boolean`.
+ここでは、 `::isOdd` は、関数の型 `(Int) -> Boolean` の値です。
 
 Function references belong to one of the [`KFunction<out R>`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.reflect/-k-function/index.html)
 subtypes, depending on the parameter count. For instance, `KFunction3<T1, T2, T3, R>`.

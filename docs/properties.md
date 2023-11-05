@@ -69,7 +69,7 @@ fun copyAddress(address: Address): Address {
 The full syntax for declaring a property is
 -->
 
-``` kotlin
+```
 var <propertyName>[: <PropertyType>] [= <property_initializer>]
     [<getter>]
     [<setter>]

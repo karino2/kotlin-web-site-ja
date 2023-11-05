@@ -22,11 +22,11 @@ subclass for it. Kotlin can handle this with _object expressions_ and _object de
 ## Object expressions
 -->
 
-_object式（object expression）_ は無名クラス(anonymous class)のオブジェクトを作ります、
+**object式（object expression）** は無名クラス(anonymous class)のオブジェクトを作ります、
 無名クラスとはこの場合、明示的に`class`で宣言しないクラスの事です。
 そのようなクラスは一度限りの使用の時に便利です。
 そのようなクラスを様々な方法で定義する事が出来ます ー 何も無い所から、既存のクラスを継承して、インターフェースを実装する事で、など。
-無名クラスのインスタンスは_無名オブジェクト（anonymous object）_とも呼ばれます。
+無名クラスのインスタンスは**無名オブジェクト（anonymous object）**とも呼ばれます。
 なぜなら、これは名前により定義されるのでは無く式により定義されるからです。
 
 <!--
@@ -212,7 +212,7 @@ object DataProviderManager {
 }
 ```
 
-これは_object宣言(object declaration)_と呼ばれ、
+これは**object宣言(object declaration)**と呼ばれ、
 それは常に object キーワードの後に名前を持ちます。
 ちょうど変数宣言と同じように、object宣言は式ではなく、代入文の右側に使用することはできません。
 

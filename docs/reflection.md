@@ -193,7 +193,7 @@ fun main() {
 
 ### プロパティリファレンス
 
-To access properties as first-class objects in Kotlin, use the `::` operator:
+プロパティをファーストクラスのオブジェクトとしてアクセスするには、Kotlinでは`::`オペレータを使います：
 
 ```kotlin
 val x = 1
@@ -204,38 +204,38 @@ fun main() {
 }
 ```
 
-The expression `::x` evaluates to a `KProperty0<Int>` type property object. You can read its
-value using `get()` or retrieve the property name using the `name` property. For more information, see
-the [docs on the `KProperty` class](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.reflect/-k-property/index.html).
+`::x`という式は`KProperty0<Int>`型のプロパティオブジェクトとして評価されます。
+その値は`get()`を用いて読み出すことが出来るし、プロパティの名前は`name`プロパティを使って取り出すことが出来ます。
+もっと詳細を知りたい人は、[`KProperty`クラスのドキュメント](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.reflect/-k-property/index.html)を参照してください。
 
-For a mutable property such as `var y = 1`, `::y` returns a value with the [`KMutableProperty0<Int>`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.reflect/-k-mutable-property/index.html) type
-which has a `set()` method:
+`var y = 1`のようなミュータブルなプロパティの場合だと、`::y` は [`KMutableProperty0<Int>`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.reflect/-k-mutable-property/index.html)型の値を返します。
+これは`set()`メソッドを持ちます：
 
-```kotlin
+{% capture mutable-prop-ref %}
 var y = 1
 
 fun main() {
     ::y.set(2)
     println(y)
 }
-```
-{kotlin-runnable="true" kotlin-min-compiler-version="1.3"}
+{% endcapture %}
+{% include kotlin_quote.html body=mutable-prop-ref %}
 
-A property reference can be used where a function with a single generic parameter is expected:
+プロパティのリファレンスは、ジェネリック引数一つの関数が期待される場所で使うことが出来ます：
 
-```kotlin
+{% capture prop-ref-as-func %}
 fun main() {
 //sampleStart
     val strs = listOf("a", "bc", "def")
     println(strs.map(String::length))
 //sampleEnd
 }
-```
-{kotlin-runnable="true" kotlin-min-compiler-version="1.3"}
+{% endcapture %}
+{% include kotlin_quote.html body=prop-ref-as-func %}
 
-To access a property that is a member of a class, qualify it as follows:
+クラスのメンバのプロパティにアクセスする為には、以下のように限定子をつけて限定します：
 
-```kotlin
+{% capture prop-ref-from-class %}
 fun main() {
 //sampleStart
     class A(val p: Int)
@@ -243,20 +243,20 @@ fun main() {
     println(prop.get(A(1)))
 //sampleEnd
 }
-```
-{kotlin-runnable="true" kotlin-min-compiler-version="1.3"}
+{% endcapture %}
+{% include kotlin_quote.html body=prop-ref-from-class %}
 
-For an extension property:
+拡張プロパティの場合は以下のようにします：
 
-```kotlin
+{% capture prop-ref-of-extension %}
 val String.lastChar: Char
     get() = this[length - 1]
 
 fun main() {
     println(String::lastChar.get("abc"))
 }
-```
-{kotlin-runnable="true" kotlin-min-compiler-version="1.3"}
+{% endcapture %}
+{% include kotlin_quote.html body=prop-ref-of-extension %}
 
 ### Interoperability with Java reflection
 

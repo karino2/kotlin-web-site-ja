@@ -72,25 +72,29 @@ val c = MyClass::class
 >
 {: .note}
 
-### Bound class references
+### 束縛されたクラスのリファレンス
 
-You can get the reference to the class of a specific object with the same `::class` syntax by using the object as a receiver:
+（訳注：Bound class references）
+
+あるオブジェクトに対して、そのオブジェクトのクラスのリファレンスを取得するのも、対象のオブジェクトをレシーバーに同様の`::class`シンタックスで取り出すことが出来ます：
 
 ```kotlin
 val widget: Widget = ...
 assert(widget is GoodWidget) { "Bad widget: ${widget::class.qualifiedName}" }
 ```
 
-You will obtain the reference to the exact class of an object, for example, `GoodWidget` or `BadWidget`,
-regardless of the type of the receiver expression (`Widget`).
+オブジェクトの実際のクラスそのものを取得出来ます。例えばこの場合は`GoodWidget` や `BadWidget`が取得出来ます。
+たとえレシーバーの式の型が`Widget`だとしてもです。
 
-## Callable references
+## 呼び出し可能リファレンス
 
-References to functions, properties, and constructors can
-also be called or used as instances of [function types](lambdas.md#function-types).
+（訳注：Callable references）
 
-The common supertype for all callable references is [`KCallable<out R>`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.reflect/-k-callable/index.html),
-where `R` is the return value type. It is the property type for properties, and the constructed type for constructors.
+関数、プロパティ、コンストラクタのリファレンスは、
+呼び出したり、[関数の型](lambdas.md#関数の型)のインスタンスとして使うことが出来ます。
+
+すべての呼び出し可能なリファレンスの共通の基底クラスは[`KCallable<out R>`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.reflect/-k-callable/index.html)です。
+ここで`R`は戻りの型です。プロパティの場合はプロパティの型で、コンストラクタの場合はそれが作成するオブジェクトの型です。
 
 ### 関数リファレンス
 
@@ -118,44 +122,44 @@ fun main() {
 
 ここでは、 `::isOdd` は、関数の型 `(Int) -> Boolean` の値です。
 
-Function references belong to one of the [`KFunction<out R>`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.reflect/-k-function/index.html)
-subtypes, depending on the parameter count. For instance, `KFunction3<T1, T2, T3, R>`.
+関数のリファレンスは[`KFunction<out R>`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.reflect/-k-function/index.html)の派生クラスに属します。
+どのクラスかはパラメータの個数に寄ります。
+例えば、`KFunction3<T1, T2, T3, R>`などです。
 
-`::` can be used with overloaded functions when the expected type is known from the context.
-For example:
+期待する型が文脈から分かる場合は、`::`を多重定義された型に使うことも出来ます。
+例えば：
 
-```kotlin
+{% capture overload-function-reference %}
 fun main() {
 //sampleStart
     fun isOdd(x: Int) = x % 2 != 0
     fun isOdd(s: String) = s == "brillig" || s == "slithy" || s == "tove"
     
     val numbers = listOf(1, 2, 3)
-    println(numbers.filter(::isOdd)) // refers to isOdd(x: Int)
+    println(numbers.filter(::isOdd)) // isOdd(x: Int)を参照
 //sampleEnd
 }
-```
-{kotlin-runnable="true" kotlin-min-compiler-version="1.3"}
+{% endcapture %}
+{% include kotlin_quote.html body=overload-function-reference %}
 
-Alternatively, you can provide the necessary context by storing the method reference in a variable with an explicitly specified type:
+または、明示的に型を指定した変数にメソッドリファレンス（訳注：関数リファレンスのことか）を格納することで、必要な文脈を与えることも出来ます：
 
 ```kotlin
-val predicate: (String) -> Boolean = ::isOdd   // refers to isOdd(x: String)
+val predicate: (String) -> Boolean = ::isOdd   //  isOdd(x: String)を参照
 ```
 
-If you need to use a member of a class or an extension function, it needs to be qualified: `String::toCharArray`.
+クラスのメンバ関数や拡張関数を使いたければ、限定子をつける(qualified)必要があります：`String::toCharArray`のように。
 
-Even if you initialize a variable with a reference to an extension function, the inferred function type will
-have no receiver, but it will have an additional parameter accepting a receiver object. To have a function type
-with a receiver instead, specify the type explicitly:
+拡張関数で変数を初期化しても、その変数の型はレシーバー無しの型で、レシーバーのオブジェクトを受け取る追加のパラメータがある関数として推論されてしまいます。
+もしレシーバー付き関数の型としたければ、型を明示的に指定します：
 
 ```kotlin
 val isEmptyStringList: List<String>.() -> Boolean = List<String>::isEmpty
 ```
 
-#### Example: function composition
+#### 例: 関数の合成
 
-Consider the following function:
+以下の関数を考えてみます：
 
 ```kotlin
 fun <A, B, C> compose(f: (B) -> C, g: (A) -> B): (A) -> C {
@@ -163,10 +167,11 @@ fun <A, B, C> compose(f: (B) -> C, g: (A) -> B): (A) -> C {
 }
 ```
 
-It returns a composition of two functions passed to it: `compose(f, g) = f(g(*))`.
-You can apply this function to callable references:
+これは渡された２つの関数を合成した関数を返します：`compose(f, g) = f(g(*))`
 
-```kotlin
+この関数を呼び出し可能リファレンスに対して適用する（applyする）ことが出来ます：
+
+{% capture compose-ex %}
 fun <A, B, C> compose(f: (B) -> C, g: (A) -> B): (A) -> C {
     return { x -> f(g(x)) }
 }
@@ -183,8 +188,8 @@ fun main() {
     println(strings.filter(oddLength))
 //sampleEnd
 }
-```
-{kotlin-runnable="true" kotlin-min-compiler-version="1.3"}
+{% endcapture %}
+{% include kotlin_quote.html body=compose-ex %}
 
 ### プロパティリファレンス
 

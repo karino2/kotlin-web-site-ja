@@ -4,25 +4,18 @@ title: "アノテーション"
 ---
 # アノテーション
 
-
-Annotations are means of attaching metadata to code. To declare an annotation, put the `annotation` modifier in front of a class:
+アノテーションはコードにメタデータを付加する手段です。
+アノテーションを宣言するには、`annotation`修飾子をclassの前に置きます：
 
 ```kotlin
 annotation class Fancy
 ```
+アノテーションにさらなる属性を、メタアノテーションでアノテーションクラスをアノテートする事で、指定する事が出来ます：
 
-Additional attributes of the annotation can be specified by annotating the annotation class with meta-annotations:
-
-  * [`@Target`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.annotation/-target/index.html) specifies the possible kinds of
-    elements which can be annotated with the annotation (such as classes, functions, properties, and expressions);
-  * [`@Retention`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.annotation/-retention/index.html) specifies whether the
-    annotation is stored in the compiled class files and whether it's visible through reflection at runtime
-    (by default, both are true);
-  * [`@Repeatable`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.annotation/-repeatable/index.html) allows using the same annotation
-    on a single element multiple times;
-  * [`@MustBeDocumented`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.annotation/-must-be-documented/index.html) specifies that the
-    annotation is part of the public API and should be included in the class or method signature shown in the
-    generated API documentation.
+  * [`@Target`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.annotation/-target/index.html) でそのアノテーションがアノテート出来る要素を指定します（例えばクラス、関数、プロパティ、式など）
+  * [`@Retention`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.annotation/-retention/index.html) でアノテーションがコンパイル結果のクラスファイルにも格納されるか、そして実行時にリフレクション越しに見る事が出来るかを指定します（デフォルトではどちらもtrueです）
+  * [`@Repeatable`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.annotation/-repeatable/index.html) は、同じアノテーションを一つの要素に複数回指定出来るようにします。
+  * [`@MustBeDocumented`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.annotation/-must-be-documented/index.html) はアノテーションがパブリックなAPIの一部であり、生成されるAPIドキュメントのメソッドやクラスのシグニチャに表示されるようにします。
 
 ```kotlin
 @Target(AnnotationTarget.CLASS, AnnotationTarget.FUNCTION,

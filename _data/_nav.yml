@@ -130,7 +130,7 @@ reference:
       - url: /docs/coroutines-overview.html
         title: コルーチン
       - url: /docs/annotations.html
-        title: Annotations
+        title: アノテーション
       - url: /docs/destructuring-declarations.html
         title: 分解宣言
       - url: /docs/reflection.html

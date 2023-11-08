@@ -10,7 +10,7 @@ title: "アノテーション"
 ```kotlin
 annotation class Fancy
 ```
-アノテーションにさらなる属性を、メタアノテーションでアノテーションクラスをアノテートする事で、指定する事が出来ます：
+メタアノテーションでアノテーションクラスをアノテートする事で、アノテーションにさらなる属性を指定する事が出来ます：
 
   * [`@Target`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.annotation/-target/index.html) でそのアノテーションがアノテート出来る要素を指定します（例えばクラス、関数、プロパティ、式など）
   * [`@Retention`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.annotation/-retention/index.html) でアノテーションがコンパイル結果のクラスファイルにも格納されるか、そして実行時にリフレクション越しに見る事が出来るかを指定します（デフォルトではどちらもtrueです）

@@ -105,16 +105,16 @@ class body, interleaved with the property initializers:
 {% capture initializer-block %}
 //sampleStart
 class InitOrderDemo(name: String) {
-    val firstProperty = "First property: $name".also(::println)
+    val firstProperty = "最初のプロパティ: $name".also(::println)
     
     init {
-        println("First initializer block that prints $name")
+        println("最初の初期化ブロックによる $name のプリント")
     }
     
-    val secondProperty = "Second property: ${name.length}".also(::println)
+    val secondProperty = "二番目のプロパティ: ${name.length}".also(::println)
     
     init {
-        println("Second initializer block that prints ${name.length}")
+        println("二番目の初期化ブロックによる ${name.length} のプリント")
     }
 }
 //sampleEnd

@@ -258,11 +258,11 @@ fun main() {
 {% endcapture %}
 {% include kotlin_quote.html body=prop-ref-of-extension %}
 
-### Interoperability with Java reflection
+### Javaのリフレクションとのインターオペラビリティ
 
-On the JVM platform, the standard library contains extensions for reflection classes that provide a mapping to and from Java
-reflection objects (see package `kotlin.reflect.jvm`).
-For example, to find a backing field or a Java method that serves as a getter for a Kotlin property, you can write something like this:
+JVMプラットフォーム上では、標準ライブラリにはJavaのリフレクションオブジェクトとの相互間のマッピングを提供するリフレクションクラスの拡張（extension）を含んでいます（`kotlin.reflect.jvm`パッケージを参照のこと）。
+例えば、Kotlinのプロパティを提供するようなバッキングフィールドやJavaのメソッドを探したければ、以下のように書く事が出来ます：
+
 
 ```kotlin
 import kotlin.reflect.jvm.*
@@ -270,12 +270,12 @@ import kotlin.reflect.jvm.*
 class A(val p: Int)
  
 fun main() {
-    println(A::p.javaGetter) // prints "public final int A.getP()"
-    println(A::p.javaField)  // prints "private final int A.p"
+    println(A::p.javaGetter) // "public final int A.getP()"とプリントされる
+    println(A::p.javaField)  // "private final int A.p"とプリントされる
 }
 ```
 
-To get the Kotlin class that corresponds to a Java class, use the `.kotlin` extension property:
+あるJavaクラスに対応するKotlinクラスを取得するには、`.kotlin`拡張プロパティを使う事が出来ます：
 
 ```kotlin
 fun getKClass(o: Any): KClass<Any> = o.javaClass.kotlin
@@ -283,10 +283,10 @@ fun getKClass(o: Any): KClass<Any> = o.javaClass.kotlin
 
 ### コンストラクタリファレンス
 
-Constructors can be referenced just like methods and properties. You can use them wherever the program expects a function type object
-that takes the same parameters as the constructor and returns an object of the appropriate type.
-Constructors are referenced by using the `::` operator and adding the class name. Consider the following function
-that expects a function parameter with no parameters and return type `Foo`:
+コンストラクタも、通常のメソッドやプロパティのように参照する事が出来ます。
+コンストラクタと同じパラメータを取り対応するオブジェクトを返す事を期待するような関数の型のオブジェクトを期待する場所では全て、コンストラクタのリファレンスを使用する事が出来ます。
+コンストラクタは`::`オペレータをクラスの名前につける事で参照する事が出来ます。
+以下のような、引数無しで戻りの型として`Foo`型を期待するような関数を期待する関数を考えてみましょう：
 
 ```kotlin
 class Foo
@@ -296,23 +296,21 @@ fun function(factory: () -> Foo) {
 }
 ```
 
-Using `::Foo`, the zero-argument constructor of the class `Foo`, you can call it like this:
+`Foo`クラスの引数零のコンストラクタ、`::Foo`を使えば、以下のように呼ぶ事が出来ます：
 
 ```kotlin
 function(::Foo)
 ```
 
-Callable references to constructors are typed as one of the
-[`KFunction<out R>`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.reflect/-k-function/index.html) subtypes
-depending on the parameter count.
+コンストラクタの呼び出し可能リファレンスは、そのパラメータの数に応じた[`KFunction<out R>`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.reflect/-k-function/index.html)の派生クラスの型となります。
 
 ### 束縛された関数やプロパティのリファレンス
 
 (Bound function and property references)
 
-You can refer to an instance method of a particular object:
+あるオブジェクトのインスタンスメソッドを参照する、という事が出来ます：
 
-```kotlin
+{% capture instance-method-ref %}
 fun main() {
 //sampleStart
     val numberRegex = "\\d+".toRegex()
@@ -322,14 +320,16 @@ fun main() {
     println(isNumber("29"))
 //sampleEnd
 }
-```
-{kotlin-runnable="true" kotlin-min-compiler-version="1.3"}
+{% endcapture %}
+{% include kotlin_quote.html body=instance-method-ref %}
 
-Instead of calling the method `matches` directly, the example uses a reference to it.
-Such a reference is bound to its receiver.
-It can be called directly (like in the example above) or used whenever a function type expression is expected:
+`matches`メソッドを直接呼ぶ代わりに、この例ではそれへのリファレンスを用いています。
+そのようなリファレンスは、そのレシーバーを束縛しています。
+そのようなリファレンスは（上の例のように）直接呼ぶ事も出来ますし、
+関数の型を期待する式ならどこでも用いる事が出来ます：
 
-```kotlin
+
+{% capture bound-reference-to-filter %}
 fun main() {
 //sampleStart
     val numberRegex = "\\d+".toRegex()
@@ -337,11 +337,12 @@ fun main() {
     println(strings.filter(numberRegex::matches))
 //sampleEnd
 }
-```
-{kotlin-runnable="true" kotlin-min-compiler-version="1.3"}
+{% endcapture %}
+{% include kotlin_quote.html body=bound-reference-to-filter %}
 
-Compare the types of the bound and the unbound references.
-The bound callable reference has its receiver "attached" to it, so the type of the receiver is no longer a parameter:
+束縛されたリファレンスと束縛されてないリファレンスの型を比較してみましょう。
+束縛されたリファレンスはそのレシーバーがそのリファレンスに「添付」されています。
+だからレシーバーの型はパラメータには現れません：
 
 ```kotlin
 val isNumber: (CharSequence) -> Boolean = numberRegex::matches
@@ -349,24 +350,26 @@ val isNumber: (CharSequence) -> Boolean = numberRegex::matches
 val matches: (Regex, CharSequence) -> Boolean = Regex::matches
 ```
 
-A property reference can be bound as well:
+プロパティのリファレンスも束縛出来ます：
 
-```kotlin
+{% capture bound-property %}
 fun main() {
 //sampleStart
     val prop = "abc"::length
     println(prop.get())
 //sampleEnd
 }
-```
-{kotlin-runnable="true" kotlin-min-compiler-version="1.3"}
+{% endcapture %}
+{% include kotlin_quote.html body=bound-property %}
 
-You don't need to specify `this` as the receiver: `this::foo` and `::foo` are equivalent.
+レシーバーに`this`を指定する必要はありません：`this::foo` と `::foo` は同じ意味となります。
 
-### Bound constructor references
+### 束縛されたコンストラクタのリファレンス
 
-A bound callable reference to a constructor of an [inner class](nested-classes.md#inner-classes) can
-be obtained by providing an instance of the outer class:
+(Bound constructor references)
+
+[内部クラス(inner class)](nested-classes.md#内部クラス)のコンストラクタの束縛された呼び出し可能リファレンスを、
+その外部クラスのインスタンスを提供する事で取得する事が出来ます：
 
 ```kotlin
 class Outer {

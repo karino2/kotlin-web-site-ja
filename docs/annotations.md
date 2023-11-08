@@ -26,7 +26,7 @@ annotation class Fancy
 annotation class Fancy
 ```
 
-## Usage
+## 使い方
 
 ```kotlin
 @Fancy class Foo {
@@ -36,14 +36,14 @@ annotation class Fancy
 }
 ```
 
-If you need to annotate the primary constructor of a class, you need to add the `constructor` keyword
-to the constructor declaration, and add the annotations before it:
+クラスのプライマリーコンストラクタをアノテートしたければ、コンストラクタ定義に`constructor`キーワードを追加して、
+その前にアノテーションを追加します：
 
 ```kotlin
 class Foo @Inject constructor(dependency: MyDependency) { ... }
 ```
 
-You can also annotate property accessors:
+プロパティのアクセサにアノテートする事も出来ます：
 
 ```kotlin
 class Foo {

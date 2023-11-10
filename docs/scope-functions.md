@@ -568,7 +568,7 @@ Otherwise, it returns `null`. So, `takeIf` is a filtering function for a single 
 
 When using `takeIf` or `takeUnless`, the object is available as a lambda argument (`it`).
 
-```kotlin
+{% capture takeif-ex1 %}
 import kotlin.random.*
 
 fun main() {
@@ -580,15 +580,15 @@ fun main() {
     println("even: $evenOrNull, odd: $oddOrNull")
 //sampleEnd
 }
-```
-{kotlin-runnable="true" kotlin-min-compiler-version="1.3"}
+{% endcapture %}
+{% include kotlin_quote.html body=takeif-ex1 %}
 
 > When chaining other functions after `takeIf` and `takeUnless`, don't forget to perform a null check or use a safe call
 > (`?.`) because their return value is nullable.
 >
-{type="tip"}
+{: .tip}
 
-```kotlin
+{% capture takeif-ex2 %}
 fun main() {
 //sampleStart
     val str = "Hello"
@@ -597,15 +597,15 @@ fun main() {
     println(caps)
 //sampleEnd
 }
-```
-{kotlin-runnable="true" kotlin-min-compiler-version="1.3"}
+{% endcapture %}
+{% include kotlin_quote.html body=takeif-ex2 %}
 
 `takeIf` and `takeUnless` are especially useful in combination with scope functions. For example, you can chain 
 `takeIf` and `takeUnless` with `let` to run a code block on objects that match the given predicate. To do this, 
 call `takeIf` on the object and then call `let` with a safe call (`?`). For objects that don't match the predicate, 
 `takeIf` returns `null` and `let` isn't invoked.
 
-```kotlin
+{% capture takeif-ex3 %}
 fun main() {
 //sampleStart
     fun displaySubstringPosition(input: String, sub: String) {
@@ -619,12 +619,12 @@ fun main() {
     displaySubstringPosition("010000011", "12")
 //sampleEnd
 }
-```
-{kotlin-runnable="true" kotlin-min-compiler-version="1.3"}
+{% endcapture %}
+{% include kotlin_quote.html body=takeif-ex3 %}
 
 For comparison, below is an example of how the same function can be written without using `takeIf` or scope functions:
 
-```kotlin
+{% capture takeif-ex4 %}
 fun main() {
 //sampleStart
     fun displaySubstringPosition(input: String, sub: String) {
@@ -639,6 +639,6 @@ fun main() {
     displaySubstringPosition("010000011", "12")
 //sampleEnd
 }
-```
-{kotlin-runnable="true" kotlin-min-compiler-version="1.3"}
+{% endcapture %}
+{% include kotlin_quote.html body=takeif-ex4 %}
 

@@ -560,13 +560,13 @@ fun main() {
 関数もあります。
 これらの関数は呼び出しチェーンの中にオブジェクトの状態のチェックを含める事を可能にします。
 
-When called on an object along with a predicate, `takeIf` returns this object if it satisfies the given predicate.
-Otherwise, it returns `null`. So, `takeIf` is a filtering function for a single object.
+`takeIf`をオブジェクトに対して述語とともに呼び出すと、与えられた述語をオブジェクトが満たすならそのオブジェクトを返します。
+そうでなければ`null`を返します。つまり、`takeIf`は単体のオブジェクトに対するフィルタ関数と言えます。
 
-`takeUnless` has the opposite logic of `takeIf`. When called on an object along with a predicate, `takeUnless` returns 
-`null` if it satisfies the given predicate. Otherwise, it returns the object.
+`takeUnless`は`takeIf`の反対です。
+`takeUnless`をオブジェクトに対し述語とともに呼び出すと、オブジェクトが述語を満たすなら`null`を返し、そうでなければそのオブジェクトを返します。
 
-When using `takeIf` or `takeUnless`, the object is available as a lambda argument (`it`).
+`takeIf`や`takeUnlesss`の使用時には対象のオブジェクトはラムダの引数(`it`)で触る事が出来ます。
 
 {% capture takeif-ex1 %}
 import kotlin.random.*
@@ -577,14 +577,14 @@ fun main() {
 
     val evenOrNull = number.takeIf { it % 2 == 0 }
     val oddOrNull = number.takeUnless { it % 2 == 0 }
-    println("even: $evenOrNull, odd: $oddOrNull")
+    println("偶数: $evenOrNull, 奇数: $oddOrNull")
 //sampleEnd
 }
 {% endcapture %}
 {% include kotlin_quote.html body=takeif-ex1 %}
 
-> When chaining other functions after `takeIf` and `takeUnless`, don't forget to perform a null check or use a safe call
-> (`?.`) because their return value is nullable.
+> `takeIf`や`takeUnless`のあとに他の関数をチェーンする場合は、つなげた方の関数でnullチェックをするかセーフコール（`?.`）を使うのを忘れないようにしてください。
+> なぜなら返される値はnullableになるからです。
 >
 {: .tip}
 
@@ -593,25 +593,26 @@ fun main() {
 //sampleStart
     val str = "Hello"
     val caps = str.takeIf { it.isNotEmpty() }?.uppercase()
-   //val caps = str.takeIf { it.isNotEmpty() }.uppercase() //compilation error
+   //val caps = str.takeIf { it.isNotEmpty() }.uppercase() //コンパイルエラー
     println(caps)
 //sampleEnd
 }
 {% endcapture %}
 {% include kotlin_quote.html body=takeif-ex2 %}
 
-`takeIf` and `takeUnless` are especially useful in combination with scope functions. For example, you can chain 
-`takeIf` and `takeUnless` with `let` to run a code block on objects that match the given predicate. To do this, 
-call `takeIf` on the object and then call `let` with a safe call (`?`). For objects that don't match the predicate, 
-`takeIf` returns `null` and `let` isn't invoked.
+`takeIf` と `takeUnless` はスコープ関数と併用するととりわけ便利です。
+例えば、`takeIf` や `takeUnless` を `let` と併用して、指定した述語にマッチしたオブジェクトに対してコードブロックを実行する事が出来ます。
+これをt実現するためには、オブジェクトに対して`takeIf`を呼んで、そのあとに`let`をセーフコール(`?`)で呼び出します。
+述語にマッチしないオブジェクトに対しては`takeIf`は`null`を返すので`let`は実行されないという訳です。
+
 
 {% capture takeif-ex3 %}
 fun main() {
 //sampleStart
     fun displaySubstringPosition(input: String, sub: String) {
         input.indexOf(sub).takeIf { it >= 0 }?.let {
-            println("The substring $sub is found in $input.")
-            println("Its start position is $it.")
+            println("部分文字列 $sub は $input の中に見つかりました。")
+            println("その開始位置は $it です。")
         }
     }
 
@@ -622,7 +623,7 @@ fun main() {
 {% endcapture %}
 {% include kotlin_quote.html body=takeif-ex3 %}
 
-For comparison, below is an example of how the same function can be written without using `takeIf` or scope functions:
+比較のために、同じ事を`takeIf`やスコープ関数なしで書くと以下のようになります：
 
 {% capture takeif-ex4 %}
 fun main() {
@@ -630,8 +631,8 @@ fun main() {
     fun displaySubstringPosition(input: String, sub: String) {
         val index = input.indexOf(sub)
         if (index >= 0) {
-            println("The substring $sub is found in $input.")
-            println("Its start position is $index.")
+            println("部分文字列 $sub は $input の中に見つかりました。")
+            println("その開始位置は $index です。")
         }
     }
 

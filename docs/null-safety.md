@@ -26,7 +26,7 @@ KotlinにおけるNPEが起こりうる原因というのは以下しかあり�
   * ジェネリック型をJavaと相互運用する時のnullabilityの問題。例えばKotlinの`MutableList<String>`にJavaの側で`null`を追加してしまうなど。この場合は`MutableList<String?>`とする必要がある。
   * 外部のJavaのコードによって引き起こされるその他の問題
 
-Kotliでは型システムが`null`を保持出来る参照（nullableな参照）と、保持出来ない参照（非nullable参照）を区別します。
+Kotlinでは型システムが`null`を保持出来る参照（nullableな参照）と、保持出来ない参照（非nullable参照）を区別します。
 例えば、通常の`String`型の変数は`null`を保持出来ません：
 
 {% capture default-non-nullable %}
@@ -207,7 +207,7 @@ fun foo(node: Node): String? {
 
 ## `!!`演算子
 
-NPE好きには三番目の選択肢があります： nullでないと断言する演算子(not-null assersion operator)である `!!` です。
+NPE好きには三番目の選択肢があります： nullでないと断言する演算子(not-null assertion operator)である `!!` です。
 これはどのような値でも非nullableに変換して、値が`null`だったら例外を投げる、というものです。
 `b!!`と書けば、`b`が`null`でなければその値（我々の例では`String`の値）を、もし`null`ならNPEを投げます。
 

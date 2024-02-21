@@ -33,7 +33,7 @@ a?.equals(b) ?: (b === null)
 同じ名前でも違うシグニチャの関数、例えば`equals(other: Foo)`などを定義しても、
 `==`と`!=`演算子には影響を与えません。
 
-Structual equalityは`Comparable<...>`インターフェースで定義される比較とは一切関係がありません。
+Structural equalityは`Comparable<...>`インターフェースで定義される比較とは一切関係がありません。
 この演算子に影響を与えるのはただ`equals(Any?)`をカスタム実装する事だけです。
 
 ## Referential equality
@@ -48,7 +48,7 @@ Referential equalityは`===`演算でチェックされて、その否定は`!==
 イコールのチェックの対象が静的に`Float`か`Double`と知れている場合は（nullableかどうかに関わらず）、
 その判定は[IEEE 754 Standard for Floating-Point Arithmetic](https://en.wikipedia.org/wiki/IEEE_754)標準に従います。
 
-それ以外の場合はstructual equalityが使われ、幾つかのケースで標準に準拠していません。
+それ以外の場合はstructural equalityが使われ、幾つかのケースで標準に準拠していません。
 `NaN`は自身と等しく、`NaN`は`POSITIVE_INFINITY`も含めてそのほかのすべての値より大きいとされ、
 `-0.0`は`0.0`とは等しく有りません。
 

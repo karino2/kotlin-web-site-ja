@@ -111,9 +111,6 @@ val text = """
 文字列リテラルは、**テンプレート式(template expressions)**、すなわち、評価され、その結果が文字列と結合されるコードの断片を含むことができます。
 テンプレート式は、ドル記号（`$`）で始まり、名前か：
 
-String literals may contain _template expressions_ – pieces of code that are evaluated and whose results are concatenated into the string.
-A template expression starts with a dollar sign (`$`) and consists of either a name:
-
 {% capture string-template-sample-1 %}
 fun main() {
 //sampleStart
